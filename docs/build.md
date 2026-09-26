@@ -873,3 +873,23 @@ risk pass (score 3) → finalize + send → detail page badge `Sent`. The wizard
 "Fill sample message" was upgraded to name a seeded buyer and carry an explicit total so
 the demo shows the full magic moment (the canonical J2 message has no total, which the rule
 engine would misread as the 2.30 unit price).
+
+**Production hosting: Vercel + Neon (deployed 2026-09-26).** https://kusanya-gamma.vercel.app —
+project `eugene-gabriel/kusanya`, Node serverless (`iad1`), Neon Postgres free_v3 (`iad1`,
+pooled `DATABASE_URL` auto-injected by the marketplace integration). The dual-driver db client
+made this zero-code-change: `DATABASE_URL` set → postgres-js; absent → PGlite (local dev/e2e
+stay embedded — `.env.local` must NOT gain a `DATABASE_URL` or local resets would wipe prod).
+Three deployment fixes were needed: (1) `outputFileTracingIncludes: {"/**": ["./drizzle/**/*"]}`
+— the runtime migrator reads SQL from disk and serverless tracing can't see the dynamic read;
+(2) `/api/demo/reset` now runs `ensureSchema()` BEFORE the user-count auth probe — a fresh
+deployment's empty Postgres threw `relation "users" does not exist`; reset is now the
+single-POST bootstrap (migrate + seed in ~2.3s); (3) Hobby plan caps crons at daily —
+reconcile 00:00 UTC, reminders 06:00 UTC (09:00 Nairobi); Pro → back to */5min. Secrets:
+`BETTER_AUTH_SECRET` + `CRON_SECRET` (random, Secret-type) and `BETTER_AUTH_URL` +
+`NEXT_PUBLIC_APP_URL` = the gamma alias, set via `vercel env add` then a second `--prod` build
+so the client-baked origin matches. Production smoke: landing canonical numbers ✓ · login ✓ ·
+authed reset ✓ · all 9 authed pages 200 (incl. /app/analytics) ✓ · momo.success → Paid ✓ ·
+settlement.complete → Settled ✓ · buyer portal /i/tok_… 200 (fake token 404) ✓ · final
+canonical reset ✓. Demo Mode is ON in production by design (no Payaza keys): fixtures +
+recorded payloads, `demo-rules-v1` labels everywhere. Going live for real = add Payaza keys,
+`NEXT_PUBLIC_DEMO_MODE=false`, set `WEBHOOK_SECRET`, and run real webhooks.

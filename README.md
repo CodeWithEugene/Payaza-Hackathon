@@ -10,6 +10,22 @@ Built for **[Borderless Kenya](https://hackathon.payaza.africa/)** — the Payaz
 Nairobi hackathon solving cross-border payments for East African trade.
 **Track #03 — SME and exporter collections.**
 
+## ▶ Live demo — https://kusanya-gamma.vercel.app
+
+Hosted on **Vercel** (Node serverless + **Neon Postgres** free tier, `iad1`), deployed with the
+Vercel CLI. Runs in **Demo Mode**: Payaza/Jev calls hit labeled fixtures (`demo-rules-v1`,
+recorded webhook payloads) — zero external keys, nothing leaves the app.
+
+| | |
+|---|---|
+| Login | `wanjiru@kusanya.demo` / `kusanya-demo-2026` |
+| Payout confirmation code | `123456` |
+| Test card (buyer portal) | Visa `4508 7500 1574 1019`, exp `01/39` (approve) · `05/39` (decline) |
+| Restore the canonical story | `/app/settings` → *Demo Mode* → Reset (or the `/demo` launcher) — wipes + reseeds; signs you out |
+
+Local dev/e2e are unaffected: they run embedded PGlite (`.env.local` intentionally has **no**
+`DATABASE_URL`; production gets it from the Neon integration).
+
 ---
 
 ## The problem in one paragraph
