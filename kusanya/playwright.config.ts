@@ -13,7 +13,7 @@ export default defineConfig({
   reporter: [["list"]],
   timeout: 60_000,
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3100",
     trace: "retain-on-failure",
   },
   projects: [
@@ -23,8 +23,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm dev",
-    url: "http://localhost:3000",
+    // Serve the existing production build on 3100 (3000 may be taken by
+    // another local app). BETTER_AUTH_URL must match the served origin or
+    // better-auth's CSRF/origin check rejects sign-in.
+    command:
+      "BETTER_AUTH_URL=http://localhost:3100 NEXT_PUBLIC_APP_URL=http://localhost:3100 npx next start -p 3100",
+    url: "http://localhost:3100/login",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
