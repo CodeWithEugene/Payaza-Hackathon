@@ -620,12 +620,12 @@ webhooks with identical UI (flagged "demo data" chip — honesty preserved).
 
 ## 19. Submission Artifacts Checklist (tonight)
 
-- [x] Team assembled: **Eugene Mutembei, Washington Adiadio, Jael Nyambura** (3 members — minimum met; form-role mapping in `README.md`)
-- [ ] Team name chosen (suggest **"Team Kusanya"** — product-aligned)
-- [x] **Deck** generated: `docs/deck/kusanya-deck.pdf` (10 slides, 16:9, dark theme; source `kusanya-deck.html`) → upload to Drive/Slides → put link in form
-- [x] **Idea text** — copy-paste ready in **Appendix A.1** (track #03 explicitly named)
-- [ ] Register at https://hackathon.payaza.africa/register before **23:59 EAT**
-- [ ] Email support@payaza.africa requesting Kenya/EAC sandbox collections access — **ready-to-send draft in Appendix B**
+- [x] Team assembled: **Eugene Mutembei, Washington Adiadio, Jael Nyambura** (3 members — minimum met)
+- [x] Team name chosen: **Technetians**
+- [x] **Deck** built: `docs/deck/kusanya-deck.pdf` (10 slides, 16:9, dark theme, "Team Technetians" branded) → uploaded: https://drive.google.com/file/d/1B0eNGHWUOt4l_nGorTiSsaccVXpFqNFg/view?usp=sharing
+- [x] **Idea text** finalized — **Appendix A.1** (plain-text, paste-ready, answers the form's exact question)
+- [ ] **SUBMIT** register form at https://hackathon.payaza.africa/register before **23:59 EAT** — all fields ready, see Appendix C for the full record
+- [ ] After registering: send Appendix B email to support@payaza.africa (Kenya/EAC sandbox collections access)
 
 > Engineering realization of everything above: **`docs/build.md`**.
 
@@ -633,54 +633,64 @@ webhooks with identical UI (flagged "demo data" chip — honesty preserved).
 
 ## Appendix A — Copy-Paste Submission Artifacts (for tonight's /register form)
 
-### A.1 "Your idea" field (≈430 words, distilled from this document)
+### A.1 "Your idea" field — FINAL SUBMITTED TEXT (plain text; paste as-is)
 
-> **Kusanya — get Kenyan exporters paid by anyone, anywhere. (Track #03: SME and exporter collections)**
->
-> Wanjiru aggregates French beans and macadamia from 40 smallholders in Murang'a and ships
-> 30–60 orders a month to buyers in Dubai, London and Amsterdam. Her week: orders arrive as
-> WhatsApp voice notes and photos; invoices are typed in Word; buyers must pay by SWIFT wire
-> (USD 25–45 plus intermediary deductions) or PayPal (multi-day holds, ~5% withdrawal loss);
-> the bank converts at its own opaque rate; her forwarding agent's commission is paid by
-> hand. She loses 3–8% of every invoice and 3–10 days of float — while paying smallholders
-> upfront. This is exactly the challenge's "small exporters struggling to collect from
-> international buyers without expensive intermediaries."
->
-> **Kusanya replaces that stack with one mobile-first workflow on Payaza rails:**
->
-> 1. **AI invoicing from how she already communicates.** Wanjiru pastes the buyer's WhatsApp
->    message (or snaps the handwritten note). TypeSafe's Jev model — calibrated decision
->    primitives, not a chatbot — extracts buyer, items, amounts, currency and due date in one
->    batched call. Every field carries a probability: high-confidence fields arrive filled,
->    low-confidence ones are highlighted with the source snippet quoted for one-tap review.
->    Numbers and dates are resolved deterministically in code — the model never invents an
->    amount.
-> 2. **Collection.** The invoice page gives her international buyer a Payaza hosted checkout
->    (USD by card, Apple Pay or Google Pay) or a Payaza payment link — zero signup, 2 minutes,
->    receipts emailed. Regional buyers in Kampala or Dar pay the same invoice in UGX/TZS via
->    mobile-money prompt on Payaza's Kenya/Uganda/Tanzania collection rails.
-> 3. **Settlement with radical transparency.** On Payaza's webhook, the invoice flips to PAID
->    and KES settles to her M-Pesa (or bank via kepss) through Payaza payouts. Every
->    transaction shows an itemized waterfall — gross, Payaza fee, FX rate with validity
->    window, partner split, net KES — plus an honest settlement ETA from Payaza's real SLAs.
->    No hidden spread, ever.
-> 4. **Partners paid automatically.** Her forwarding agent and co-op are registered as Payaza
->    split-settlement beneficiaries; their cut lands at settlement with statement lines. No
->    more hand-paid commissions.
-> 5. **Compliance-grade risk.** Jev composite scores screen every invoice (sanctions language,
->    amount anomalies, first-buyer patterns) with confidence-gated routing — auto-proceed,
->    merchant-review, or hold — and an immutable audit trail of every AI judgment. It's the
->    screen a Payaza compliance officer can pilot against.
->
-> **Business case:** 1.5% take rate (still ≤ half her current leakage) + KES 1,500/mo Pro tier
-> billed on Payaza Subscriptions + 0.25% on split volume. Beachhead: ~50k Kenyan SME
-> exporters; 1% penetration ≈ USD 50M TPV. Kusanya needs no license of its own — Payaza
-> holds the regulated rails; we own the exporter workflow. We're asking Payaza for 10 pilot
-> merchants from their network; the product is already built for their checkout, links,
-> momo, transfers, splits, subscriptions and webhooks.
->
-> Demo: real money movement on Payaza sandbox — pasted WhatsApp text → AI invoice → test-card
-> checkout → live webhook → KES payout → split statement — in under 4 minutes.
+The form asks: *"Which of the five problems are you solving, for whom, and how will you use
+Payaza?"* — the text below answers the three sub-questions in order, in plain text (the form
+does not render markdown, so no bold/links are used).
+
+```text
+KUSANYA — invoice-first international collections for Kenyan SME exporters.
+Team Technetians · Solving Problem #03: SME and exporter collections.
+
+WHICH PROBLEM, FOR WHOM
+Small Kenyan exporters in agriculture, crafts and digital services — the people the challenge
+names as "struggling to collect from international buyers without expensive intermediaries."
+Meet Wanjiru: she aggregates French beans and macadamia from 40 smallholders in Murang'a and
+ships 30–60 orders a month to buyers in Dubai, London and Amsterdam. Orders arrive as WhatsApp
+voice notes and photos; invoices are typed by hand in Word; buyers are forced onto SWIFT wires
+(USD 25–45 plus intermediary deductions) or PayPal (multi-day holds, ~5% withdrawal loss); the
+bank converts at its own opaque rate; her forwarding agent is paid by hand. She loses 3–8% of
+every invoice and 3–10 days of float — while paying smallholders upfront. Every week.
+
+THE SOLUTION
+Kusanya replaces that stack with one mobile-first workflow:
+1. AI INVOICING — Wanjiru pastes the buyer's WhatsApp message or snaps the handwritten note.
+TypeSafe's Jev decision models extract buyer, items, amounts, currency and due date into a
+professional invoice. Every field arrives with a probability; low-confidence fields are
+highlighted for one-tap review; amounts and dates are resolved in code, so the model can never
+invent a number.
+2. COLLECTION — Her international buyer gets a branded invoice page with a Payaza hosted
+checkout (USD by card, Apple Pay, Google Pay) or payment link: zero signup, under 2 minutes,
+receipts emailed. A buyer in Kampala or Dar pays the same invoice in UGX/TZS by mobile-money
+prompt.
+3. SETTLEMENT WITH RADICAL TRANSPARENCY — Payaza's webhook confirms funds, the invoice flips to
+PAID, and KES settles to her M-Pesa or bank account via Payaza transfers. Every transaction
+shows an itemized waterfall — gross, Payaza fee, FX rate with validity window, partner split,
+net KES — plus an honest settlement ETA from Payaza's real SLAs. No hidden spread, ever.
+4. PARTNERS PAID AUTOMATICALLY — Her forwarding agent and co-op are split-settlement
+beneficiaries; their cut lands at settlement with statement lines.
+5. COMPLIANCE-GRADE RISK — Jev composite scores screen every invoice (sanctions language,
+amount anomalies, first-buyer patterns) with pass/review/hold routing and an immutable audit
+trail of every AI judgment.
+
+HOW WE USE PAYAZA (structurally, not bolted on)
+Web Checkout SDK + Payment Links for USD buyer collections; the Card Charge API as the
+server-side path; MoMo Collections for KES/UGX/TZS regional buyers; Transfers for KES payouts
+to M-Pesa (mobile_money) and banks (kepss); Split Settlements for agent payouts; Subscriptions
+to bill our Pro tier — dogfooding Payaza's own rail; and HMAC-verified Webhooks + status APIs
+as the single source of truth driving our ledger state machine. Corridors covered: World→NBO
+(USD→KES) primary, with NBO→KLA (KES→UGX) and NBO→DAR (KES→TZS) enabled. We built our
+integration spec from all 57 pages of docs.payaza.africa plus the OpenAPI spec — the demo will
+move real money on Payaza sandbox: test card through 3DS checkout → live webhook → KES payout
+funded via the sandbox funding endpoint.
+
+BUSINESS CASE
+1.5% take rate (half her current leakage) + KES 1,500/mo Pro tier + 0.25% on split volume.
+Beachhead: ~50k Kenyan SME exporters; 1% penetration ≈ USD 50M TPV. Kusanya needs no license
+of its own — Payaza holds the regulated rails; we own the exporter workflow. Our ask: 10 pilot
+merchants from Payaza's network. Tuma invoice, lipwa leo — send the invoice, get paid today.
+```
 
 ### A.2 Deck outline (8–10 slides, build from §15 script; upload → link in form)
 
@@ -710,7 +720,7 @@ from the same outline) and put the share link in the register form.
 ## Appendix B — Sandbox Access Request Email (ready to send)
 
 > To: **support@payaza.africa** (cc integrationsupport@payaza.africa)
-> Fill the three [bracketed] placeholders before sending.
+> Contact details pre-filled from the registration (Appendix C). Send AFTER the register form is submitted.
 
 **Subject:** Borderless Kenya Hackathon (Track #03) — request for test-mode API access: Kenya & EAC collections + payouts
 
@@ -718,10 +728,10 @@ from the same outline) and put the share link in the register form.
 
 Hi Payaza Integrations Team,
 
-We are **Team Kusanya** — Eugene Mutembei, Washington Adiadio and Jael Nyambura — and we have
-just registered for the **Borderless Kenya hackathon** (Payaza × Hackhouse Nairobi) under
-**Track #03, SME and exporter collections** (registration email: [email used on the register
-form]; dashboard account: [your business.payaza.africa account email, if already created]).
+We are **Team Technetians** — Eugene Mutembei, Washington Adiadio and Jael Nyambura — and we
+have registered for the **Borderless Kenya hackathon** (Payaza × Hackhouse Nairobi) under
+**Track #03, SME and exporter collections** (registration email: eugenegabriel.ke@gmail.com).
+Our product is **Kusanya**.
 
 We are building **Kusanya**, an invoice-first international collections product for Kenyan
 SME exporters: international buyers pay in USD via Payaza's hosted checkout / payment links
@@ -757,10 +767,35 @@ verification, unique transaction references with our own retry/idempotency layer
 `09 → 00/06` status semantics. We will demo on test keys only; KYB for live access can
 follow the hackathon if we progress to the pilot pathway.
 
-We would be grateful for any enablement or a pointer to the right contact. Happy to share
-our idea deck on request.
+We would be grateful for any enablement or a pointer to the right contact. Our idea deck:
+https://drive.google.com/file/d/1B0eNGHWUOt4l_nGorTiSsaccVXpFqNFg/view?usp=sharing
 
 Asante sana,
-**Team Kusanya** — Borderless Kenya hackathon, Track #03
-Eugene Mutembei · [phone] · [email]
+**Team Technetians** (building Kusanya) — Borderless Kenya hackathon, Track #03
+Eugene Mutembei · +254 746 152 008 · eugenegabriel.ke@gmail.com
 Washington Adiadio · Jael Nyambura
+
+---
+
+## Appendix C — Registration Record (Borderless Kenya, submitted 26 Sept 2026)
+
+| Field | Value |
+|---|---|
+| Team name | **Technetians** |
+| Track | **#03 — SME and exporter collections** (product: Kusanya) |
+| Presentation link | https://drive.google.com/file/d/1B0eNGHWUOt4l_nGorTiSsaccVXpFqNFg/view?usp=sharing |
+| Deck source of truth | `docs/deck/kusanya-deck.pdf` (10 slides · 16:9 · "Team Technetians" branded — **re-upload to Drive if regenerated**) |
+| Idea text | Appendix A.1 above (submitted verbatim, plain text) |
+
+**Members (as entered on the form):**
+
+| # | Name | Email | Phone | Role | LinkedIn |
+|---|---|---|---|---|---|
+| 1 | Eugene Mutembei | eugenegabriel.ke@gmail.com | +254746152008 | Software Engineer (ML/AI) | https://www.linkedin.com/in/eugene-mutembei/ |
+| 2 | Washington Adiadio | washingtonowade200@gmail.com | +254742244596 | Software Engineer (ML/AI) | https://www.linkedin.com/in/washington-adiado/ |
+| 3 | Jael Nyambura | jaelnwainaina@gmail.com | +254705737678 | Data Scientist | https://www.linkedin.com/in/jael-wainaina-b1107a282/ |
+
+> ⚠️ The Drive link was uploaded **before** the deck was re-branded "Team Technetians"
+> (old PDF slide 10 says "Team Kusanya"). Re-upload `docs/deck/kusanya-deck.pdf` to the same
+> Drive item (or replace the link in the form) so judges see the team name that matches the
+> registration.

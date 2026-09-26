@@ -41,8 +41,10 @@ judgments. Full story: [`docs/solution.md`](docs/solution.md).
 - [x] Track & concept decided via Jev decision analysis (research §9)
 - [x] Solution designed (solution.md)
 - [x] Engineering spec written (build.md)
-- [ ] **Idea submitted at hackathon.payaza.africa/register** ⏰ deadline Sat 26 Sept 2026, 23:59 EAT
-- [ ] Payaza sandbox access confirmed (email support@payaza.africa — Kenya/UGX/TZS collections are on-request)
+- [x] **Deck built & uploaded** — `docs/deck/kusanya-deck.pdf` → [Drive link](https://drive.google.com/file/d/1B0eNGHWUOt4l_nGorTiSsaccVXpFqNFg/view?usp=sharing)
+- [x] Idea text finalized — solution.md Appendix A.1 (plain-text, paste-ready)
+- [ ] **Register team Technetians at hackathon.payaza.africa/register** ⏰ deadline Sat 26 Sept 2026, 23:59 EAT (~12h left)
+- [ ] Payaza sandbox access confirmed (email draft ready — solution.md Appendix B)
 - [ ] Phase 1 skeleton (build.md §16)
 - [ ] Phase 2 money spine — sandbox smoke green
 - [ ] Phase 3 AI layer
@@ -80,19 +82,17 @@ pnpm sandbox:smoke             # real Payaza test-rail smoke test (needs test ke
 5. **Demo moves real sandbox money** on Payaza test rails, with a deterministic Demo-Mode
    fallback (replayed recorded payloads).
 
-## Team
+## Team — Technetians
 
-| Name | Title | Register-form role (suggested mapping) |
-|---|---|---|
-| Eugene Mutembei | Software Engineer | Frontend Developer *(or Software Engineer (ML/AI))* |
-| Washington Adiadio | Software Engineer | Backend Developer *(or Software Engineer (ML/AI))* |
-| Jael Nyambura | Data Scientist | Data Scientist |
+Registered for Borderless Kenya, **Track #03** (SME & exporter collections).
 
-The form's role enum has no plain "Software Engineer" — closest is **Software Engineer
-(ML/AI)**. Tip: mapping the two SWEs to Frontend/Backend shows complementary coverage
-(product + design gaps are covered by the AI-assisted workflow and documented in
-`docs/build.md`); alternatively both pick Software Engineer (ML/AI), which is literally
-true for the Jev layer. Team minimum is 3 — we are exactly at it.
+| Name | Register-form role | Email | LinkedIn |
+|---|---|---|---|
+| Eugene Mutembei | Software Engineer (ML/AI) | eugenegabriel.ke@gmail.com | [in/eugene-mutembei](https://www.linkedin.com/in/eugene-mutembei/) |
+| Washington Adiadio | Software Engineer (ML/AI) | washingtonowade200@gmail.com | [in/washington-adiado](https://www.linkedin.com/in/washington-adiado/) |
+| Jael Nyambura | Data Scientist | jaelnwainaina@gmail.com | [in/jael-wainaina](https://www.linkedin.com/in/jael-wainaina-b1107a282/) |
+
+Full registration record as submitted: `docs/solution.md` **Appendix C**.
 
 ## Links
 
