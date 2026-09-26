@@ -127,7 +127,7 @@ export function CardCheckout({
           <AlertDescription>
             {demoReason}
             <span className="mt-1 block text-xs text-muted-foreground">
-              Ask the merchant to use Demo controls, or pay by mobile money below if available.
+              Ask the merchant to use Demo controls, or pay by mobile money above if available.
             </span>
           </AlertDescription>
         </Alert>
