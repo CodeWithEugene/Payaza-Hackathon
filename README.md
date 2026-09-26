@@ -43,31 +43,46 @@ judgments. Full story: [`docs/solution.md`](docs/solution.md).
 - [x] Engineering spec written (build.md)
 - [x] **Deck built & uploaded** — `docs/deck/kusanya-deck.pdf` → [Drive link](https://drive.google.com/file/d/1B0eNGHWUOt4l_nGorTiSsaccVXpFqNFg/view?usp=sharing)
 - [x] Idea text finalized — solution.md Appendix A.1 (plain-text, paste-ready)
-- [ ] **Register team Technetians at hackathon.payaza.africa/register** ⏰ deadline Sat 26 Sept 2026, 23:59 EAT (~12h left)
+- [x] **Team Technetians registered** — submission confirmed (record: solution.md Appendix C)
+- [x] Phase 1 skeleton (build.md §16)
+- [x] Phase 2 money spine — single completion paths, webhook HMAC-SHA512, reconciliation cron
+- [x] Phase 3 AI layer — Jev extraction + guardrails + risk engine (fail-closed)
+- [x] Phase 4 settlement & trust — waterfall, splits (inversion documented), payouts, rails
+- [x] Phase 5 demo hardening — Demo Mode replay hub, seeded personas, e2e green
 - [ ] Payaza sandbox access confirmed (email draft ready — solution.md Appendix B)
-- [ ] Phase 1 skeleton (build.md §16)
-- [ ] Phase 2 money spine — sandbox smoke green
-- [ ] Phase 3 AI layer
-- [ ] Phase 4 settlement & trust
-- [ ] Phase 5 demo hardening — Playwright demo-path green, deck rehearsed
 
-## Stack (planned — see build.md §2)
+### Verification (as-built)
 
-Next.js 15 (App Router) · React 19 · TypeScript strict · Tailwind CSS v4 · **shadcn/ui**
-(Radix base, `nova` preset) · PostgreSQL (Neon) + Drizzle ORM · Zod v4 · TanStack Query ·
-better-auth · **payaza-web-sdk** + Payaza REST · **@typesafe-ai/sdk** (Jev) · Resend ·
-Africa's Talking · Vercel · Playwright/Vitest · pnpm
+| Gate | Result |
+|---|---|
+| `pnpm build` (Next 16, production) | exit 0 — 37 routes, no WASM aborts |
+| `pnpm typecheck` (tsc strict) | 0 errors |
+| `pnpm lint` (ESLint 10) | 0 errors (4 documented preview-rule warnings) |
+| `pnpm test` (Vitest) | **98/98 passing** — money, FX, waterfall, state machine, webhook signature, risk, extraction, guardrails |
+| `pnpm test:e2e` (Playwright, system Chrome) | **passing** — reset → login → SENT invoice → M-Pesa webhook replay → badge flips Sent → Paid |
+| Runtime smoke (production server) | all public + 9 authed routes 200 · extraction returns Dubai Fresh FZE / USD 1,150.00 / due +5d · lifecycle sent → paid → settled · wallets + notification outbox live |
 
-## Quickstart (once Phase 1 lands)
+## Stack (as-built — see build.md §2 + §19)
+
+Next.js **16.3.4** (App Router, Turbopack) · React 19.2 · TypeScript strict · Tailwind CSS v4 ·
+**shadcn/ui** · **PGlite** (embedded WASM Postgres) + Drizzle ORM · Zod v4 · TanStack Query ·
+better-auth · **payaza-web-sdk** + Payaza REST · **@typesafe-ai/sdk** (Jev, Demo-Mode
+deterministic fallback) · Vercel (crons in `vercel.json`) · Vitest + Playwright · pnpm
+
+## Quickstart
 
 ```bash
+cd kusanya
 pnpm install
-cp .env.example .env.local     # fill Payaza test keys, DATABASE_URL, TYPESAFE_API_KEY
-pnpm db:push                   # drizzle-kit push
-pnpm seed:demo                 # Demo Mode fixtures
-pnpm dev                       # http://localhost:3000  (Demo Mode: no live keys needed)
-pnpm sandbox:smoke             # real Payaza test-rail smoke test (needs test keys)
+cp .env.example .env.local   # defaults work — Demo Mode auto-enables without Payaza keys
+pnpm db:migrate              # embedded PGlite, no database server needed
+pnpm seed:demo               # Wanjiru / FreshLeaf Exports + 5 invoices across every state
+pnpm dev                     # http://localhost:3000
 ```
+
+Login `wanjiru@kusanya.demo` / `kusanya-demo-2026` · payout code `123456` ·
+test card Visa `4508750015741019` (`01/39` approve, `05/39` decline).
+Full guide: [`kusanya/README.md`](kusanya/README.md).
 
 ## Key decisions (evidence in research.md §9)
 
