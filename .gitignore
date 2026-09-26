@@ -1,0 +1,27 @@
+.claude-flow
+
+# --- secrets (SECURITY.md) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- node / next (Phase 1, build.md §2) ---
+node_modules/
+.next/
+out/
+build/
+dist/
+.vercel/
+.turbo/
+
+# --- test / tooling ---
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# --- misc ---
+.DS_Store
+*.log
