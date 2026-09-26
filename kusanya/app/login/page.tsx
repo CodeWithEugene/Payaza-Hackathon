@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { LoginForm } from "@/components/auth/login-form";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="bg-muted/30 grid min-h-screen place-items-center p-4">
+    <div className="bg-muted/30 relative grid min-h-screen place-items-center p-4">
+      <div className="absolute right-4 top-4">
+        <ModeToggle />
+      </div>
       <div className="flex w-full max-w-sm flex-col gap-6">
         <div className="flex flex-col items-center gap-2">
           <Link href="/" className="flex items-center gap-2">

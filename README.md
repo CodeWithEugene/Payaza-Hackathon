@@ -22,6 +22,7 @@ recorded webhook payloads) — zero external keys, nothing leaves the app.
 | Payout confirmation code | `123456` |
 | Test card (buyer portal) | Visa `4508 7500 1574 1019`, exp `01/39` (approve) · `05/39` (decline) |
 | Restore the canonical story | `/app/settings` → *Demo Mode* → Reset (or the `/demo` launcher) — wipes + reseeds; signs you out |
+| Dark mode | Toggle in the topbar / landing nav / buyer page, or press **`d`** anywhere — Light · Dark · System, persisted per browser |
 
 Local dev/e2e are unaffected: they run embedded PGlite (`.env.local` intentionally has **no**
 `DATABASE_URL`; production gets it from the Neon integration).

@@ -893,3 +893,16 @@ settlement.complete → Settled ✓ · buyer portal /i/tok_… 200 (fake token 4
 canonical reset ✓. Demo Mode is ON in production by design (no Payaza keys): fixtures +
 recorded payloads, `demo-rules-v1` labels everywhere. Going live for real = add Payaza keys,
 `NEXT_PUBLIC_DEMO_MODE=false`, set `WEBHOOK_SECRET`, and run real webhooks.
+
+**Dark mode (shadcn canonical).** The scaffold already carried the machinery — `.dark` token
+block + `@custom-variant` in globals.css, `next-themes` ThemeProvider with `attribute="class"`,
+`suppressHydrationWarning`, and a press-`d`-anywhere hotkey — so the feature is pure UI:
+`components/mode-toggle.tsx` (the canonical Light/Dark/System dropdown, Sun/Moon icon button)
+mounted in the topbar (every /app page), landing nav, buyer-portal header, and both auth pages;
+`defaultTheme` moved light → system (OS preference honored on first visit, toggle overrides and
+persists in localStorage). Zero color edits were needed anywhere — the semantic-token law
+(no raw palette, charts via `var(--chart-1..5)`) means every surface flips with the token block.
+Pinned by `tests/e2e/theme.spec.ts`: stored theme applies pre-paint, computed background flips
+oklch(0.145 0 0)=#0a0a0a ↔ #ffffff (1×1 canvas pixel readback — Chrome serializes computed
+colors as lab(), and fillStyle getters no longer normalize to hex), dropdown + hotkey both
+toggle. Suite now 4 specs.

@@ -2,6 +2,7 @@ import { FlaskConical } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import { UserMenu } from "@/components/layout/user-menu";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export function Topbar(props: { userName: string | null; demoMode: boolean }) {
   return (
@@ -16,6 +17,7 @@ export function Topbar(props: { userName: string | null; demoMode: boolean }) {
         )}
       </div>
       <div className="ml-auto flex items-center gap-2">
+        <ModeToggle />
         <UserMenu userName={props.userName} />
       </div>
     </header>

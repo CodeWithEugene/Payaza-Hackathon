@@ -14,6 +14,7 @@ import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle }
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ModeToggle } from "@/components/mode-toggle";
 
 /**
  * /i/[token] — the public buyer invoice + payment page. No session, no app
@@ -80,11 +81,14 @@ export default async function BuyerInvoicePage({ params }: Props) {
     <div className="min-h-svh bg-muted/30">
       <main className="mx-auto flex w-full max-w-2xl flex-col gap-5 px-4 py-8 sm:py-12">
         {/* Header: who is billing + the kusanya wordmark */}
-        <header className="flex items-baseline justify-between gap-3">
+        <header className="flex items-center justify-between gap-3">
           <p className="truncate text-sm font-medium">{businessName}</p>
-          <p className="shrink-0 text-xs text-muted-foreground">
-            invoices via <span className="font-mono font-semibold tracking-tight">kusanya</span>
-          </p>
+          <div className="flex shrink-0 items-center gap-2">
+            <p className="text-xs text-muted-foreground">
+              invoices via <span className="font-mono font-semibold tracking-tight">kusanya</span>
+            </p>
+            <ModeToggle />
+          </div>
         </header>
 
         {/* Invoice card */}

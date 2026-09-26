@@ -28,6 +28,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const HOW_IT_WORKS = [
   {
@@ -183,6 +184,7 @@ export default function LandingPage() {
             </span>
           </Link>
           <nav className="flex items-center gap-2">
+            <ModeToggle />
             <Button variant="ghost" asChild>
               <Link href="/login">Sign in</Link>
             </Button>
