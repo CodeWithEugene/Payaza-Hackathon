@@ -8,6 +8,12 @@ export const maxDuration = 60;
 
 export async function POST(req: Request) {
   if (!env.DEMO_MODE) return err(404, "Not found");
+  // Bootstrap a fresh deployment: apply migrations BEFORE the user-count
+  // auth probe, so an empty production Postgres is seedable with one POST
+  // (the probe itself would throw "relation users does not exist" otherwise).
+  // Idempotent — drizzle's migrator no-ops when the journal is applied.
+  const { ensureSchema } = await import("@/lib/db/client");
+  await ensureSchema();
   const session = await routeSession(req).catch(() => null);
   // Allow unauthenticated reset ONLY when no session exists yet (fresh clone);
   // otherwise require the signed-in demo user.

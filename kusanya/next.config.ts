@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Native/WASM server packages must not be bundled (PGlite WASM, postgres-js).
   serverExternalPackages: ["@electric-sql/pglite", "postgres"],
+  // Serverless (Vercel): the runtime migrator reads ./drizzle/*.sql from
+  // disk (ensureSchema → seedDemo/signup/demo-reset). File tracing can't see
+  // that dynamic read, so include the folder explicitly (76K).
+  outputFileTracingIncludes: {
+    "/**": ["./drizzle/**/*"],
+  },
   experimental: {
     // Snap-step photo uploads (OCR path) can exceed the 1MB default.
     serverActions: { bodySizeLimit: "6mb" },
