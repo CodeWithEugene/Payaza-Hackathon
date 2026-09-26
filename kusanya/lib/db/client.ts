@@ -39,8 +39,33 @@ function createDb(): Db {
   return drizzlePglite(new PGlite(dataDir), { schema });
 }
 
-export const db: Db = globalForDb._kusanyaDb ?? createDb();
-if (!globalForDb._kusanyaDb) globalForDb._kusanyaDb = db;
+/**
+ * Lazy singleton. PGlite instantiates WASM on construction, which aborts
+ * inside Next's build workers that only EVALUATE a route's module graph
+ * (static generation never issues a query). Deferring construction to first
+ * property access keeps `next build` clean and avoids loading WASM in any
+ * context that doesn't actually touch the DB. The proxy below is transparent:
+ * every `db.<method>()` call materializes the real driver once, then forwards
+ * (functions bound to the real instance so drizzle's `this` stays correct).
+ */
+function getDb(): Db {
+  if (!globalForDb._kusanyaDb) globalForDb._kusanyaDb = createDb();
+  return globalForDb._kusanyaDb;
+}
+
+export const db: Db = new Proxy(function () {} as unknown as Db, {
+  get(_target, prop) {
+    const real = getDb();
+    const value = Reflect.get(real, prop, real);
+    return typeof value === "function" ? value.bind(real) : value;
+  },
+  has(_target, prop) {
+    return Reflect.has(getDb(), prop);
+  },
+  set(_target, prop, value) {
+    return Reflect.set(getDb(), prop, value);
+  },
+});
 
 export function isPgliteDb(target: Db = db): boolean {
   // postgres-js drizzle sessions expose the callable postgres client.

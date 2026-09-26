@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { auth } from "@/lib/auth/config";
 import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
@@ -17,12 +16,16 @@ import {
 import { screenInvoice } from "@/lib/services/risk";
 import { loadBuyerHistory } from "@/lib/services/extraction";
 import { simulateSettlement } from "@/lib/services/payouts";
+import { createInvoiceSchema, type CreateInvoiceInput } from "@/lib/validators/invoice";
 import type { ActionResult } from "./auth";
 
 /**
  * Invoice server actions (merchant forms). Pipeline for the wizard:
  * create (draft) → risk screen → pass: finalize (payment link) + send;
  * review/hold: stop and surface the review queue.
+ *
+ * NOTE: the zod schema lives in @/lib/validators/invoice — "use server"
+ * modules may only export async functions (Next build enforces this).
  */
 
 async function sessionContext() {
@@ -33,34 +36,6 @@ async function sessionContext() {
   if (!rows[0]) return null;
   return { userId: session.user.id, businessId: rows[0].id };
 }
-
-const buyerNewSchema = z.object({
-  name: z.string().min(2).max(160),
-  kind: z.enum(["person", "company"]).default("person"),
-  country: z.string().length(2).default("KE"),
-  email: z.string().email().optional().or(z.literal("")).nullable(),
-  phone: z.string().max(16).optional().or(z.literal("")).nullable(),
-});
-
-const itemSchema = z.object({
-  description: z.string().min(1).max(500),
-  qty: z.number().positive().max(1_000_000),
-  unitPriceMinor: z.number().int().min(0).nullable(),
-});
-
-export const createInvoiceSchema = z.object({
-  buyer: z.union([z.object({ existingId: z.string() }), buyerNewSchema]),
-  items: z.array(itemSchema).max(50),
-  totalMinor: z.number().int().positive(),
-  currency: z.enum(["USD", "KES", "UGX", "TZS"]),
-  dueAt: z.string().datetime().nullable().optional(),
-  notes: z.string().max(2000).nullable().optional(),
-  feeBearer: z.enum(["business", "customer"]).default("business"),
-  extractionId: z.string().nullable().optional(),
-  sendNow: z.boolean().default(true),
-});
-
-export type CreateInvoiceInput = z.input<typeof createInvoiceSchema>;
 
 export async function createInvoiceAction(
   input: CreateInvoiceInput,

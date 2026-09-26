@@ -1,5 +1,5 @@
 import "server-only";
-import { eq } from "drizzle-orm";
+import { eq, inArray, like } from "drizzle-orm";
 import { db, ensureSchema } from "@/lib/db/client";
 import {
   aiExtractions,
@@ -547,12 +547,33 @@ export async function seedDemo(): Promise<{ businessId: string; invoiceIds: Reco
   return { businessId, invoiceIds: ids };
 }
 
-/** Wipe demo business + user (FK cascade handles children). */
+/**
+ * Wipe demo business + user in FK-safe order. Cascades alone race: payouts
+ * reference BOTH transactions (cascade) and payoutRails (no cascade), and
+ * invoiceSplits reference splitBeneficiaries without cascade — so children
+ * are deleted explicitly, deepest first.
+ */
 export async function wipeDemo() {
   const [biz] = await db.select({ id: businesses.id }).from(businesses).where(eq(businesses.slug, DEMO_SLUG)).limit(1);
-  if (biz) await db.delete(businesses).where(eq(businesses.id, biz.id));
+  if (biz) {
+    const invoiceIds = db.select({ id: invoices.id }).from(invoices).where(eq(invoices.businessId, biz.id));
+    const txnIds = db.select({ id: transactions.id }).from(transactions).where(eq(transactions.businessId, biz.id));
+    await db.delete(invoiceSplits).where(inArray(invoiceSplits.invoiceId, invoiceIds));
+    await db.delete(reminders).where(inArray(reminders.invoiceId, invoiceIds));
+    await db.delete(riskAssessments).where(inArray(riskAssessments.invoiceId, invoiceIds));
+    await db.delete(invoiceItems).where(inArray(invoiceItems.invoiceId, invoiceIds));
+    await db.delete(payouts).where(inArray(payouts.transactionId, txnIds));
+    await db.delete(transactions).where(eq(transactions.businessId, biz.id));
+    await db.delete(invoices).where(eq(invoices.businessId, biz.id));
+    await db.delete(splitBeneficiaries).where(eq(splitBeneficiaries.businessId, biz.id));
+    await db.delete(payoutRails).where(eq(payoutRails.businessId, biz.id));
+    await db.delete(buyers).where(eq(buyers.businessId, biz.id));
+    await db.delete(aiExtractions).where(eq(aiExtractions.businessId, biz.id));
+    await db.delete(webhookEvents).where(like(webhookEvents.dedupeKey, "seed:%"));
+    await db.delete(businesses).where(eq(businesses.id, biz.id));
+  }
   const [u] = await db.select({ id: users.id }).from(users).where(eq(users.email, DEMO_EMAIL)).limit(1);
-  if (u) await db.delete(users).where(eq(users.id, u.id));
+  if (u) await db.delete(users).where(eq(users.id, u.id)); // sessions/accounts cascade
 }
 
 /** Reset = wipe + seed (demo reset button / API). */

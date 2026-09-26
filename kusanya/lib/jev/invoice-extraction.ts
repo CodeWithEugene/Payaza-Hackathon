@@ -281,7 +281,7 @@ async function jevExtraction(
   return {
     buyer,
     buyerCandidateId: matched?.id ?? null,
-    items: resolveItems(items, currency.value as CurrencyCode, source),
+    items: resolveItems(items, currency.value as CurrencyCode),
     total,
     currency,
     dueDate,
@@ -361,7 +361,7 @@ export function ruleExtraction(
   return {
     buyer,
     buyerCandidateId: matched?.id ?? null,
-    items: resolveItems(items, currencyGuess, source),
+    items: resolveItems(items, currencyGuess),
     total,
     currency: { value: currencyGuess, confidence: pick?.currencyHint ? 0.88 : 0.6, snippet: null, deterministic: false, demo: true },
     dueDate,
@@ -375,7 +375,7 @@ export function ruleExtraction(
 
 // ------------------------------------------------------------------- helpers --
 
-function resolveItems(items: ExtractedItem[], currency: CurrencyCode, _source: string): ExtractedItem[] {
+function resolveItems(items: ExtractedItem[], currency: CurrencyCode): ExtractedItem[] {
   return items.map((it) => {
     const unit = (it as ExtractedItem & { _unit?: number })._unit;
     const unitCurrency = (it.currency as CurrencyCode | null) ?? currency;

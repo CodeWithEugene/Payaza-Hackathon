@@ -2,7 +2,7 @@
  * CLI migration runner: pnpm db:migrate
  * Applies ./drizzle SQL to PGlite (default) or DATABASE_URL Postgres.
  */
-import { db, ensureSchema } from "@/lib/db/client";
+import { ensureSchema } from "@/lib/db/client";
 
 async function main() {
   console.log("▶ applying migrations…");
