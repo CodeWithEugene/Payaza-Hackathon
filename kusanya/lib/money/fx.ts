@@ -84,8 +84,8 @@ function addBusinessDays(from: Date, days: number): Date {
   const d = new Date(from);
   let added = 0;
   while (added < days) {
-    d.setDate(d.getDate() + 1);
-    const dow = d.getDay();
+    d.setUTCDate(d.getUTCDate() + 1);
+    const dow = d.getUTCDay();
     if (dow !== 0 && dow !== 6) added++;
   }
   return d;

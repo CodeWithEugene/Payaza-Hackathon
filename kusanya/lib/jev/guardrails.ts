@@ -56,9 +56,14 @@ export function ruleGuardrail(draft: string, facts: LedgerFact[]): GuardrailResu
   const claims = extractClaims(draft).map((claim) => {
     // citation check: every number/amount/date token in the claim must appear in facts
     const tokens = claim.match(/\d[\d,.]*|[A-Z]{3}\s?\d[\d,.]*|\b(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b|\d{1,2}[\/-]\d{1,2}(?:[\/-]\d{2,4})?/gi) ?? [];
-    const supported = tokens.every((tok) =>
-      factsBlob.includes(tok.toLowerCase().replace(/,/g, "")) || factsBlob.includes(tok.toLowerCase()),
-    );
+    const supported = tokens.every((raw) => {
+      const tok = raw.replace(/[.,]+$/, ""); // claims end with sentence punctuation
+      if (!tok) return true;
+      return (
+        factsBlob.includes(tok.toLowerCase().replace(/,/g, "")) ||
+        factsBlob.includes(tok.toLowerCase())
+      );
+    });
     return { claim, supported: tokens.length === 0 ? true : supported, probability: tokens.length === 0 ? 0.9 : supported ? 0.85 : 0.2 };
   });
   const unsafeProbability = unsafeHit ? 0.9 : 0.05;

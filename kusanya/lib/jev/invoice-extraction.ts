@@ -45,8 +45,21 @@ export interface Preparsed {
 }
 
 const AMOUNT_RE =
-  /(?:\b(usd|kes|ugx|tzs)\b|\$|\bkshs?\b|\bushs?\b|\btshs?\b)?\s*(\d{1,3}(?:[,\s]\d{3})+|\d+)(?:\.(\d{1,2}))?\b/gi;
+  /(\b(?:usd|kes|ugx|tzs)\b|\$|\b(?:kshs?|ushs?|tshs?)\b)?\s*(\d{1,3}(?:[,\s]\d{3})+|\d+)(?:\.(\d{1,2}))?\b/gi;
 const IGNORE_NUMBERS = new Set(["254", "256", "255", "0"]); // dial codes
+const HINT_MAP: Record<string, CurrencyCode> = {
+  USD: "USD",
+  KES: "KES",
+  UGX: "UGX",
+  TZS: "TZS",
+  $: "USD",
+  KSH: "KES",
+  KSHS: "KES",
+  USH: "UGX",
+  USHS: "UGX",
+  TSH: "TZS",
+  TSHS: "TZS",
+};
 
 export function preparse(text: string, today = new Date()): Preparsed {
   const amounts: AmountCandidate[] = [];
@@ -59,7 +72,7 @@ export function preparse(text: string, today = new Date()): Preparsed {
     if (!Number.isFinite(major) || major <= 0) continue;
     const hintRaw = (m[1] ?? "").toUpperCase();
     const before = text.slice(Math.max(0, m.index - 4), m.index).toLowerCase();
-    let hint: CurrencyCode | null = isCurrency(hintRaw) ? hintRaw : null;
+    let hint: CurrencyCode | null = HINT_MAP[hintRaw] ?? null;
     if (!hint && before.includes("$")) hint = "USD";
     if (!hint && /ksh/.test(before)) hint = "KES";
     if (!hint && /ush/.test(before)) hint = "UGX";
@@ -298,11 +311,21 @@ export function ruleExtraction(
     ? { value: matched.name, confidence: 0.92, snippet: firstMention(source, matched.name), deterministic: false, demo: true }
     : { value: guessNewBuyerName(source), confidence: 0.5, snippet: null, deterministic: false, demo: true };
 
-  // Amount: prefer candidates with currency hints; then ones near total-ish words; else max.
+  // Amount: score candidates — totalish word BEFORE the number (+2), currency
+  // hint (+1); tie-break by larger amount, then later position (totals come
+  // last). Unit prices ("USD 2.30 per kg") lose to "total USD 1,150".
   const totalish = /(total|invoice|amount|pay|due|balance)/i;
-  const hinted = pre.amounts.filter((c) => c.currencyHint);
-  const nearTotal = pre.amounts.filter((c) => totalish.test(c.snippet));
-  const pick = hinted[0] ?? nearTotal[0] ?? [...pre.amounts].sort((x, y) => y.major - x.major)[0];
+  const scored = pre.amounts.map((c, idx) => {
+    const low = c.snippet.toLowerCase();
+    const at = low.lastIndexOf(c.raw.toLowerCase());
+    const before = at >= 0 ? low.slice(0, at) : low;
+    let score = 0;
+    if (totalish.test(before)) score += 2;
+    if (c.currencyHint) score += 1;
+    return { c, idx, score };
+  });
+  scored.sort((a, b) => b.score - a.score || b.c.major - a.c.major || b.idx - a.idx);
+  const pick = scored[0]?.c;
   const currencyGuess: CurrencyCode =
     pick?.currencyHint ??
     (/\busd|\$/i.test(source) ? "USD" : /\bkes|ksh/i.test(source) ? "KES" : /\bugx|ush/i.test(source) ? "UGX" : /\btzs|tsh/i.test(source) ? "TZS" : "USD");
@@ -390,18 +413,20 @@ function nextWeekday(from: Date, name: string): string | null {
   if (target < 0) return null;
   const d = new Date(from);
   do {
-    d.setDate(d.getDate() + 1);
-  } while (d.getDay() !== target);
+    d.setUTCDate(d.getUTCDate() + 1);
+  } while (d.getUTCDay() !== target);
   return d.toISOString().slice(0, 10);
 }
 
 function lastDayOfMonth(from: Date): string {
-  return new Date(from.getFullYear(), from.getMonth() + 1, 0).toISOString().slice(0, 10);
+  return new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth() + 1, 0))
+    .toISOString()
+    .slice(0, 10);
 }
 
 function addDays(from: Date, n: number): string {
   const d = new Date(from);
-  d.setDate(d.getDate() + n);
+  d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().slice(0, 10);
 }
 

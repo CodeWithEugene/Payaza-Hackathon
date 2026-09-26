@@ -153,6 +153,10 @@ export async function assessRisk(input: RiskInput): Promise<RiskAssessmentResult
     if (sanctionsP >= 0.9) decision = "hold";
     else if (decision === "pass") decision = "review";
   }
+  // Elevated-review jurisdiction → never a silent pass (compliance floor).
+  if (HIGH_RISK_JURISDICTIONS.has(input.buyerCountry.toUpperCase()) && decision === "pass") {
+    decision = "review";
+  }
 
   return { score, decision, criteria, source, jevAnswerId };
 }

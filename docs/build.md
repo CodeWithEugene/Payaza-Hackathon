@@ -786,3 +786,59 @@ Definition of done per phase: CI green + Playwright demo-path passes + checklist
 
 All UI additions strictly via `pnpm dlx shadcn@latest add …` (§9) — no manual component
 copies, no third-party UI kits.
+
+## 19. Implementation Notes & Deviations (as-built)
+
+Recorded so the plan and the shipped code never silently disagree.
+
+**Framework: Next.js 16.3 (not ^15).** `kusanya/AGENTS.md` + the bundled docs in
+`node_modules/next/dist/docs/` are authoritative ("this is NOT the Next.js you know").
+Consequences we honor:
+- Route-handler `params`/`searchParams` are **Promises** — every dynamic route awaits them
+  (`const { id } = await props.params`). Verified against `01-app/.../upgrading/version-16.md`.
+- `await headers()` / `await cookies()` everywhere (auth guards, route session helper).
+- Turbopack is the default dev/build bundler; `next lint` is **gone** → we lint with `eslint`
+  (flat config) directly and `tsc --noEmit` for types.
+- Middleware is now `proxy.ts`; we don't ship request middleware — auth is enforced per-route
+  in server components/actions + route handlers, so nothing to rename.
+- Route handlers are unchanged and fully supported; the auth catch-all exports the single
+  better-auth handler as both GET and POST (`const handler = auth.handler; export { handler as GET, handler as POST }`).
+
+**Database: PGlite by default (embedded WASM Postgres), `postgres` when `DATABASE_URL` set.**
+The BOM lists Neon serverless; for a self-contained, zero-provision demo we run PGlite at
+`kusanya/data/pglite` behind the same Drizzle `db` union, and swap to `postgres-js` via
+`DATABASE_URL` for deploy. `serverExternalPackages: ["@electric-sql/pglite","postgres"]`.
+
+**Money contract (non-negotiable, unit-tested 100%):** DB `numeric(18,2)` columns hold
+**minor units as strings**; the wire (Payaza) uses **major units**; all math is integer/BigInt.
+`formatMinor(currency, minor)` — **currency first**. `minorFactor(currency)` is a **function**.
+`indicativeQuote(from, to)` takes **two** args. `settlementEta(currency)` → `{label, earliest, latest, basis}`.
+
+**Payaza `split_value` INVERSION:** their split-account field is the **platform-keep**
+percentage, so we store `splitValue = 100 − partnerShare` and derive `sharePct = 100 − splitValue`
+for all UI. Handled in `lib/services/splits.ts`.
+
+**Single completion paths (idempotency we own — Payaza does not retry webhooks):**
+`applyCollectionResult` (`collections.ts`) and `applyPayoutResult` (`payouts.ts`) are the ONLY
+places a txn/invoice advances on money movement. Webhook, checkout callback, polling
+reconciliation, and **demo replay all funnel through them** — demo never fakes ledger state.
+Webhook dedupe = unique `dedupeKey` (`{demo:}{kind}:{ref}:{status}`) with `onConflictDoNothing`.
+Payout webhooks match on `narration = our merchantReference` (Payaza's PTSA ref is unknowable at initiate).
+
+**Testing seams:** `tests/stubs/server-only.ts` aliases Next's `server-only` import guard so
+Vitest can exercise the pure money/state-machine/risk/extraction/guardrail logic. Vitest env
+forces `NEXT_PUBLIC_DEMO_MODE=true` + empty keys → deterministic rule-based paths under test
+(the same ones Demo Mode ships). Playwright uses `channel: "chrome"` (system browser — no download).
+
+**AI (Jev) typed-judgment discipline:** deterministic pre-parse produces candidates
+(`amt_N`/`date_N` keys); ONE batched `systemOne` call lets the model **select** among candidates;
+**code resolves every number/date** (minor units, ISO) — the model never emits a figure. Confidence
+bands HIGH ≥ 0.85 / MED ≥ 0.60 / LOW < 0.60 (LOW requires an explicit merchant confirm). Jev
+unavailable/Demo → rule fallback labeled `model: "demo-rules-v1"`, `demo: true`, `source: "demo-rules"`.
+Risk is fail-closed: the sanctions regex ALWAYS runs; elevated jurisdictions floor at review;
+Jev-down + first buyer floors at review.
+
+**Notifications never throw on a money path.** Resend (email) + Africa's Talking (SMS) are
+lazy-imported; absent keys → an in-process **demo outbox** (surfaced in the sidebar) so the flow
+is observable without external services. Email/SMS templates are pure functions.
+
