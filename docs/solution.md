@@ -620,12 +620,12 @@ webhooks with identical UI (flagged "demo data" chip — honesty preserved).
 
 ## 19. Submission Artifacts Checklist (tonight)
 
-- [ ] Team assembled (3–5 members, roles from register form enum)
-- [ ] Team name chosen (suggest product-aligned, e.g. "Kusanya" or team brand)
-- [ ] **Deck** (8–10 slides — outline ready in Appendix A.2, built from §15 script) uploaded → link
-- [ ] **Idea text** (copy-paste ready in **Appendix A.1** — track #03 explicitly named)
+- [x] Team assembled: **Eugene Mutembei, Washington Adiadio, Jael Nyambura** (3 members — minimum met; form-role mapping in `README.md`)
+- [ ] Team name chosen (suggest **"Team Kusanya"** — product-aligned)
+- [x] **Deck** generated: `docs/deck/kusanya-deck.pdf` (10 slides, 16:9, dark theme; source `kusanya-deck.html`) → upload to Drive/Slides → put link in form
+- [x] **Idea text** — copy-paste ready in **Appendix A.1** (track #03 explicitly named)
 - [ ] Register at https://hackathon.payaza.africa/register before **23:59 EAT**
-- [ ] Email support@payaza.africa requesting Kenya/EAC sandbox collections access (R1)
+- [ ] Email support@payaza.africa requesting Kenya/EAC sandbox collections access — **ready-to-send draft in Appendix B**
 
 > Engineering realization of everything above: **`docs/build.md`**.
 
@@ -699,3 +699,68 @@ webhooks with identical UI (flagged "demo data" chip — honesty preserved).
 
 Deck rules: only 🟡-verified numbers (research §7 must be re-verified first); dark theme +
 mono money figures to echo the hackathon site aesthetic; every money claim shows its source.
+
+**Generated deck:** `docs/deck/kusanya-deck.pdf` (10 slides, 1280×720 / 16:9, dark theme,
+Inter + IBM Plex Mono — echoes the hackathon site). Editable source: `docs/deck/kusanya-deck.html`
+(re-render: headless Chrome `--print-to-pdf`). Upload the PDF (or rebuild as Google Slides
+from the same outline) and put the share link in the register form.
+
+---
+
+## Appendix B — Sandbox Access Request Email (ready to send)
+
+> To: **support@payaza.africa** (cc integrationsupport@payaza.africa)
+> Fill the three [bracketed] placeholders before sending.
+
+**Subject:** Borderless Kenya Hackathon (Track #03) — request for test-mode API access: Kenya & EAC collections + payouts
+
+---
+
+Hi Payaza Integrations Team,
+
+We are **Team Kusanya** — Eugene Mutembei, Washington Adiadio and Jael Nyambura — and we have
+just registered for the **Borderless Kenya hackathon** (Payaza × Hackhouse Nairobi) under
+**Track #03, SME and exporter collections** (registration email: [email used on the register
+form]; dashboard account: [your business.payaza.africa account email, if already created]).
+
+We are building **Kusanya**, an invoice-first international collections product for Kenyan
+SME exporters: international buyers pay in USD via Payaza's hosted checkout / payment links
+(card, Apple Pay, Google Pay), regional buyers pay in KES/UGX/TZS via mobile money, and the
+exporter settles to **M-Pesa or a Kenyan bank account in KES** via Payaza transfers — with
+forwarding agents paid automatically through split settlements, and AI-assisted invoicing
+and risk screening on top.
+
+Your docs note that *"collections to countries other than Nigeria are available on request
+only"*, so we would like to request the following for our **test environment**
+(`X-TenantID: test`) ahead of the build phase:
+
+1. **MoMo collections** enabled in test mode for:
+   - **Kenya (KES)** — Safaricom M-Pesa and Airtel
+   - **Uganda (UGX)** — MTN and Airtel
+   - **Tanzania (TZS)** — Vodacom, Airtel, Tigo, Halopesa
+2. **Transfers/payouts** in test mode for KES (`mobile_money` + `kepss`) and UGX/TZS
+   (`mobile_money`), so we can demo end-to-end settlement.
+3. **Payment Links + Checkout SDK** in test mode with `USD` and `KES` currency support
+   (docs show USD for card collections and links — confirming links/checkout accept USD in
+   test mode for internationally-issued cards).
+4. Any **sandbox test phone numbers / test-funding guidance** for Kenya momo collections —
+   we plan to use `POST /subsidiary/funding/v1/process-collection` to simulate customer
+   approvals in our demo, and want to use the correct `customer_bank_code` values
+   (e.g. `SAFKEN` for Safaricom M-Pesa — Airtel Kenya's code?).
+5. Confirmation whether **split settlements support KES beneficiary accounts** in test mode,
+   or whether we should implement the agent-payout leg via transfers instead (we have
+   designed both paths).
+
+We have already built our full integration spec against docs.payaza.africa (all guides +
+the OpenAPI spec): `Payaza <base64-key>` auth, the per-API header matrix, HMAC-SHA512 webhook
+verification, unique transaction references with our own retry/idempotency layer, and the
+`09 → 00/06` status semantics. We will demo on test keys only; KYB for live access can
+follow the hackathon if we progress to the pilot pathway.
+
+We would be grateful for any enablement or a pointer to the right contact. Happy to share
+our idea deck on request.
+
+Asante sana,
+**Team Kusanya** — Borderless Kenya hackathon, Track #03
+Eugene Mutembei · [phone] · [email]
+Washington Adiadio · Jael Nyambura

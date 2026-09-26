@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kusanya — Borderless Kenya · Track #03</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0F0C; --panel:#121813; --panel2:#0E140F; --line:#223026; --line2:#2C3D30;
+    --ink:#EAF2EB; --muted:#9DB3A2; --faint:#6E8272;
+    --lime:#A8FC84; --lime-dim:#66CC5B; --amber:#FFC46B; --sky:#8BD0FF; --red:#FF8A8A;
+  }
+  *{ box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  @page{ size:1280px 720px; margin:0; }
+  html,body{ margin:0; padding:0; background:var(--bg); }
+  body{ font-family:'Inter',-apple-system,'Segoe UI',sans-serif; color:var(--ink); }
+  .mono{ font-family:'IBM Plex Mono',Menlo,monospace; }
+  .slide{
+    width:1280px; height:720px; overflow:hidden; position:relative;
+    page-break-after:always; break-after:page;
+    padding:52px 64px 64px; background:var(--bg);
+  }
+  .slide:last-child{ page-break-after:auto; break-after:auto; }
+  /* header bits */
+  .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--lime); margin:0 0 14px; }
+  .eyebrow .dim{ color:var(--faint); }
+  h2{ font-size:38px; font-weight:800; letter-spacing:-.02em; margin:0 0 8px; line-height:1.12; }
+  .sub{ color:var(--muted); font-size:17px; margin:0 0 26px; line-height:1.45; max-width:900px; }
+  /* footer */
+  .foot{ position:absolute; left:64px; right:64px; bottom:24px; display:flex;
+    justify-content:space-between; align-items:center; font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px; color:var(--faint); letter-spacing:.06em; }
+  .foot .dot{ color:var(--lime); }
+  /* generic panels */
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 22px; }
+  .card h3{ margin:0 0 8px; font-size:17px; font-weight:700; }
+  .card p{ margin:0; color:var(--muted); font-size:14.5px; line-height:1.5; }
+  .tag{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:999px; border:1px solid var(--line2); color:var(--muted);
+    letter-spacing:.04em; }
+  .tag.lime{ color:var(--lime); border-color:rgba(168,252,132,.4); background:rgba(168,252,132,.08); }
+  .tag.amber{ color:var(--amber); border-color:rgba(255,196,107,.4); background:rgba(255,196,107,.08); }
+  .tag.sky{ color:var(--sky); border-color:rgba(139,208,255,.4); background:rgba(139,208,255,.08); }
+  .tag.red{ color:var(--red); border-color:rgba(255,138,138,.4); background:rgba(255,138,138,.08); }
+  ul.clean{ margin:0; padding:0; list-style:none; }
+  ul.clean li{ position:relative; padding-left:20px; margin-bottom:9px; color:var(--muted);
+    font-size:14.5px; line-height:1.45; }
+  ul.clean li::before{ content:"›"; position:absolute; left:2px; color:var(--lime); font-weight:700; }
+  ul.clean li b{ color:var(--ink); font-weight:600; }
+  .money{ font-family:'IBM Plex Mono',monospace; color:var(--lime); font-weight:600; }
+  .grid{ display:grid; gap:16px; }
+</style>
+</head>
+<body>
+
+<!-- ============ SLIDE 1 · TITLE ============ -->
+<div class="slide" style="display:flex; flex-direction:column; justify-content:center; padding-bottom:90px;">
+  <div style="position:absolute; inset:0; background:
+      radial-gradient(900px 500px at 85% -10%, rgba(168,252,132,.10), transparent 60%),
+      radial-gradient(700px 420px at -10% 110%, rgba(102,204,91,.07), transparent 55%);"></div>
+  <div style="position:relative;">
+    <div class="eyebrow" style="margin-bottom:26px;">Borderless Kenya <span class="dim">·</span> Payaza × Hackhouse Nairobi <span class="dim">·</span> Track #03 — SME &amp; Exporter Collections</div>
+    <div style="font-size:96px; font-weight:900; letter-spacing:-.04em; line-height:1;">kusanya<span style="color:var(--lime);">.</span></div>
+    <div class="mono" style="font-size:15px; color:var(--faint); margin-top:10px; letter-spacing:.06em;">Kiswahili · <i>to collect, to gather</i></div>
+    <div style="font-size:30px; font-weight:700; letter-spacing:-.015em; margin-top:30px; max-width:980px; line-height:1.25;">
+      Get paid for what you ship —<br>wherever your buyer is<span style="color:var(--lime);">.</span>
+    </div>
+    <p class="sub" style="margin-top:18px; font-size:18px; max-width:860px;">
+      Invoice-first international collections for Kenyan SME exporters. AI turns a WhatsApp
+      order into a professional invoice · buyers pay in USD by card or Apple/Google Pay ·
+      KES settles to M-Pesa with total transparency — all on Payaza rails.
+    </p>
+    <div style="display:flex; gap:10px; margin-top:8px;">
+      <span class="tag lime">USD → KES live</span>
+      <span class="tag lime">KES ⇄ UGX / TZS momo</span>
+      <span class="tag sky">TypeSafe Jev AI</span>
+      <span class="tag sky">shadcn/ui · Next.js</span>
+    </div>
+  </div>
+  <div class="foot">
+    <span>Team <span class="dot">·</span> Eugene Mutembei <span class="dim">·</span> Washington Adiadio <span class="dim">·</span> Jael Nyambura</span>
+    <span>01 / 10</span>
+  </div>
+</div>
+
+<!-- ============ SLIDE 2 · THE PROBLEM ============ -->
+<div class="slide">
+  <div class="eyebrow">01 <span class="dim">—</span> The problem</div>
+  <h2>Wanjiru loses 3–8% of every invoice.<br>And waits a week for it.</h2>
+  <p class="sub" style="margin-bottom:20px;">The challenge's named persona: <i>"Small exporters in agriculture, crafts and digital
+  services struggle to collect from international buyers without expensive intermediaries."</i></p>
+  <div class="grid" style="grid-template-columns:340px 1fr 1fr;">
+    <div class="card" style="background:linear-gradient(160deg,#151C16,#101511);">
+      <div class="tag lime" style="margin-bottom:12px;">PERSONA</div>
+      <h3 style="font-size:19px;">Wanjiru · FreshLeaf Exports</h3>
+      <p style="margin-bottom:12px;">Murang'a → Nairobi. Aggregates French beans &amp; macadamia from <b style="color:var(--ink)">40 smallholders</b>.</p>
+      <ul class="clean">
+        <li><b>30–60 orders / month</b>, USD 800–6,000 each</li>
+        <li>Buyers in Dubai, London, Amsterdam</li>
+        <li>Mid-range Android · lives in WhatsApp</li>
+        <li>M-Pesa + KES bank account · <b>no global PSP</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Her week, today</h3>
+      <ul class="clean">
+        <li>Orders arrive as <b>WhatsApp voice notes &amp; photos</b>; invoices typed in Word</li>
+        <li>Buyer pays by <b>SWIFT wire</b> — USD 25–45 + intermediary deductions — or refuses for small amounts</li>
+        <li>PayPal route: <b>multi-day holds</b> + ~5% withdrawal loss via third parties</li>
+        <li>Bank converts at its <b>own opaque rate</b> on arrival</li>
+        <li>Forwarding agent's commission <b>paid by hand</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>What it costs</h3>
+      <ul class="clean">
+        <li>She pays smallholders <b>before</b> she collects → bridge loans at 3–8%/month</li>
+        <li>Quotes padded "just in case" FX moves → <b>lost orders</b></li>
+        <li>Hours of admin + "where is my payment?" anxiety, <b>every week</b></li>
+        <li>At USD 30k/month, 4% leakage = <span class="money">USD 1,200 / month</span> — more than this hackathon's prize, every month</li>
+      </ul>
+    </div>
+  </div>
+  <div style="display:flex; gap:16px; margin-top:18px;">
+    <div class="card" style="flex:1; text-align:center; padding:14px;"><span class="mono" style="font-size:30px; font-weight:700; color:var(--red);">3–8%</span><p style="margin-top:4px; font-size:13px;">of invoice value lost to fees, spreads &amp; FX</p></div>
+    <div class="card" style="flex:1; text-align:center; padding:14px;"><span class="mono" style="font-size:30px; font-weight:700; color:var(--red);">3–10 days</span><p style="margin-top:4px; font-size:13px;">invoice-to-cash float, every order</p></div>
+    <div class="card" style="flex:1; text-align:center; padding:14px;"><span class="mono" style="font-size:30px; font-weight:700; color:var(--lime);">weekly</span><p style="margin-top:4px; font-size:13px;">"the person who feels it every week"</p></div>
+  </div>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>02 / 10</span></div>
+</div>
+
+<!-- ============ SLIDE 3 · WHY EXISTING RAILS FAIL ============ -->
+<div class="slide">
+  <div class="eyebrow">02 <span class="dim">—</span> Why existing rails fail her</div>
+  <h2>Every option trades speed, cost, or dignity.</h2>
+  <p class="sub">None of them owns the exporter's actual workflow: invoice → collection → conversion → settlement → partner splits → follow-up.</p>
+  <div class="grid" style="grid-template-columns:1fr 1fr;">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;"><h3>SWIFT bank wires</h3><span class="tag red">USD 25–45 + 3–7 days</span></div>
+      <p>Intermediary deductions nobody can predict, paperwork, and buyers under USD 2,000 often refuse to wire at all. The bank's arrival FX rate is opaque.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;"><h3>PayPal · Wise · Payoneer</h3><span class="tag red">~5% + withdrawal holds</span></div>
+      <p>Kenya withdrawal friction (multi-day holds, third-party services), <b style="color:var(--ink)">no M-Pesa-native settlement</b>, no EAC mobile money, invoicing built for Western freelancers — not Murang'a aggregators.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;"><h3>Bank merchant acquiring</h3><span class="tag red">paperwork wall</span></div>
+      <p>Requires documentation informal SMEs don't have; onboarding takes weeks; Stripe doesn't serve Kenya-registered SMEs natively. The intermediaries the challenge names.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;"><h3>Generic PSP checkout pages</h3><span class="tag amber">acceptance ≠ workflow</span></div>
+      <p>A pay button solves acceptance only. No AI invoicing from WhatsApp, no transparency on FX, no agent splits, no settlement ETAs, no risk/compliance trail — the exporter still does everything by hand.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px; border-color:rgba(168,252,132,.35); background:linear-gradient(120deg, rgba(168,252,132,.07), rgba(168,252,132,.02));">
+    <p style="font-size:16px; color:var(--ink);"><b style="color:var(--lime);">The gap:</b> a product that owns the whole exporter workflow — and rides licensed rails instead of reinventing them. That's Kusanya.</p>
+  </div>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>03 / 10</span></div>
+</div>
+
+<!-- ============ SLIDE 4 · THE PRODUCT ============ -->
+<div class="slide">
+  <div class="eyebrow">03 <span class="dim">—</span> The product</div>
+  <h2>WhatsApp in. KES on M-Pesa out.</h2>
+  <p class="sub" style="margin-bottom:18px;">Four steps, one mobile-first flow — AI does the paperwork, Payaza moves the money.</p>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr); gap:14px;">
+    <div class="card" style="padding:16px 18px;">
+      <span class="mono" style="color:var(--lime); font-weight:700; font-size:13px;">STEP 1 · SNAP / PASTE</span>
+      <h3 style="margin-top:8px; font-size:16px;">AI invoice from the order itself</h3>
+      <div style="background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin:10px 0; font-size:12.5px; color:var(--muted); font-style:italic;">"Please send 500kg French beans to Dubai Fresh Co, attn Susan, we'll pay USD 2.30/kg as usual"</div>
+      <p style="font-size:13px;">Jev extracts buyer, items, amounts, currency, due date — <b style="color:var(--amber)">low-confidence fields highlighted</b> with the source snippet, one-tap fixes. Numbers resolved in code; the model never invents an amount.</p>
+    </div>
+    <div class="card" style="padding:16px 18px;">
+      <span class="mono" style="color:var(--lime); font-weight:700; font-size:13px;">STEP 2 · SEND &amp; COLLECT</span>
+      <h3 style="margin-top:8px; font-size:16px;">Buyer pays in 2 minutes, zero signup</h3>
+      <div style="background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin:10px 0; font-size:12.5px;">
+        <div class="mono" style="color:var(--ink);">INVOICE KSN-2026-0042</div>
+        <div style="color:var(--muted); margin:4px 0 8px;">Dubai Fresh Co. LLC · due 03 Oct</div>
+        <div class="mono" style="font-size:20px; color:var(--ink); font-weight:700;">USD 1,150.00</div>
+        <div style="margin-top:8px; background:var(--lime); color:#1B2A16; text-align:center; border-radius:8px; padding:7px; font-weight:700; font-size:12.5px;">Pay securely — Payaza</div>
+      </div>
+      <p style="font-size:13px;">Intl buyers: <b>card · Apple Pay · Google Pay</b> (hosted checkout / payment link). EAC buyers: <b>M-Pesa · MTN · Vodacom</b> momo prompt in KES/UGX/TZS.</p>
+    </div>
+    <div class="card" style="padding:16px 18px;">
+      <span class="mono" style="color:var(--lime); font-weight:700; font-size:13px;">STEP 3 · SETTLE TRANSPARENTLY</span>
+      <h3 style="margin-top:8px; font-size:16px;">KES to M-Pesa, honest math</h3>
+      <div style="background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin:10px 0; font-size:12px;" >
+        <div style="display:flex; justify-content:space-between; color:var(--muted);"><span>Gross</span><span class="mono">USD 1,150.00</span></div>
+        <div style="display:flex; justify-content:space-between; color:var(--muted);"><span>Payaza fee 1.9%</span><span class="mono">−21.85</span></div>
+        <div style="display:flex; justify-content:space-between; color:var(--muted);"><span>FX 128.9 (locked)</span><span class="mono">→ KES</span></div>
+        <div style="display:flex; justify-content:space-between; color:var(--muted);"><span>Agent split 3%</span><span class="mono">−34.50</span></div>
+        <div style="display:flex; justify-content:space-between; color:var(--lime); font-weight:700; border-top:1px solid var(--line2); margin-top:6px; padding-top:6px;"><span>Net · M-Pesa by Thu 16:00</span><span class="mono">KES 140,113</span></div>
+      </div>
+      <p style="font-size:13px;">Webhook flips PAID → payout via Payaza transfers. <b>Every fee itemized, real settlement ETA</b> (T+1 local, T+3–5 USD — Payaza's actual SLAs, not theater).</p>
+    </div>
+    <div class="card" style="padding:16px 18px;">
+      <span class="mono" style="color:var(--lime); font-weight:700; font-size:13px;">STEP 4 · PARTNERS AUTO-PAID</span>
+      <h3 style="margin-top:8px; font-size:16px;">Splits &amp; follow-ups, hands-free</h3>
+      <div style="background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin:10px 0; font-size:12.5px; color:var(--muted);">
+        <div style="display:flex; justify-content:space-between;"><span>Otieno · forwarding agent</span><span class="mono" style="color:var(--lime);">✓ paid at settlement</span></div>
+        <div style="display:flex; justify-content:space-between; margin-top:4px;"><span>Reminder to buyer · day 3</span><span class="mono" style="color:var(--sky);">AI draft → approved</span></div>
+      </div>
+      <p style="font-size:13px;">Agents &amp; co-ops registered as <b>Payaza split-settlement beneficiaries</b> — their cut lands automatically with statement lines. Past-due invoices get guard-railed reminders (AI drafts, Wanjiru approves).</p>
+    </div>
+  </div>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>04 / 10</span></div>
+</div>
+
+<!-- ============ SLIDE 5 · BUILT ON PAYAZA ============ -->
+<div class="slide">
+  <div class="eyebrow">04 <span class="dim">—</span> Use of Payaza infrastructure</div>
+  <h2>Built on Payaza rails — structurally, not bolted on.</h2>
+  <p class="sub" style="margin-bottom:18px;">Eight product areas carry the flow. Remove Payaza and Kusanya doesn't exist. Nothing is mocked.</p>
+  <div class="grid" style="grid-template-columns:1.25fr 1fr;">
+    <div class="card">
+      <h3 style="margin-bottom:12px;">Rail map</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:13.5px;">
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:7px 0; color:var(--ink); font-weight:600;">Web Checkout SDK</td><td style="color:var(--muted);">hosted modal — intl buyers pay USD by card / Apple Pay / Google Pay</td><td style="text-align:right;"><span class="tag lime">in</span></td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:7px 0; color:var(--ink); font-weight:600;">Payment Links</td><td style="color:var(--muted);">no-code hosted pay pages on invoices (USD/KES)</td><td style="text-align:right;"><span class="tag lime">in</span></td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:7px 0; color:var(--ink); font-weight:600;">MoMo collections</td><td style="color:var(--muted);">KES (M-Pesa, Airtel) · UGX (MTN, Airtel) · TZS (Vodacom, Airtel, Tigo, Halopesa)</td><td style="text-align:right;"><span class="tag lime">in</span></td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:7px 0; color:var(--ink); font-weight:600;">Transfers / payouts</td><td style="color:var(--muted);">KES → M-Pesa (mobile_money) &amp; bank (kepss) · UGX/TZS momo</td><td style="text-align:right;"><span class="tag sky">out</span></td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:7px 0; color:var(--ink); font-weight:600;">Split Settlements</td><td style="color:var(--muted);">agents &amp; co-ops paid automatically at settlement (SSA_ codes)</td><td style="text-align:right;"><span class="tag sky">out</span></td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:7px 0; color:var(--ink); font-weight:600;">Webhooks + status APIs</td><td style="color:var(--muted);">HMAC-SHA512 verified events drive the ledger state machine</td><td style="text-align:right;"><span class="tag">truth</span></td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:7px 0; color:var(--ink); font-weight:600;">Subscriptions</td><td style="color:var(--muted);">Kusanya Pro (KES 1,500/mo) billed on Payaza's own rail</td><td style="text-align:right;"><span class="tag">SaaS</span></td></tr>
+        <tr><td style="padding:7px 0; color:var(--ink); font-weight:600;">Refunds · Bank Codes · Account APIs</td><td style="color:var(--muted);">buyer refunds, payout setup, live wallet balances</td><td style="text-align:right;"><span class="tag">ops</span></td></tr>
+      </table>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div class="card">
+        <h3 style="margin-bottom:10px;">Corridors in scope</h3>
+        <div style="display:flex; flex-direction:column; gap:8px; font-size:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span class="mono">WORLD → NBO · USD → KES</span><span class="tag lime">demo live</span></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span class="mono">NBO → KLA · KES → UGX</span><span class="tag lime">enabled</span></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span class="mono">NBO → DAR · KES → TZS</span><span class="tag lime">enabled</span></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span class="mono">NBO → KGL · KES → RWF</span><span class="tag amber">Payaza roadmap*</span></div>
+        </div>
+        <p style="font-size:12px; margin-top:10px; color:var(--faint);">*Honesty slide: Payaza's public docs ship no RWF rail today — we don't mock it. Rwanda switches on when the rail lands.</p>
+      </div>
+      <div class="card" style="border-color:rgba(168,252,132,.35);">
+        <p style="font-size:14.5px; color:var(--ink); line-height:1.5;"><b style="color:var(--lime);">Integration discipline</b> (from 57 doc pages + the OpenAPI spec): <span class="mono" style="font-size:12.5px;">Payaza &lt;base64-key&gt;</span> auth, per-API header matrix, webhook-as-truth with client callbacks treated as hints, unique references + dedupe (Payaza never retries — we own idempotency), split-value semantics handled correctly (it's the platform's keep, not the beneficiary's).</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>05 / 10</span></div>
+</div>
+
+<!-- ============ SLIDE 6 · THE AI LAYER ============ -->
+<div class="slide">
+  <div class="eyebrow">05 <span class="dim">—</span> The AI layer · TypeSafe Jev</div>
+  <h2>Not a chatbot. Calibrated decisions inside the payment pipeline.</h2>
+  <p class="sub" style="margin-bottom:20px;">Jev returns typed answers with probabilities — code owns the workflow, the model supplies programmable common sense. Every judgment is logged and merchant-visible.</p>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr); gap:14px;">
+    <div class="card" style="border-top:2px solid var(--lime);">
+      <span class="tag lime">1 · EXTRACTION</span>
+      <h3 style="margin-top:10px; font-size:15.5px;">WhatsApp → invoice</h3>
+      <p style="font-size:13px;">One batched call: buyer Choice, amount/currency selection from <b style="color:var(--ink)">code-extracted candidates</b>, firm-order Noul, quality Score. Dates &amp; numbers resolved deterministically — zero hallucinated amounts.</p>
+    </div>
+    <div class="card" style="border-top:2px solid var(--amber);">
+      <span class="tag amber">2 · RISK COMPOSITE</span>
+      <h3 style="margin-top:10px; font-size:15.5px;">Screen every invoice</h3>
+      <p style="font-size:13px;">Batched Nouls — sanctions language, amount anomaly vs buyer history, first-buyer, jurisdiction, name mismatch — weighted <b style="color:var(--ink)">in code</b> → pass / review / hold with reason chips + probabilities.</p>
+    </div>
+    <div class="card" style="border-top:2px solid var(--sky);">
+      <span class="tag sky">3 · INTENT ROUTING</span>
+      <h3 style="margin-top:10px; font-size:15.5px;">Buyer replies, handled</h3>
+      <p style="font-size:13px;">Promise-to-pay / dispute / question / spam classified and routed into the follow-up engine; low confidence → merchant sees the raw message. No lost context, no wrong auto-replies.</p>
+    </div>
+    <div class="card" style="border-top:2px solid var(--lime-dim);">
+      <span class="tag lime">4 · GUARDRAILS</span>
+      <h3 style="margin-top:10px; font-size:15.5px;">AI drafts, human sends</h3>
+      <p style="font-size:13px;">Every drafted reminder passes an unsafe-claims Noul + per-claim citation check against ledger facts before the merchant approves it. Nothing auto-sends to a buyer.</p>
+    </div>
+  </div>
+  <div class="grid" style="grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:16px;">
+    <div class="card" style="padding:14px 18px;"><p style="font-size:13.5px;"><b style="color:var(--ink);">Audit trail by design.</b> State, criteria, probabilities and overrides persisted per judgment — the screen a Payaza compliance officer can pilot against.</p></div>
+    <div class="card" style="padding:14px 18px;"><p style="font-size:13.5px;"><b style="color:var(--ink);">Fail-safe, never fail-open.</b> AI unavailable → manual form prefilled with regex guesses; new buyers default to review. Money flows even if Jev doesn't.</p></div>
+    <div class="card" style="padding:14px 18px;"><p style="font-size:13.5px;"><b style="color:var(--ink);">Economics that work.</b> Batched System-One calls cost <span class="money">&lt; USD 0.01 / invoice</span> — viable at SME ticket sizes where per-token LLMs aren't.</p></div>
+  </div>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>06 / 10</span></div>
+</div>
+
+<!-- ============ SLIDE 7 · BUSINESS CASE ============ -->
+<div class="slide">
+  <div class="eyebrow">06 <span class="dim">—</span> The business case</div>
+  <h2>Half her leakage is our entire take rate.</h2>
+  <p class="sub" style="margin-bottom:20px;">Pricing sells itself against the status quo: Kusanya keeps 1.5% where wires, PayPal and spreads take 3–8%.</p>
+  <div class="grid" style="grid-template-columns:1fr 1.15fr 1fr;">
+    <div class="card">
+      <h3>Revenue</h3>
+      <ul class="clean" style="margin-top:8px;">
+        <li><b>1.5% take rate</b> on collected volume (rail fees passed through at cost)</li>
+        <li><b>Kusanya Pro</b> — KES 1,500/mo: subscriptions billing, multi-user, accounting exports, WhatsApp bot — <i>billed on Payaza Subscriptions</i></li>
+        <li><b>0.25%</b> on auto-split volume — agents pay for certainty</li>
+        <li>Later: FX-transparency premium tier · Payaza Boost lending referrals from clean ledgers</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Unit economics · per USD 1,000 invoice</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px;">
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px 0; color:var(--muted);">Buyer-side rail cost (intl card)</td><td style="text-align:right;" class="mono">− USD 29*</td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px 0; color:var(--muted);">KES momo payout</td><td style="text-align:right;" class="mono">− USD 0.30</td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px 0; color:var(--muted);">Jev AI judgments (batched)</td><td style="text-align:right;" class="mono">&lt; USD 0.01</td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px 0; color:var(--muted);">Infra + notifications</td><td style="text-align:right;" class="mono">− USD 0.05</td></tr>
+        <tr style="border-bottom:1px solid var(--line);"><td style="padding:6px 0; color:var(--ink); font-weight:700;">Kusanya revenue</td><td style="text-align:right;" class="mono" style="color:var(--lime);"><b style="color:var(--lime);">USD 15.00</b></td></tr>
+        <tr><td style="padding:6px 0; color:var(--ink); font-weight:700;">Exporter saves vs status quo</td><td style="text-align:right;" class="mono"><b style="color:var(--lime);">USD 10–50 + 2–9 days</b></td></tr>
+      </table>
+      <p style="font-size:11.5px; color:var(--faint); margin-top:8px;">*pass-through at commercial rates; exact Payaza fees displayed live in the transparency panel — we never hide behind the spread.</p>
+    </div>
+    <div class="card">
+      <h3>Market &amp; GTM</h3>
+      <ul class="clean" style="margin-top:8px;">
+        <li>Beachhead: <b>~50k Kenyan SME exporters</b>¹ · 1% penetration ≈ <span class="money">USD 50M TPV / USD 750k ARR</span></li>
+        <li><b>Pilot first:</b> 5–10 merchants from Payaza's own network (10k+ Storefront merchants already sell online)</li>
+        <li><b>Agent-led growth:</b> every forwarding agent onboarded as a split beneficiary brings their exporter book</li>
+        <li>Communities: KEPA events, agri co-ops, craft associations, Hackhouse alumni · WhatsApp-native distribution (sharing an invoice = sharing the product)</li>
+      </ul>
+    </div>
+  </div>
+  <p style="font-size:11.5px; color:var(--faint); margin-top:14px;">¹ estimates from public trade/freelance data (World Bank, KNBS, provider fee schedules) — pilot data replaces them; sources in repo docs/research.md §7.</p>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>07 / 10</span></div>
+</div>
+
+<!-- ============ SLIDE 8 · FEASIBILITY & COMPLIANCE ============ -->
+<div class="slide">
+  <div class="eyebrow">07 <span class="dim">—</span> Feasibility</div>
+  <h2>A pilot in months — because Payaza holds the licenses.</h2>
+  <p class="sub" style="margin-bottom:20px;">Kusanya is a workflow layer on regulated rails: no custody, no license of our own, no PCI scope. That's what makes "feasible within a few months" honest.</p>
+  <div class="grid" style="grid-template-columns:1fr 1fr;">
+    <div class="card">
+      <h3>Regulatory posture</h3>
+      <ul class="clean" style="margin-top:6px;">
+        <li>Payments run on <b>Payaza's licensed infrastructure</b> (CBN &amp; Bank of Ghana licensed; Kenya rails live in their docs) — funds never touch our servers</li>
+        <li><b>PCI-DSS scope avoided by design:</b> card data enters only Payaza's hosted checkout — we never see a PAN</li>
+        <li>KYC tiers mirror Payaza's own test/live gate: Tier 1 (phone/email + ID, small limits) → Tier 2 (KYB docs, full limits)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>AML &amp; data protection</h3>
+      <ul class="clean" style="margin-top:6px;">
+        <li>Jev composite risk screening on every invoice + <b>immutable audit trail</b> (state, criteria, probabilities, overrides)</li>
+        <li>Hard holds on high-probability sanctions hits; human escalation; sender blocks populated on every payout per Payaza AML fields</li>
+        <li>Kenya DPA 2019 posture: PII minimized, encrypted, exportable/deletable; demo fixtures are synthetic personas only</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Engineering reliability</h3>
+      <ul class="clean" style="margin-top:6px;">
+        <li>Next.js 15 + TypeScript strict + <b>shadcn/ui</b> + Postgres/Drizzle — one Vercel deploy, webhook URL live day one</li>
+        <li><b>Webhook is truth:</b> HMAC-SHA512-verified events drive a typed state machine; client callbacks are hints; polling + cron reconciliation cover webhook gaps</li>
+        <li>Idempotency everywhere: unique references, dedupe indexes, no automatic double-payouts; integer minor-unit money math</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Demo-day proof</h3>
+      <ul class="clean" style="margin-top:6px;">
+        <li>Built against Payaza <b>sandbox from day one</b>: test cards (3DS + non-3DS), momo test-funding endpoint, test payment links</li>
+        <li><b>Demo Mode</b>: recorded real sandbox payloads replayed through the same pipeline — the 4-minute judge demo never depends on venue Wi-Fi</li>
+        <li>Playwright demo-path regression suite must stay green to ship</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>08 / 10</span></div>
+</div>
+
+<!-- ============ SLIDE 9 · THE ASK ============ -->
+<div class="slide">
+  <div class="eyebrow">08 <span class="dim">—</span> The pilot pathway</div>
+  <h2>What we're asking for. What Payaza gets.</h2>
+  <p class="sub" style="margin-bottom:20px;">The prize we're actually building toward: the structured pilot conversation with real Payaza merchants.</p>
+  <div class="grid" style="grid-template-columns:1fr 1fr;">
+    <div class="card">
+      <div class="tag sky" style="margin-bottom:10px;">FROM PAYAZA</div>
+      <ul class="clean">
+        <li><b>10 pilot merchants</b> from your network with export flows — Storefront sellers already shipping abroad are ideal</li>
+        <li><b>Kenya/EAC sandbox enablement:</b> test-mode KES/UGX/TZS momo collections (the docs' on-request gate) + test phone numbers</li>
+        <li>Commercial <b>fee schedule</b> so the transparency panel shows real numbers from day one</li>
+        <li>Confirmation: <b>split settlements with KES beneficiaries</b> (else we run the payout-leg fallback — already designed)</li>
+        <li>Mentor hours at Hackhouse during the build phase; KYB fast-track for live keys post-event</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(168,252,132,.35);">
+      <div class="tag lime" style="margin-bottom:10px;">PAYAZA GETS</div>
+      <ul class="clean">
+        <li>A <b>vertical product activating six of your product areas</b> (checkout, links, momo, transfers, splits, subscriptions) for a new merchant segment</li>
+        <li><b>Incremental cross-border TPV</b> on the exact corridors this hackathon targets — USD→KES and EAC momo</li>
+        <li><b>Fraud-screened volume:</b> calibrated risk judgments + audit trails on every invoice, aligned with your published fraud taxonomy</li>
+        <li>A <b>Kenya-expansion case study</b> and community goodwill at Hackhouse Nairobi</li>
+        <li>Subscription-rail dogfooding: Kusanya Pro is billed on Payaza Subscriptions</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;">
+    <h3 style="margin-bottom:8px;">90-day pilot success metrics</h3>
+    <div style="display:flex; gap:26px; font-size:13.5px; color:var(--muted);" class="mono">
+      <span><b style="color:var(--ink);">TPV</b> collected via Payaza rails</span>
+      <span><b style="color:var(--ink);">≥2%</b> leakage saved vs prior method</span>
+      <span><b style="color:var(--ink);">≤ T+4</b> median time-to-KES</span>
+      <span><b style="color:var(--ink);">≥90%</b> AI extraction fields untouched</span>
+      <span><b style="color:var(--ink);">0</b> compliance incidents</span>
+    </div>
+  </div>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>09 / 10</span></div>
+</div>
+
+<!-- ============ SLIDE 10 · DEMO ============ -->
+<div class="slide" style="display:flex; flex-direction:column; justify-content:center;">
+  <div style="position:absolute; inset:0; background:
+      radial-gradient(900px 500px at 15% 110%, rgba(168,252,132,.09), transparent 60%),
+      radial-gradient(700px 420px at 100% 0%, rgba(139,208,255,.06), transparent 55%);"></div>
+  <div style="position:relative;">
+    <div class="eyebrow">09 <span class="dim">—</span> The demo · live on Payaza sandbox</div>
+    <h2 style="font-size:42px;">Real rails. Real webhooks. Four minutes.</h2>
+    <div class="grid" style="grid-template-columns:repeat(3,1fr); gap:12px; margin-top:22px;">
+      <div class="card" style="padding:14px 16px;"><span class="mono" style="color:var(--lime); font-size:12px; font-weight:700;">BEAT 1</span><p style="font-size:13.5px; margin-top:6px;">Paste a real WhatsApp order text → <b style="color:var(--ink)">Jev extracts the invoice live</b> → fix one amber field with a tap</p></div>
+      <div class="card" style="padding:14px 16px;"><span class="mono" style="color:var(--lime); font-size:12px; font-weight:700;">BEAT 2</span><p style="font-size:13.5px; margin-top:6px;">Buyer laptop (London persona): invoice page → <b style="color:var(--ink)">Payaza hosted checkout</b> → test card through 3DS → receipt</p></div>
+      <div class="card" style="padding:14px 16px;"><span class="mono" style="color:var(--lime); font-size:12px; font-weight:700;">BEAT 3</span><p style="font-size:13.5px; margin-top:6px;">Flip to merchant app: <b style="color:var(--ink)">webhook lands live</b> → PAID → toast + SMS on the phone mirror</p></div>
+      <div class="card" style="padding:14px 16px;"><span class="mono" style="color:var(--lime); font-size:12px; font-weight:700;">BEAT 4</span><p style="font-size:13.5px; margin-top:6px;"><b style="color:var(--ink)">Transparency panel</b> walkthrough → OTP-confirmed KES payout to M-Pesa (sandbox-funded) → "Imefika!" receipt</p></div>
+      <div class="card" style="padding:14px 16px;"><span class="mono" style="color:var(--lime); font-size:12px; font-weight:700;">BEAT 5</span><p style="font-size:13.5px; margin-top:6px;">Agent <b style="color:var(--ink)">split statement line</b> + the REVIEW-state invoice with reason chips and AI audit log</p></div>
+      <div class="card" style="padding:14px 16px;"><span class="mono" style="color:var(--lime); font-size:12px; font-weight:700;">BEAT 6</span><p style="font-size:13.5px; margin-top:6px;">Business case in three numbers + the ask: <b style="color:var(--ink)">10 pilot merchants</b>. Close on the corridor map.</p></div>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:28px;">
+      <div>
+        <div style="font-size:34px; font-weight:800; letter-spacing:-.02em;">Tuma invoice, lipwa leo<span style="color:var(--lime);">.</span></div>
+        <div class="mono" style="color:var(--muted); font-size:13.5px; margin-top:8px;">Send the invoice. Get paid today. — kusanya<span style="color:var(--lime);">.</span></div>
+        <div class="mono" style="color:var(--faint); font-size:12px; margin-top:14px;">Eugene Mutembei · Washington Adiadio · Jael Nyambura — Team Kusanya · Nairobi</div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <span class="tag lime">USD→KES live</span><span class="tag lime">KES⇄UGX</span><span class="tag lime">KES⇄TZS</span><span class="tag amber">RWF next</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>kusanya<span class="dot">.</span> · Borderless Kenya · Track #03</span><span>10 / 10</span></div>
+</div>
+
+</body>
+</html>

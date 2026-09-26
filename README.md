@@ -82,15 +82,17 @@ pnpm sandbox:smoke             # real Payaza test-rail smoke test (needs test ke
 
 ## Team
 
-| Name | Role (register-form enum) |
-|---|---|
-| _TBD_ | Product Manager |
-| _TBD_ | Frontend Developer |
-| _TBD_ | Backend Developer |
-| _TBD_ | UI/UX Designer |
-| _TBD_ | Software Engineer (ML/AI) |
+| Name | Title | Register-form role (suggested mapping) |
+|---|---|---|
+| Eugene Mutembei | Software Engineer | Frontend Developer *(or Software Engineer (ML/AI))* |
+| Washington Adiadio | Software Engineer | Backend Developer *(or Software Engineer (ML/AI))* |
+| Jael Nyambura | Data Scientist | Data Scientist |
 
-(Fill before registering — the form requires 3–5 members.)
+The form's role enum has no plain "Software Engineer" — closest is **Software Engineer
+(ML/AI)**. Tip: mapping the two SWEs to Frontend/Backend shows complementary coverage
+(product + design gaps are covered by the AI-assisted workflow and documented in
+`docs/build.md`); alternatively both pick Software Engineer (ML/AI), which is literally
+true for the Jev layer. Team minimum is 3 — we are exactly at it.
 
 ## Links
 
