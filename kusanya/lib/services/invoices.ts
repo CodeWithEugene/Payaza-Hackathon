@@ -152,7 +152,14 @@ export async function finalizeInvoice(
   const biz = await mustGetBusiness(businessId);
 
   if (!inv.payazaLinkUrl) {
-    const slug = `ksn-${inv.token.slice(0, 12).toLowerCase()}`;
+    // Payaza custom_url allows only /^[a-z0-9-]+$/ (max 60). Tokens look
+    // like "tok_01…" — the underscore is illegal, so sanitize instead of
+    // truncating (keeps full-token uniqueness; 35 chars total, well under).
+    const slug = `ksn-${inv.token
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 50)}`;
     const link = await createPaymentLink({
       payment_link_name: `Invoice ${inv.number}`,
       payment_description: `Invoice ${inv.number} — ${biz.name}`,

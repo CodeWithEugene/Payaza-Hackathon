@@ -861,3 +861,15 @@ it `Paying out` → `Imefika! Completed`.
 limit (~10/min) locked the demo out mid-script because every `/api/demo/reset` wipes the
 session's user (forced re-login) and judges may share one NAT IP. In DEMO_MODE only:
 sign-in 60/min, sign-up 30/min, global 600/min. Production keeps better-auth defaults.
+
+**Payment-link slug must satisfy Payaza's charset, not ours.** `finalizeInvoice` builds the
+`custom_url` from the invoice token; tokens are `tok_…` and Payaza's schema accepts only
+`/^[a-z0-9-]+$/` (max 60) — the underscore threw a ZodError on the first-ever runtime
+finalize (seeded invoices ship with links pre-set, so no path had exercised it). Slug is now
+the full sanitized token (`ksn-tok-01…`, 35 chars): legal, unique, within limits. Pinned by
+`tests/e2e/wizard-flow.spec.ts` — the judge's-first-move flow: sample WhatsApp paste →
+demo-rules extraction (buyer matched from directory, quality 1.0) → review → create →
+risk pass (score 3) → finalize + send → detail page badge `Sent`. The wizard's
+"Fill sample message" was upgraded to name a seeded buyer and carry an explicit total so
+the demo shows the full magic moment (the canonical J2 message has no total, which the rule
+engine would misread as the 2.30 unit price).

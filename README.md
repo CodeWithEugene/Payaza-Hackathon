@@ -59,7 +59,7 @@ judgments. Full story: [`docs/solution.md`](docs/solution.md).
 | `pnpm typecheck` (tsc strict) | 0 errors |
 | `pnpm lint` (ESLint 10) | 0 errors (4 documented preview-rule warnings) |
 | `pnpm test` (Vitest) | **98/98 passing** — money, FX, waterfall, state machine, webhook signature, risk, extraction, guardrails |
-| `pnpm test:e2e` (Playwright, system Chrome) | **passing** — reset → login → SENT invoice → M-Pesa webhook replay → badge flips Sent → Paid |
+| `pnpm test:e2e` (Playwright, system Chrome) | **3/3 passing (13.5s)** — collection: reset → SENT invoice → M-Pesa replay → Paid · payout: Settled → confirmation gate (wrong code refused, money unmoved) → Imefika! Completed · wizard: WhatsApp paste → Jev extraction → reviewed invoice created, screened & sent |
 | Runtime smoke (production server) | all public + 9 authed routes 200 · extraction returns Dubai Fresh FZE / USD 1,150.00 / due +5d · lifecycle sent → paid → settled · wallets + notification outbox live |
 
 ## Stack (as-built — see build.md §2 + §19)

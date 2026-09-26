@@ -73,8 +73,13 @@ export interface ExtractApiResponse {
   };
 }
 
+// Demo-safe variant of the J2 journey message (solution.md): names a seeded
+// directory buyer (token match → existing-buyer mode with history → risk
+// score 3 → pass), states an explicit total (so the rule engine can never
+// mistake the 2.30 unit price for it) and a resolvable "in 5 days" due date.
+// Result: a clean 4/4-quality magic moment with zero LOW-field friction.
 const SAMPLE_MESSAGE =
-  "Hi Wanjiru, please send 500kg French beans at USD 2.30/kg, total 1,150. Payment by card in 5 days.";
+  "Hi Wanjiru, Susan here from Dubai Fresh FZE. Please send 500kg of French beans at USD 2.30 per kg, total USD 1,150. Payment by card in 5 days.";
 
 export function PasteStep({
   onExtracted,
