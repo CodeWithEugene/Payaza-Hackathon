@@ -51,6 +51,25 @@ export const auth = betterAuth({
     cookieCache: { enabled: true, maxAge: 300 },
     freshAge: 60 * 30, // re-auth for payout confirms within 30 min
   },
+  /**
+   * Rate limits: production keeps better-auth's strict defaults (untouched).
+   * Demo Mode raises them — still bounded, never disabled — because the demo
+   * story legitimately hammers sign-in: every /api/demo/reset wipes the
+   * session's user (forced re-login), judges may share one NAT IP, and the
+   * Playwright suite logs in several times a minute. The default sign-in
+   * limit (≈10/min) locked the demo out mid-script ("Too many requests").
+   */
+  rateLimit: env.DEMO_MODE
+    ? {
+        enabled: true,
+        window: 60,
+        max: 600,
+        customRules: {
+          "/sign-in/email": { window: 60, max: 60 },
+          "/sign-up/email": { window: 60, max: 30 },
+        },
+      }
+    : undefined,
   advanced: {
     cookiePrefix: "kusanya",
   },

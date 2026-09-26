@@ -74,7 +74,6 @@ export interface InitiatePayoutInput {
 export async function initiateInvoicePayout(input: InitiatePayoutInput) {
   const inv = await mustGetInvoice(input.invoiceId, input.businessId);
   const biz = await mustGetBusiness(input.businessId);
-  const owner = await getOwnerContact(input.businessId);
 
   if (inv.status === "paid") {
     // Local-rail collections settle T+1; the MVP advances paid → settled with
@@ -105,6 +104,31 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
   if (!wallet) throw new Error("No active KES wallet found on your Payaza account.");
   if (wallet.postNoDebit) {
     throw new Error("Payouts are temporarily frozen on your wallet (PND flag). Contact Payaza support.");
+  }
+
+  // Idempotent: if a payout is already awaiting confirmation for this
+  // invoice, hand it back instead of creating a duplicate (the dialog can
+  // be reopened safely after an abandoned attempt).
+  const [awaiting] = await db
+    .select({ payoutId: payouts.id, txnId: transactions.id })
+    .from(payouts)
+    .innerJoin(transactions, eq(transactions.id, payouts.transactionId))
+    .where(
+      and(
+        eq(transactions.invoiceId, inv.id),
+        eq(transactions.kind, "payout"),
+        eq(payouts.status, "initialized"),
+      ),
+    )
+    .limit(1);
+  if (awaiting) {
+    return {
+      txnId: awaiting.txnId,
+      payoutId: awaiting.payoutId,
+      status: "awaiting_confirmation" as const,
+      amountDisplay: formatMinor("KES", payoutMinor),
+      message: `Payout of ${formatMinor("KES", payoutMinor)} is waiting for your confirmation code.`,
+    };
   }
 
   const txnId = newId("txn");
@@ -140,6 +164,85 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
     pinUsed: false,
     status: "initialized",
   });
+
+  await writeAudit({
+    actor: input.actorId,
+    action: "payout.initiated",
+    entityType: "payouts",
+    entityId: payoutId,
+    after: {
+      amountMinor: payoutMinor,
+      rail: rail.rail,
+      reference: merchantReference,
+      awaitingConfirmation: true,
+    },
+  });
+
+  // Money does NOT move here. Execution (Payaza transfer, invoice →
+  // paying_out, demo settlement) lives in executePayout(): manual payouts
+  // reach it only through confirmPayoutGate() after the confirmation code
+  // verifies (confirmation policy "always_ask"); opt-in auto-payouts reach
+  // it immediately via initiatePayoutToDefaultRail() (pre-authorized in
+  // settings, confirmation "not_required").
+  return {
+    txnId,
+    payoutId,
+    status: "awaiting_confirmation" as const,
+    amountDisplay: formatMinor("KES", payoutMinor),
+    message: `Payout of ${formatMinor("KES", payoutMinor)} to ${isMpesa ? "M-Pesa" : "bank"} ${maskAccount(accountNumber)} created — confirm to send.`,
+  };
+}
+
+// --------------------------------------------------------------- execute ----
+
+/**
+ * Phase 2 — the ONLY place money moves: the Payaza transfer call, ledger and
+ * invoice transitions, and demo settlement scheduling. Idempotent: a payout
+ * already past "initialized" is a no-op (guards double-confirms and the
+ * auto-payout chain). Amount and reference are frozen at initiate time.
+ */
+export async function executePayout(
+  payoutId: string,
+  businessId: string,
+  actorId: string,
+  confirmation: "not_required" | "otp_confirmed" | "dialog_confirmed" = "otp_confirmed",
+) {
+  const [row] = await db
+    .select({ payout: payouts, txn: transactions })
+    .from(payouts)
+    .innerJoin(transactions, eq(transactions.id, payouts.transactionId))
+    .where(and(eq(payouts.id, payoutId), eq(transactions.businessId, businessId)))
+    .limit(1);
+  if (!row) throw new Error("payout not found");
+  if (row.payout.status !== "initialized") return; // already executed — idempotent
+  if (!row.txn.invoiceId) throw new Error("payout transaction is missing its invoice");
+
+  const txnId = row.txn.id;
+  const inv = await mustGetInvoice(row.txn.invoiceId, businessId);
+  if (inv.status !== "settled") {
+    throw new Error("This invoice isn't settled anymore — refresh and check its status.");
+  }
+  const biz = await mustGetBusiness(businessId);
+  const owner = await getOwnerContact(businessId);
+  const [rail] = await db
+    .select()
+    .from(payoutRails)
+    .where(and(eq(payoutRails.id, row.payout.railId), eq(payoutRails.businessId, businessId)))
+    .limit(1);
+  if (!rail) throw new Error("Payout rail not found — add your M-Pesa or bank details in Settings.");
+
+  const wallet = await getWalletForCurrency(businessId, "KES");
+  if (!wallet) throw new Error("No active KES wallet found on your Payaza account.");
+  if (wallet.postNoDebit) {
+    throw new Error("Payouts are temporarily frozen on your wallet (PND flag). Contact Payaza support.");
+  }
+
+  const payoutMinor = Number(row.payout.amountMinorKes);
+  const merchantReference = row.txn.merchantReference;
+  const isMpesa = rail.rail === "mpesa";
+  const accountNumber = isMpesa ? rail.phone : rail.accountNumber;
+  if (!accountNumber) throw new Error("Payout rail is missing its account/phone number.");
+  const accountName = row.payout.beneficiaryName;
 
   try {
     const resp = await initiatePayout({
@@ -180,19 +283,19 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
         payload: resp as unknown as Record<string, unknown>,
       })
       .where(eq(transactions.id, txnId));
-    await db.update(payouts).set({ status: "pending" }).where(eq(payouts.id, payoutId));
+    await db.update(payouts).set({ status: "pending", confirmation }).where(eq(payouts.id, payoutId));
 
     assertInvoiceTransition("settled", "paying_out");
     await db.update(invoices).set({ status: "paying_out", updatedAt: new Date() }).where(eq(invoices.id, inv.id));
 
     await writeAudit({
-      actor: input.actorId,
-      action: "payout.initiated",
+      actor: actorId,
+      action: "payout.executed",
       entityType: "payouts",
       entityId: payoutId,
-      after: { amountMinor: payoutMinor, rail: rail.rail, reference: merchantReference, raw },
+      after: { amountMinor: payoutMinor, rail: rail.rail, reference: merchantReference, raw, confirmation },
     });
-    publish({ type: "payout.updated", businessId: input.businessId, entityId: payoutId, at: new Date().toISOString() });
+    publish({ type: "payout.updated", businessId, entityId: payoutId, at: new Date().toISOString() });
 
     if (env.DEMO_MODE) scheduleDemoSettlement(txnId);
 
@@ -210,8 +313,8 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
       .where(eq(transactions.id, txnId));
     await db.update(payouts).set({ status: "failed" }).where(eq(payouts.id, payoutId));
     await writeAudit({
-      actor: input.actorId,
-      action: "payout.initiate_failed",
+      actor: actorId,
+      action: "payout.execute_failed",
       entityType: "payouts",
       entityId: payoutId,
       after: { error: String(err).slice(0, 300) },
@@ -229,7 +332,11 @@ export async function initiatePayoutToDefaultRail(invoiceId: string, businessId:
     .where(and(eq(payoutRails.businessId, businessId), eq(payoutRails.isDefault, true)))
     .limit(1);
   if (!rail) throw new Error("no default payout rail");
-  return initiateInvoicePayout({ invoiceId, businessId, railId: rail.id, actorId });
+  const created = await initiateInvoicePayout({ invoiceId, businessId, railId: rail.id, actorId });
+  // Auto-payout is pre-authorized in settings — no interactive code gate is
+  // possible, so it executes immediately with confirmation "not_required".
+  await executePayout(created.payoutId, businessId, actorId, "not_required");
+  return created;
 }
 
 // ------------------------------------------------- single completion path ---
@@ -345,7 +452,7 @@ export async function confirmPayoutGate(payoutId: string, businessId: string, co
     .limit(1);
   if (!rows[0]) throw new Error("payout not found");
   if (code !== DEMO_PAYOUT_CODE) throw new Error("Wrong confirmation code.");
-  await db.update(payouts).set({ confirmation: "otp_confirmed" }).where(eq(payouts.id, payoutId));
+  if (rows[0].payout.status !== "initialized") return; // already executed — idempotent
   await writeAudit({
     actor: actorId,
     action: "payout.gate_confirmed",
@@ -353,6 +460,8 @@ export async function confirmPayoutGate(payoutId: string, businessId: string, co
     entityId: payoutId,
     after: { method: env.DEMO_MODE ? "demo-code" : "pin" },
   });
+  // The gate is the trigger: money moves ONLY after the code verifies.
+  await executePayout(payoutId, businessId, actorId, "otp_confirmed");
 }
 
 // -------------------------------------------------------------- demo settle --

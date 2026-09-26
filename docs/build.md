@@ -842,3 +842,22 @@ Jev-down + first buyer floors at review.
 lazy-imported; absent keys → an in-process **demo outbox** (surfaced in the sidebar) so the flow
 is observable without external services. Email/SMS templates are pure functions.
 
+
+**Payout confirmation gate is the trigger, not a witness.** `initiateInvoicePayout` (dialog
+step 1) only validates and creates the payout in `initialized` state — amount and merchant
+reference frozen; no Payaza call, no invoice transition. Money moves exclusively in
+`executePayout()`, reached by manual payouts only through `confirmPayoutGate()` after the
+confirmation code verifies (policy "always_ask"), and by opt-in auto-payout
+(`initiatePayoutToDefaultRail`, `system:auto-payout`) which chains initiate+execute because
+settings pre-authorized it (`confirmation: "not_required"`). `executePayout` is idempotent
+(status ≠ `initialized` → no-op), re-checks wallet/PND and `settled` status at execution time,
+and schedules the demo settlement webhook (same completion path) in Demo Mode. Abandoned
+awaiting payouts stay `initialized` (excluded from reconciliation, which only touches
+`pending`); re-initiating returns the existing one instead of duplicating. Pinned by
+`tests/e2e/payout-flow.spec.ts`: wrong code leaves the invoice `Settled`; the demo code takes
+it `Paying out` → `Imefika! Completed`.
+
+**Demo Mode relaxes auth rate limits (bounded, never off).** better-auth's default sign-in
+limit (~10/min) locked the demo out mid-script because every `/api/demo/reset` wipes the
+session's user (forced re-login) and judges may share one NAT IP. In DEMO_MODE only:
+sign-in 60/min, sign-up 30/min, global 600/min. Production keeps better-auth defaults.
