@@ -401,6 +401,45 @@ function scheduleDemoSettlement(txnId: string) {
   }, 1_500);
 }
 
+// ------------------------------------------------------------- reconcile ----
+
+/** Poll PENDING payouts so nothing waits on a lost transfer webhook. */
+export async function reconcilePendingPayouts(limit = 20) {
+  const { payoutStatus } = await import("@/lib/payaza/endpoints");
+  const stale = await db
+    .select()
+    .from(transactions)
+    .where(and(eq(transactions.kind, "payout"), eq(transactions.status, "pending")))
+    .limit(limit);
+  let advanced = 0;
+  for (const txn of stale) {
+    const ageMin = (Date.now() - (txn.createdAt?.getTime() ?? Date.now())) / 60_000;
+    if (ageMin < 3) continue;
+    const ref = txn.payazaReference ?? txn.merchantReference;
+    try {
+      const resp = await payoutStatus(ref);
+      const data = (resp.data ?? resp) as Record<string, unknown>;
+      const raw = String(data.transaction_status ?? data.status ?? "").toUpperCase();
+      const mapped = payoutRawToTxnStatus(raw);
+      if (mapped === "completed" || mapped === "failed") {
+        const [payout] = await db.select().from(payouts).where(eq(payouts.transactionId, txn.id)).limit(1);
+        await applyPayoutResult({
+          txn,
+          payout: payout ?? null,
+          status: mapped,
+          feeMajor: typeof data.transaction_fee === "number" ? data.transaction_fee : null,
+          payazaStatusRaw: `poll:${raw}`.slice(0, 48),
+          source: "poll",
+        });
+        advanced++;
+      }
+    } catch (err) {
+      console.warn("[reconcile] payout poll failed for", ref, err);
+    }
+  }
+  return { checked: stale.length, advanced };
+}
+
 // ----------------------------------------------------------------- helpers --
 
 async function notifyPayoutOutcome(inv: Invoice, amountMinor: number, success: boolean) {

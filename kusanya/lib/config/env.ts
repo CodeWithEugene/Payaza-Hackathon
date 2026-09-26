@@ -42,6 +42,9 @@ const envSchema = z.object({
     .optional()
     .default("true"),
   DEMO_SEED: z.string().optional().default("wanjiru"),
+
+  /** Vercel cron secret; empty in dev = crons open (localhost only). */
+  CRON_SECRET: z.string().optional().default(""),
 });
 
 const parsed = envSchema.safeParse(process.env);
