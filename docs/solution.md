@@ -622,9 +622,80 @@ webhooks with identical UI (flagged "demo data" chip — honesty preserved).
 
 - [ ] Team assembled (3–5 members, roles from register form enum)
 - [ ] Team name chosen (suggest product-aligned, e.g. "Kusanya" or team brand)
-- [ ] **Deck** (8–10 slides from §15 script + §2 problem + §11 business case) uploaded → link
-- [ ] **Idea text** (300–500 words distilled from §1, §2, §4.3, §14 — track #3 explicitly named)
+- [ ] **Deck** (8–10 slides — outline ready in Appendix A.2, built from §15 script) uploaded → link
+- [ ] **Idea text** (copy-paste ready in **Appendix A.1** — track #03 explicitly named)
 - [ ] Register at https://hackathon.payaza.africa/register before **23:59 EAT**
 - [ ] Email support@payaza.africa requesting Kenya/EAC sandbox collections access (R1)
 
 > Engineering realization of everything above: **`docs/build.md`**.
+
+---
+
+## Appendix A — Copy-Paste Submission Artifacts (for tonight's /register form)
+
+### A.1 "Your idea" field (≈430 words, distilled from this document)
+
+> **Kusanya — get Kenyan exporters paid by anyone, anywhere. (Track #03: SME and exporter collections)**
+>
+> Wanjiru aggregates French beans and macadamia from 40 smallholders in Murang'a and ships
+> 30–60 orders a month to buyers in Dubai, London and Amsterdam. Her week: orders arrive as
+> WhatsApp voice notes and photos; invoices are typed in Word; buyers must pay by SWIFT wire
+> (USD 25–45 plus intermediary deductions) or PayPal (multi-day holds, ~5% withdrawal loss);
+> the bank converts at its own opaque rate; her forwarding agent's commission is paid by
+> hand. She loses 3–8% of every invoice and 3–10 days of float — while paying smallholders
+> upfront. This is exactly the challenge's "small exporters struggling to collect from
+> international buyers without expensive intermediaries."
+>
+> **Kusanya replaces that stack with one mobile-first workflow on Payaza rails:**
+>
+> 1. **AI invoicing from how she already communicates.** Wanjiru pastes the buyer's WhatsApp
+>    message (or snaps the handwritten note). TypeSafe's Jev model — calibrated decision
+>    primitives, not a chatbot — extracts buyer, items, amounts, currency and due date in one
+>    batched call. Every field carries a probability: high-confidence fields arrive filled,
+>    low-confidence ones are highlighted with the source snippet quoted for one-tap review.
+>    Numbers and dates are resolved deterministically in code — the model never invents an
+>    amount.
+> 2. **Collection.** The invoice page gives her international buyer a Payaza hosted checkout
+>    (USD by card, Apple Pay or Google Pay) or a Payaza payment link — zero signup, 2 minutes,
+>    receipts emailed. Regional buyers in Kampala or Dar pay the same invoice in UGX/TZS via
+>    mobile-money prompt on Payaza's Kenya/Uganda/Tanzania collection rails.
+> 3. **Settlement with radical transparency.** On Payaza's webhook, the invoice flips to PAID
+>    and KES settles to her M-Pesa (or bank via kepss) through Payaza payouts. Every
+>    transaction shows an itemized waterfall — gross, Payaza fee, FX rate with validity
+>    window, partner split, net KES — plus an honest settlement ETA from Payaza's real SLAs.
+>    No hidden spread, ever.
+> 4. **Partners paid automatically.** Her forwarding agent and co-op are registered as Payaza
+>    split-settlement beneficiaries; their cut lands at settlement with statement lines. No
+>    more hand-paid commissions.
+> 5. **Compliance-grade risk.** Jev composite scores screen every invoice (sanctions language,
+>    amount anomalies, first-buyer patterns) with confidence-gated routing — auto-proceed,
+>    merchant-review, or hold — and an immutable audit trail of every AI judgment. It's the
+>    screen a Payaza compliance officer can pilot against.
+>
+> **Business case:** 1.5% take rate (still ≤ half her current leakage) + KES 1,500/mo Pro tier
+> billed on Payaza Subscriptions + 0.25% on split volume. Beachhead: ~50k Kenyan SME
+> exporters; 1% penetration ≈ USD 50M TPV. Kusanya needs no license of its own — Payaza
+> holds the regulated rails; we own the exporter workflow. We're asking Payaza for 10 pilot
+> merchants from their network; the product is already built for their checkout, links,
+> momo, transfers, splits, subscriptions and webhooks.
+>
+> Demo: real money movement on Payaza sandbox — pasted WhatsApp text → AI invoice → test-card
+> checkout → live webhook → KES payout → split statement — in under 4 minutes.
+
+### A.2 Deck outline (8–10 slides, build from §15 script; upload → link in form)
+
+| # | Slide | Content |
+|---|---|---|
+| 1 | Title | Kusanya · "Get paid for what you ship — wherever your buyer is." · Track #03 · team names |
+| 2 | Wanjiru's week | Persona photo/illustration + the 6 pains table (§2.1) + "3–8% and 3–10 days, every invoice" |
+| 3 | Why existing rails fail | Wire / PayPal / banks / generic PSPs — one line each (§2.2) |
+| 4 | The product | 3 screens: AI invoice wizard → buyer checkout → transparency panel (§7 J2–J4) |
+| 5 | Built on Payaza, structurally | Rail map: Checkout SDK + Payment Links + Card (USD) + MoMo KES/UGX/TZS + Transfers KES + Split Settlements + Webhooks + Subscriptions (§2.3) — "impossible without Payaza" |
+| 6 | AI that pays for itself | Jev pipeline diagram: extraction → composite risk → intent → guardrails; probabilities + audit trail; <1¢/invoice (§9) |
+| 7 | Business case | Take rate, unit economics per USD 1,000 invoice, beachhead sizing, GTM via agents (§11) |
+| 8 | Feasibility & compliance | Licensed-rails posture, KYC tiers, PCI-scope-free, DPA 2019, pilot in months (§13, §16) |
+| 9 | The ask | 10 Payaza-network pilot merchants + sandbox Kenya collections access (§16) |
+| 10 | Demo | Live sandbox flow or 90-second Loom embed; close on corridor map (USD→KES live, UGX/TZS enabled) |
+
+Deck rules: only 🟡-verified numbers (research §7 must be re-verified first); dark theme +
+mono money figures to echo the hackathon site aesthetic; every money claim shows its source.
