@@ -917,3 +917,18 @@ size-3.5). Static assets in `public/logo/`: adaptive mark SVG, fixed-ink lockups
 1216 lockups) rendered headless. `app/icon.svg` is the favicon (fixed ink — browser chrome
 gives no currentColor context). Verified programmatically both modes (ink flips
 lab(2.75)↔lab(98.3), geometry 3 paths + 1 circle, lockup text fits viewBox).
+
+**Custom domain + git-push deploys (2026-09-27).** Canonical URL is now
+**https://kusanya.codewitheugene.top** (gamma remains a mirror). The GitHub repo was connected
+to the Vercel project mid-session; the first auto-deploys errored in seconds — Root Directory
+was `/` while the app lives in `kusanya/` — fixed via the Projects API (`PATCH
+/v9/projects/{id}` `{"rootDirectory":"kusanya"}`; the CLI has no command for it), proven by an
+empty-commit push building to ● Ready. Adding the subdomain to the project (`vercel domains
+add kusanya.codewitheugene.top kusanya`) was initially blocked by those errored production
+deployments, and — once added — instantly fixed the pre-existing HTTP 525: the Cloudflare
+record already pointed at Vercel's edge, which was refusing the TLS handshake for a hostname
+it didn't know. Auth cutover: `BETTER_AUTH_URL` + `NEXT_PUBLIC_APP_URL` (production) →
+custom domain; `lib/auth/config.ts` trustedOrigins now lists BOTH production origins
+explicitly, so sign-in passes CSRF on custom domain and gamma alike in either env order
+(pre-cutover probe: custom origin 403 INVALID_ORIGIN, gamma 200 — exactly the failure mode
+trustedOrigins removes).

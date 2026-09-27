@@ -16,7 +16,17 @@ import { magicLinkEmail } from "@/lib/notify/templates";
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET || "kusanya-dev-secret-change-me",
   baseURL: env.BETTER_AUTH_URL,
-  trustedOrigins: [env.NEXT_PUBLIC_APP_URL],
+  /**
+   * better-auth trusts the baseURL origin automatically; both production
+   * origins are listed explicitly so the canonical custom domain and the
+   * gamma.vercel.app alias (still circulating in the deck/README) coexist —
+   * cross-origin CSRF checks pass on either, in either env order.
+   */
+  trustedOrigins: [
+    env.NEXT_PUBLIC_APP_URL,
+    "https://kusanya.codewitheugene.top",
+    "https://kusanya-gamma.vercel.app",
+  ].filter((origin): origin is string => Boolean(origin)),
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {

@@ -10,11 +10,13 @@ Built for **[Borderless Kenya](https://hackathon.payaza.africa/)** — the Payaz
 Nairobi hackathon solving cross-border payments for East African trade.
 **Track #03 — SME and exporter collections.**
 
-## ▶ Live demo — https://kusanya-gamma.vercel.app
+## ▶ Live demo — https://kusanya.codewitheugene.top
 
-Hosted on **Vercel** (Node serverless + **Neon Postgres** free tier, `iad1`), deployed with the
-Vercel CLI. Runs in **Demo Mode**: Payaza/Jev calls hit labeled fixtures (`demo-rules-v1`,
-recorded webhook payloads) — zero external keys, nothing leaves the app.
+Hosted on **Vercel** (Node serverless + **Neon Postgres** free tier, `iad1`); push to `main`
+on GitHub (`CodeWithEugene/Payaza-Hackathon`, Root Directory `kusanya/`) auto-deploys production.
+`https://kusanya-gamma.vercel.app` remains a working mirror alias. Runs in **Demo Mode**:
+Payaza/Jev calls hit labeled fixtures (`demo-rules-v1`, recorded webhook payloads) — zero
+external keys, nothing leaves the app.
 
 | | |
 |---|---|
