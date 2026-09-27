@@ -175,7 +175,7 @@ export default function LandingPage() {
   return (
     <div className="bg-background text-foreground flex min-h-svh flex-col">
       <header className="border-border border-b">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3 md:px-6">
+        <div className="flex w-full items-center justify-between gap-4 px-4 py-3 md:px-8 xl:px-12">
           <Link href="/" className="flex items-center gap-2">
             <KusanyaMark className="size-8" />
             <span className="font-heading text-lg font-semibold tracking-tight">
@@ -194,7 +194,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 md:px-6">
+      <main className="flex w-full flex-1 flex-col px-4 md:px-8 xl:px-12">
         {/* Hero */}
         <section className="flex flex-col items-center gap-6 py-16 text-center md:py-24">
           <Badge variant="secondary" className="gap-1.5 px-3 py-1">
@@ -369,7 +369,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-border border-t">
-        <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-4 px-4 py-8 md:flex-row md:px-6">
+        <div className="flex w-full flex-col items-center justify-between gap-4 px-4 py-8 md:flex-row md:px-8 xl:px-12">
           <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
             <span className="text-sm font-medium">
               Kusanya · Team Technetians · Payaza × Hackhouse Borderless Kenya
