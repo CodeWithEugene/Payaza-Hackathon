@@ -26,6 +26,7 @@ test-results/
 .DS_Store
 *.log
 
-# pnpm sandbox-local store/cache
+# pnpm/npm sandbox-local store/cache (scripts/env.sh)
 .pnpm-store/
 .pnpm-cache/
+.npm-cache/
