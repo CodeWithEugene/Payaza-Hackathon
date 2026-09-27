@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { DemoLauncher } from "@/components/demo/demo-launcher";
+import { KusanyaMark } from "@/components/brand/logo";
 
 export const metadata: Metadata = {
   title: "Live demo",
@@ -13,9 +14,7 @@ export default function DemoPage() {
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-10 md:px-6 md:py-16">
         <header className="flex flex-col gap-4">
           <Link href="/" className="flex w-fit items-center gap-2">
-            <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg font-mono text-sm font-semibold">
-              k.
-            </div>
+            <KusanyaMark className="size-8" />
             <span className="font-heading text-lg font-semibold tracking-tight">
               kusanya
             </span>

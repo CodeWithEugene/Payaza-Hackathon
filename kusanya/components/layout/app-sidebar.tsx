@@ -23,6 +23,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { DemoOutboxButton } from "@/components/layout/demo-outbox";
+import { KusanyaMark } from "@/components/brand/logo";
 
 const NAV = [
   { href: "/app", label: "Dashboard", icon: LayoutDashboard },
@@ -47,9 +48,7 @@ export function AppSidebar(props: {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="/app">
-                <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg font-mono text-sm font-semibold">
-                  k.
-                </div>
+                <KusanyaMark className="size-8" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">kusanya</span>
                   <span className="text-muted-foreground truncate text-xs">

@@ -15,6 +15,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ModeToggle } from "@/components/mode-toggle";
+import { KusanyaMark } from "@/components/brand/logo";
 
 /**
  * /i/[token] — the public buyer invoice + payment page. No session, no app
@@ -84,8 +85,10 @@ export default async function BuyerInvoicePage({ params }: Props) {
         <header className="flex items-center justify-between gap-3">
           <p className="truncate text-sm font-medium">{businessName}</p>
           <div className="flex shrink-0 items-center gap-2">
-            <p className="text-xs text-muted-foreground">
-              invoices via <span className="font-mono font-semibold tracking-tight">kusanya</span>
+            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              invoices via
+              <KusanyaMark className="size-3.5" />
+              <span className="font-mono font-semibold tracking-tight">kusanya</span>
             </p>
             <ModeToggle />
           </div>

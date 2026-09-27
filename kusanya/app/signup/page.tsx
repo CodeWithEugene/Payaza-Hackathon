@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { SignupForm } from "@/components/auth/signup-form";
 import { ModeToggle } from "@/components/mode-toggle";
+import { KusanyaMark } from "@/components/brand/logo";
 
 export const metadata: Metadata = {
   title: "Create account",
@@ -17,9 +18,7 @@ export default function SignupPage() {
       <div className="flex w-full max-w-sm flex-col gap-6 py-8">
         <div className="flex flex-col items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
-            <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg font-mono text-sm font-semibold">
-              k.
-            </div>
+            <KusanyaMark className="size-8" />
             <span className="font-heading text-xl font-semibold tracking-tight">
               kusanya
             </span>

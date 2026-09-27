@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 40" fill="none">
+  <!-- Kusanya lockup — LIGHT backgrounds (ink #0a0a0a = oklch 0.145, shadcn dark token).
+       Transparent background. Wordmark: Inter 600 (falls back to system sans). -->
+  <g transform="translate(4,5) scale(1.25)">
+    <g stroke="#0a0a0a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6.5 4V19"/>
+      <path d="M6.5 13L13.5 6"/>
+      <path d="M6.5 13L12.75 19"/>
+    </g>
+    <circle cx="17.75" cy="17.1" r="1.9" fill="#0a0a0a"/>
+  </g>
+  <text x="46" y="27.5" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="-0.5" fill="#0a0a0a">kusanya</text>
+</svg>

@@ -906,3 +906,14 @@ Pinned by `tests/e2e/theme.spec.ts`: stored theme applies pre-paint, computed ba
 oklch(0.145 0 0)=#0a0a0a ↔ #ffffff (1×1 canvas pixel readback — Chrome serializes computed
 colors as lab(), and fillStyle getters no longer normalize to hex), dropdown + hotkey both
 toggle. Suite now 4 specs.
+
+**Brand mark.** The "k." box treatment was replaced by a real vector monogram
+(`components/brand/logo.tsx`): lucide-style 24-grid, stroke 2, round caps — the k's arms
+converge into the stem (to gather), the period sits on the baseline as the gathered coin.
+`currentColor` strokes mean one component serves every surface and both themes (landing nav,
+login/signup, demo page, sidebar header at shadcn's conventional 16px, buyer-page wordmark at
+size-3.5). Static assets in `public/logo/`: adaptive mark SVG, fixed-ink lockups
+(light #0a0a0a / dark #fafafa, Inter 600 wordmark), transparent PNG exports (512 mark,
+1216 lockups) rendered headless. `app/icon.svg` is the favicon (fixed ink — browser chrome
+gives no currentColor context). Verified programmatically both modes (ink flips
+lab(2.75)↔lab(98.3), geometry 3 paths + 1 circle, lockup text fits viewBox).

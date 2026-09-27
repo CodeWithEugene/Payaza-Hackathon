@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "@/components/mode-toggle";
+import { KusanyaMark } from "@/components/brand/logo";
 
 const HOW_IT_WORKS = [
   {
@@ -176,9 +177,7 @@ export default function LandingPage() {
       <header className="border-border border-b">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3 md:px-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg font-mono text-sm font-semibold">
-              k.
-            </div>
+            <KusanyaMark className="size-8" />
             <span className="font-heading text-lg font-semibold tracking-tight">
               kusanya
             </span>

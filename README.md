@@ -24,6 +24,21 @@ recorded webhook payloads) — zero external keys, nothing leaves the app.
 | Restore the canonical story | `/app/settings` → *Demo Mode* → Reset (or the `/demo` launcher) — wipes + reseeds; signs you out |
 | Dark mode | Toggle in the topbar / landing nav / buyer page, or press **`d`** anywhere — Light · Dark · System, persisted per browser |
 
+### Brand
+
+The **"k." monogram** — a lucide-style vector mark: the arms of the *k* converge into the stem
+(*kusanya* = to gather), and the period rests on the baseline as the gathered coin. Strokes are
+`currentColor` in-app (`components/brand/logo.tsx`), so it adapts to light/dark automatically.
+Fixed-ink files with transparent backgrounds live in `kusanya/public/logo/`:
+
+| File | Use |
+|---|---|
+| `kusanya-mark.svg` / `-512.png` / `-512-white.png` | The mark alone (adaptive SVG · dark-ink PNG · light-ink PNG) |
+| `kusanya-logo-light.svg` / `-light-1216.png` | Mark + wordmark for LIGHT backgrounds (ink #0a0a0a) |
+| `kusanya-logo-dark.svg` / `-dark-1216.png` | Mark + wordmark for DARK backgrounds (ink #fafafa) |
+
+Favicon: `kusanya/app/icon.svg` (served at `/icon.svg`).
+
 Local dev/e2e are unaffected: they run embedded PGlite (`.env.local` intentionally has **no**
 `DATABASE_URL`; production gets it from the Neon integration).
 
