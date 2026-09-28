@@ -8,6 +8,7 @@ import { formatMinor } from "@/lib/money/format";
 import { isCurrency } from "@/lib/money/currencies";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PayDoneRefresh } from "@/components/buyer/pay-done-refresh";
 
 /**
  * /pay-done?ref=… — where Payaza drops the buyer. Two reference kinds arrive:
@@ -87,9 +88,9 @@ export default async function PayDonePage({ searchParams }: Props) {
               <span className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <CheckCircle2 className="size-8" />
               </span>
-              <CardTitle>Payment confirmed ✅</CardTitle>
+              <CardTitle>Payment Confirmed ✅</CardTitle>
               <CardDescription>
-                We verified with Payaza server-side — the merchant has been notified and your
+                Payaza confirmed your payment. The merchant has been notified and your
                 receipt is on its way.
               </CardDescription>
               {detail && (
@@ -103,11 +104,12 @@ export default async function PayDonePage({ searchParams }: Props) {
               <span className="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 <Clock className="size-8" />
               </span>
-              <CardTitle>We couldn&apos;t confirm the payment yet.</CardTitle>
+              <CardTitle>Confirming Your Payment</CardTitle>
               <CardDescription>
-                If money left your card it will reflect within a few minutes — Payaza webhooks
-                complete it automatically. Don&apos;t pay twice.
+                Payaza is still confirming this payment, which usually takes a few seconds. Please
+                keep this page open and don&apos;t pay twice.
               </CardDescription>
+              <PayDoneRefresh />
             </CardHeader>
           )}
 
@@ -116,7 +118,7 @@ export default async function PayDonePage({ searchParams }: Props) {
               <span className="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 <HelpCircle className="size-8" />
               </span>
-              <CardTitle>Reference not recognised.</CardTitle>
+              <CardTitle>Reference Not Recognised</CardTitle>
               <CardDescription>
                 We couldn&apos;t find a payment with that reference. If you just paid, give it a
                 few minutes and check with the merchant.
@@ -126,7 +128,7 @@ export default async function PayDonePage({ searchParams }: Props) {
 
           <CardContent className="flex justify-center">
             <Button variant="outline" asChild>
-              <Link href="/">Back to kusanya</Link>
+              <Link href="/">Back To Kusanya</Link>
             </Button>
           </CardContent>
         </Card>

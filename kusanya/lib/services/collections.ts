@@ -228,22 +228,41 @@ export async function handleCheckoutCallback(merchant_reference: string) {
     .limit(1);
   if (!txn) return { found: false as const };
 
-  const query = await merchantTransactionQuery(merchant_reference);
+  if (txn.status === "completed") return { found: true as const, verified: true as const };
+  const outcome = await verifyCheckoutTxn(txn, "callback");
+  return { found: true as const, verified: outcome === "completed" };
+}
+
+/**
+ * Merchant-reference status query (checkout SDK + payment links), then the
+ * single completion path. Response: data.transaction_status Completed |
+ * Failed | Initialized, data.amount_received, data.transaction_fee.
+ */
+async function verifyCheckoutTxn(
+  txn: Transaction,
+  source: "callback" | "poll",
+): Promise<"completed" | "failed" | "pending"> {
+  const query = await merchantTransactionQuery(txn.merchantReference);
   const data = (query.data ?? {}) as Record<string, unknown>;
-  const status = String(data.status ?? data.transaction_status ?? "").toLowerCase();
-  const verified = status.includes("success") || status.includes("completed");
-  if (!verified) return { found: true as const, verified: false as const };
+  const status = String(data.transaction_status ?? data.status ?? "").toLowerCase();
+  const outcome = status.includes("completed") || status.includes("success")
+    ? "completed"
+    : status.includes("fail")
+      ? "failed"
+      : "pending";
+  if (outcome === "pending") return outcome;
 
   await applyCollectionResult({
     txn,
-    status: "completed",
-    amountReceivedMajor: typeof data.amount === "number" ? data.amount : null,
+    status: outcome,
+    amountReceivedMajor: typeof data.amount_received === "number" ? data.amount_received : null,
     feeMajor: typeof data.transaction_fee === "number" ? data.transaction_fee : null,
     amountValidation: "EXACT",
-    payazaStatusRaw: `query:${status}`.slice(0, 48),
-    source: "callback",
+    payerName: typeof data.sender_name === "string" ? data.sender_name : null,
+    payazaStatusRaw: `query:${status}:${String(data.status_reason ?? "")}`.slice(0, 48),
+    source,
   });
-  return { found: true as const, verified: true as const };
+  return outcome;
 }
 
 // ------------------------------------------------- single completion path ----
@@ -397,6 +416,11 @@ async function simulateSandboxApproval(
 
 /** One status-query round for a PENDING collection; true when it reached a final state. */
 async function pollCollectionOnce(txn: Transaction): Promise<boolean> {
+  // Card / wallet / payment-link txns are looked up by merchant reference;
+  // only momo prompts use the momo check-status API.
+  if (!txn.channel?.startsWith("momo_")) {
+    return (await verifyCheckoutTxn(txn, "poll")) !== "pending";
+  }
   const country = txn.channel === "momo_ug" ? "UG" : txn.channel === "momo_tz" ? "TZ" : "KE";
   const status = await checkCollectionStatus(txn.merchantReference, country);
   const mapped = collectionCodeToTxnStatus(status.response_code, status.transaction_status ?? undefined);

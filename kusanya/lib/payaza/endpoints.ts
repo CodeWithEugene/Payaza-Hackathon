@@ -206,16 +206,29 @@ export async function fetchPaymentLinkTransactions(link_id: string | number) {
 }
 
 /** Checkout-callback verification: query by OUR merchant reference. */
+/**
+ * Checkout / payment-link status by OUR reference (the SDK's
+ * transaction_reference). Docs: GET with ?merchant_reference= (a POST body
+ * gets a 500). Payaza answers 400 "Transaction not found" until the checkout
+ * transaction exists, which we surface as data: null, not an error.
+ */
 export async function merchantTransactionQuery(merchant_reference: string) {
   if (DEMO()) {
     await sleep(demo.DEMO_LATENCY_MS.fast);
-    return { status: true, message: "demo", data: { merchant_reference, status: "success" } };
+    return { status: true, message: "demo", data: { merchant_reference, transaction_status: "Completed" } };
   }
-  return payazaFetch(
-    "/merchant-collection/transfer_notification_controller/merchant/transaction-query",
-    looseEnvelopeSchema,
-    { method: "POST", body: { merchant_reference } },
-  );
+  try {
+    return await payazaFetch(
+      "/merchant-collection/transfer_notification_controller/merchant/transaction-query",
+      looseEnvelopeSchema,
+      { query: { merchant_reference } },
+    );
+  } catch (err) {
+    if (err instanceof PayazaError && err.httpStatus === 400) {
+      return { status: false, message: err.responseMessage ?? "not found", data: null };
+    }
+    throw err;
+  }
 }
 
 // ---------------------------------------------------------------- payouts ----
