@@ -68,7 +68,7 @@ export function Rails() {
       aria-labelledby="rails-heading"
       className="border-y border-border/70 bg-muted/40"
     >
-      <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-20 md:px-8 md:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <div className="mx-auto grid w-full max-w-[110rem] gap-12 px-4 py-20 md:px-8 lg:px-12 2xl:px-16 md:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <SectionHeading
           id="rails-heading"
           eyebrow="Payment Rails"

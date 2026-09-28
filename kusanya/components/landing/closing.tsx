@@ -8,9 +8,9 @@ export function FinalCta() {
   return (
     <section
       aria-labelledby="cta-heading"
-      className="px-4 pb-20 md:px-8 md:pb-28"
+      className="px-4 pb-20 md:px-8 lg:px-12 2xl:px-16 md:pb-28"
     >
-      <div className="relative isolate mx-auto w-full max-w-7xl overflow-hidden rounded-3xl ring-1 ring-foreground/10">
+      <div className="relative isolate mx-auto w-full max-w-[110rem] overflow-hidden rounded-3xl ring-1 ring-foreground/10">
         <div
           aria-hidden="true"
           className="k-hero-gradient absolute inset-0 -z-20"
@@ -67,7 +67,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-border">
       {/* Right padding keeps links clear of the fixed help and accessibility dock. */}
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-10 pb-28 md:flex-row md:items-center md:justify-between md:px-8 md:pr-24 md:pb-10">
+      <div className="mx-auto flex w-full max-w-[110rem] flex-col gap-6 px-4 py-10 pb-28 md:flex-row md:items-center md:justify-between md:px-8 lg:px-12 2xl:px-16 md:pr-24 md:pb-10">
         <div className="flex items-start gap-3">
           <KusanyaMark className="size-7" />
           <div className="flex flex-col gap-1">

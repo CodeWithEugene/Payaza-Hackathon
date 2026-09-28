@@ -27,7 +27,7 @@ export function ProductMock() {
   return (
     <figure
       aria-label="Example: a Telegram order from Dubai Fresh FZE becomes invoice KSN-2026-0001 for USD 1,150, paid by card, with KES 138,260.04 paid out to M-Pesa."
-      className="relative mx-auto flex w-full max-w-md flex-col lg:max-w-lg"
+      className="relative mx-auto flex w-full max-w-md flex-col lg:max-w-lg 2xl:max-w-2xl 2xl:scale-105"
     >
       <div aria-hidden="true" className="contents">
         <div className="k-float-slow z-10 w-[90%] self-start sm:w-[78%]">

@@ -6,8 +6,8 @@ import { STATS } from "./data"
  */
 export function StatsBand() {
   return (
-    <section aria-labelledby="stats-heading" className="px-4 md:px-8">
-      <div className="k-ink-glow mx-auto flex w-full max-w-7xl flex-col gap-14 overflow-hidden rounded-3xl px-6 py-16 text-brand-ink-foreground ring-1 ring-foreground/10 md:px-12 md:py-20 dark:ring-white/10">
+    <section aria-labelledby="stats-heading" className="px-4 md:px-8 lg:px-12 2xl:px-16">
+      <div className="k-ink-glow mx-auto flex w-full max-w-[110rem] flex-col gap-14 overflow-hidden rounded-3xl px-6 py-16 text-brand-ink-foreground ring-1 ring-foreground/10 md:px-12 md:py-20 dark:ring-white/10">
         <div className="flex max-w-3xl flex-col gap-4">
           <p className="text-sm font-semibold text-hero-sun">
             Pricing, In Plain Numbers

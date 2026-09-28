@@ -51,7 +51,7 @@ export function DeveloperTeaser() {
   return (
     <section
       aria-labelledby="developers-heading"
-      className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-20 md:px-8 md:py-28 lg:grid-cols-2 lg:gap-16"
+      className="mx-auto grid w-full max-w-[110rem] items-center gap-12 px-4 py-20 md:px-8 lg:px-12 2xl:px-16 md:py-28 lg:grid-cols-2 lg:gap-16"
     >
       <div className="flex flex-col gap-6">
         <Eyebrow>For Developers</Eyebrow>

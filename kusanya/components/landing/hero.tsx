@@ -20,7 +20,7 @@ const NAV_LINKS = [
 export function SiteHeader() {
   return (
     <header className="absolute inset-x-0 top-0 z-40">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-4 md:px-8">
+      <div className="mx-auto flex w-full max-w-[110rem] items-center justify-between gap-3 px-4 py-4 md:px-8 lg:px-12 2xl:px-16">
         <Link
           href="/"
           className="flex items-center gap-2 rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
@@ -69,7 +69,7 @@ export function Hero() {
 
       <section
         aria-labelledby="hero-heading"
-        className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 pt-8 pb-20 md:px-8 md:pt-12 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pt-16 lg:pb-32"
+        className="mx-auto grid w-full max-w-[110rem] items-center gap-12 px-4 pt-8 pb-20 md:px-8 lg:px-12 2xl:px-16 md:pt-12 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pt-16 lg:pb-32"
       >
         <div className="flex flex-col items-start gap-6">
           <Badge
@@ -81,12 +81,12 @@ export function Hero() {
           </Badge>
           <h1
             id="hero-heading"
-            className="font-heading text-[2.6rem] leading-[1.02] font-semibold tracking-tighter text-balance sm:text-6xl lg:text-7xl"
+            className="font-heading text-[2.6rem] leading-[1.02] font-semibold tracking-tighter text-balance sm:text-6xl lg:text-7xl 2xl:text-8xl"
           >
             Get Paid For Your Exports,{" "}
             <span className="text-primary">Without The Chase</span>
           </h1>
-          <p className="max-w-xl text-lg leading-relaxed text-pretty sm:text-xl">
+          <p className="max-w-xl text-lg leading-relaxed text-pretty sm:text-xl 2xl:max-w-2xl 2xl:text-2xl">
             A buyer&apos;s Telegram order becomes a clean invoice in seconds.
             Buyers abroad pay USD by card, Apple Pay or Google Pay, and regional
             buyers pay by mobile money. You receive KES in M-Pesa or your bank,

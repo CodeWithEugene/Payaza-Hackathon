@@ -10,7 +10,7 @@ export function TrustStrip() {
       aria-labelledby="trust-heading"
       className="border-y border-border/70"
     >
-      <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-6 px-4 py-10 md:px-8">
+      <div className="mx-auto flex w-full max-w-[110rem] flex-col items-center gap-6 px-4 py-10 md:px-8 lg:px-12 2xl:px-16">
         <h2
           id="trust-heading"
           className="text-center text-sm font-medium text-muted-foreground"

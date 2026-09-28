@@ -42,7 +42,7 @@ export function HowItWorks() {
     <section
       id="how-it-works"
       aria-labelledby="how-heading"
-      className="mx-auto flex w-full max-w-7xl scroll-mt-8 flex-col gap-12 px-4 py-20 md:px-8 md:py-28"
+      className="mx-auto flex w-full max-w-[110rem] scroll-mt-8 flex-col gap-12 px-4 py-20 md:px-8 lg:px-12 2xl:px-16 md:py-28"
     >
       <SectionHeading
         id="how-heading"
