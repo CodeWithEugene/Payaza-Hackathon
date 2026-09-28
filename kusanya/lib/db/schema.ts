@@ -556,6 +556,36 @@ export const auditLog = pgTable(
   (t) => [index("audit_log_entity_idx").on(t.entityType, t.entityId)],
 );
 
+/**
+ * Developer API keys (public REST API v1). Only a SHA-256 hash of the full
+ * secret is stored; the plaintext is shown to the merchant exactly once.
+ * `prefix` (first chars, e.g. "ksn_test_AbCd1234") is the lookup handle and
+ * the only part the UI ever shows again.
+ */
+export const apiKeys = pgTable(
+  "api_keys",
+  {
+    id: text("id").primaryKey(), // key_…
+    businessId: text("business_id")
+      .notNull()
+      .references(() => businesses.id, { onDelete: "cascade" }),
+    name: varchar("name", { length: 80 }).notNull(),
+    prefix: varchar("prefix", { length: 24 }).notNull(),
+    /** Hex SHA-256 of the full secret. Never the plaintext. */
+    keyHash: varchar("key_hash", { length: 64 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("api_keys_key_hash_idx").on(t.keyHash),
+    index("api_keys_prefix_idx").on(t.prefix),
+    index("api_keys_business_idx").on(t.businessId),
+  ],
+);
+
 // --------------------------------------------------------------- relations --
 
 export const businessesRelations = relations(businesses, ({ one, many }) => ({
@@ -659,6 +689,7 @@ export const schema = {
   webhookEvents,
   reminders,
   auditLog,
+  apiKeys,
 };
 
 export type Invoice = typeof invoices.$inferSelect;
@@ -676,3 +707,4 @@ export type Reminder = typeof reminders.$inferSelect;
 export type AuditEntry = typeof auditLog.$inferSelect;
 export type InvoiceItem = typeof invoiceItems.$inferSelect;
 export type PayoutRail = typeof payoutRails.$inferSelect;
+export type ApiKey = typeof apiKeys.$inferSelect;

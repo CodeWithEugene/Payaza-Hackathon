@@ -3,6 +3,7 @@ import { eq, inArray, like } from "drizzle-orm";
 import { db, ensureSchema } from "@/lib/db/client";
 import {
   aiExtractions,
+  apiKeys,
   businesses,
   buyers,
   invoiceItems,
@@ -570,6 +571,8 @@ export async function wipeDemo() {
     await db.delete(buyers).where(eq(buyers.businessId, biz.id));
     await db.delete(aiExtractions).where(eq(aiExtractions.businessId, biz.id));
     await db.delete(webhookEvents).where(like(webhookEvents.dedupeKey, "seed:%"));
+    // Developer API keys (FK also cascades; explicit keeps the wipe order readable).
+    await db.delete(apiKeys).where(eq(apiKeys.businessId, biz.id));
     await db.delete(businesses).where(eq(businesses.id, biz.id));
   }
   const [u] = await db.select({ id: users.id }).from(users).where(eq(users.email, DEMO_EMAIL)).limit(1);

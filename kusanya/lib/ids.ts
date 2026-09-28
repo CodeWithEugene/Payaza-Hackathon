@@ -20,6 +20,7 @@ export type IdPrefix =
   | "wev" // webhook_events
   | "rem" // reminders
   | "aud" // audit_log
+  | "key" // api_keys
   | "tok"; // public buyer-facing tokens
 
 export function newId(prefix: IdPrefix): string {

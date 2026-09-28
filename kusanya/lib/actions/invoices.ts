@@ -5,16 +5,8 @@ import { auth } from "@/lib/auth/config";
 import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
-import { aiExtractions } from "@/lib/db/schema";
-import {
-  createInvoice,
-  finalizeInvoice,
-  sendInvoice,
-  cancelInvoice,
-  mustGetInvoice,
-} from "@/lib/services/invoices";
-import { screenInvoice } from "@/lib/services/risk";
-import { loadBuyerHistory } from "@/lib/services/extraction";
+import { sendInvoice, cancelInvoice, mustGetInvoice } from "@/lib/services/invoices";
+import { issueInvoice } from "@/lib/services/invoice-pipeline";
 import { simulateSettlement } from "@/lib/services/payouts";
 import { createInvoiceSchema, type CreateInvoiceInput } from "@/lib/validators/invoice";
 import type { ActionResult } from "./auth";
@@ -49,8 +41,7 @@ export async function createInvoiceAction(
   const data = parsed.data;
 
   try {
-    // Sum check when items carry prices (transparency, not a hard block).
-    const invoice = await createInvoice({
+    const { invoice, riskDecision, riskScore } = await issueInvoice({
       businessId: ctx.businessId,
       actorId: ctx.userId,
       buyer:
@@ -74,44 +65,12 @@ export async function createInvoiceAction(
       notes: data.notes ?? null,
       feeBearer: data.feeBearer,
       extractionId: data.extractionId ?? null,
+      sendNow: data.sendNow,
     });
-
-    // Risk screening — source text from the extraction when present.
-    let sourceText: string | null = null;
-    if (data.extractionId) {
-      const [ext] = await db.select().from(aiExtractions).where(eq(aiExtractions.id, data.extractionId)).limit(1);
-      sourceText = ext?.sourceText ?? null;
-    }
-    const buyerForRisk =
-      "existingId" in data.buyer
-        ? { id: data.buyer.existingId, name: "", country: "KE" }
-        : { id: invoice.buyerId, name: data.buyer.name, country: data.buyer.country };
-    const { buyers } = await import("@/lib/db/schema");
-    const [buyerRow] = await db.select().from(buyers).where(eq(buyers.id, invoice.buyerId)).limit(1);
-    const history = await loadBuyerHistory(ctx.businessId, invoice.buyerId);
-    const { result } = await screenInvoice({
-      invoice: { id: invoice.id, status: invoice.status },
-      text: sourceText,
-      buyerName: buyerRow?.name ?? buyerForRisk.name,
-      buyerCountry: buyerRow?.country ?? buyerForRisk.country,
-      isFirstBuyer: history.isFirstBuyer,
-      invoiceTotalMinor: data.totalMinor,
-      historyAverageMinor: history.averageMinor,
-    });
-
-    let status = invoice.status;
-    if (result.decision === "pass" && data.sendNow) {
-      await finalizeInvoice(invoice.id, ctx.businessId);
-      await sendInvoice(invoice.id, ctx.businessId, ctx.userId);
-      status = "sent";
-    } else if (result.decision === "pass") {
-      await finalizeInvoice(invoice.id, ctx.businessId);
-      status = "ready";
-    }
     revalidatePath("/app/invoices");
     return {
       ok: true,
-      data: { invoiceId: invoice.id, status, riskDecision: result.decision, riskScore: result.score },
+      data: { invoiceId: invoice.id, status: invoice.status, riskDecision, riskScore },
     };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "Could not create the invoice." };

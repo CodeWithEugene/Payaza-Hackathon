@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  Code2,
   Coins,
   Contact,
   LayoutDashboard,
@@ -34,6 +35,7 @@ const NAV = [
   { href: "/app/partners", label: "Partners", icon: Users },
   { href: "/app/buyers", label: "Buyers", icon: Contact },
   { href: "/app/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/app/developers", label: "Developers", icon: Code2 },
   { href: "/app/settings", label: "Settings", icon: Settings },
 ];
 
