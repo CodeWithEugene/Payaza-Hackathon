@@ -1,6 +1,6 @@
 import "server-only";
 import { env } from "@/lib/config/env";
-import { formatMinor } from "@/lib/money/format";
+import { formatMoney } from "@/lib/money/format";
 import { isCurrency } from "@/lib/money/currencies";
 import { cancelInvoice, listInvoices, mustGetInvoice, sendInvoice } from "@/lib/services/invoices";
 import { draftInvoiceFromText } from "@/lib/services/order-intake";
@@ -152,7 +152,7 @@ async function handleOrder(chatId: string, ctx: ChatContext, text: string): Prom
         number: invoice.number,
         buyerName: outcome.buyerName,
         items: extraction.items.map((i) => ({ description: i.description, qty: String(i.qty) })),
-        totalLabel: isCurrency(currency) ? formatMinor(currency, Number(invoice.amountMinor)) : `${currency} ${invoice.amountMinor}`,
+        totalLabel: isCurrency(currency) ? formatMoney(currency, Number(invoice.amountMinor)) : `${currency} ${invoice.amountMinor}`,
         dueLabel: invoice.dueAt ? invoice.dueAt.toISOString().slice(0, 10) : "on receipt",
         quality: extraction.quality,
         engine: extraction.model.startsWith("demo") ? "demo rules" : "Jev AI",
@@ -214,7 +214,7 @@ async function replyLatestInvoices(chatId: string, ctx: ChatContext): Promise<vo
     return;
   }
   const lines = rows.map(({ invoice, buyerName }) => {
-    const amount = isCurrency(invoice.currency) ? formatMinor(invoice.currency, Number(invoice.amountMinor)) : invoice.amountMinor;
+    const amount = isCurrency(invoice.currency) ? formatMoney(invoice.currency, Number(invoice.amountMinor)) : invoice.amountMinor;
     return `• <b>${escapeHtml(invoice.number)}</b> ${escapeHtml(buyerName)}: ${escapeHtml(amount)} (${escapeHtml(invoice.status.replace(/_/g, " "))})`;
   });
   await sendMessage(chatId, `<b>Latest invoices, ${escapeHtml(ctx.businessName)}</b>\n\n${lines.join("\n")}`, [

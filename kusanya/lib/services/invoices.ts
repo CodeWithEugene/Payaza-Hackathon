@@ -21,7 +21,7 @@ import { assertInvoiceTransition } from "@/lib/payaza/state-machine";
 import { publish } from "./events";
 import { createPaymentLink } from "@/lib/payaza/endpoints";
 import { buildPaymentLinkRequest } from "@/lib/payaza/payment-link";
-import { toNumericColumn, formatMinor } from "@/lib/money/format";
+import { toNumericColumn, formatMoney } from "@/lib/money/format";
 import { isCurrency, type CurrencyCode } from "@/lib/money/currencies";
 import { sendEmail } from "@/lib/notify/email";
 import { sendSms } from "@/lib/notify/sms";
@@ -202,7 +202,7 @@ export async function sendInvoice(
   const [buyerRow] = await db.select().from(buyers).where(eq(buyers.id, fresh.buyerId)).limit(1);
   const biz = await mustGetBusiness(businessId);
   const payUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/i/${fresh.token}`;
-  const amountDisplay = formatMinor(fresh.currency as CurrencyCode, Number(fresh.amountMinor));
+  const amountDisplay = formatMoney(fresh.currency as CurrencyCode, Number(fresh.amountMinor));
   const dueDisplay = fresh.dueAt ? fresh.dueAt.toISOString().slice(0, 10) : "on receipt";
 
   if (opts.email && buyerRow?.email) {

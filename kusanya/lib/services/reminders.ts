@@ -3,7 +3,7 @@ import { and, desc, eq, inArray, lte } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { buyers, invoices, reminders, transactions } from "@/lib/db/schema";
 import { newId } from "@/lib/ids";
-import { formatMinor } from "@/lib/money/format";
+import { formatMoney } from "@/lib/money/format";
 import type { CurrencyCode } from "@/lib/money/currencies";
 import { checkReminderDraft, type LedgerFact } from "@/lib/jev/guardrails";
 import { classifyBuyerMessage } from "@/lib/jev/intent";
@@ -123,7 +123,7 @@ export async function sendReminder(reminderId: string, businessId: string, actor
   const [buyer] = await db.select().from(buyers).where(eq(buyers.id, inv.buyerId)).limit(1);
   if (!buyer) throw new Error("buyer missing");
   const owner = await getOwnerContact(businessId);
-  const amountDisplay = formatMinor(inv.currency as CurrencyCode, Number(inv.amountMinor));
+  const amountDisplay = formatMoney(inv.currency as CurrencyCode, Number(inv.amountMinor));
   const payUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/i/${inv.token}`;
 
   if (rem.channel === "email" && buyer.email) {
@@ -251,7 +251,7 @@ async function ledgerFacts(invoiceId: string): Promise<LedgerFact[]> {
   const [inv] = await db.select().from(invoices).where(eq(invoices.id, invoiceId)).limit(1);
   if (!inv) return [];
   const facts: LedgerFact[] = [
-    { fact: `Invoice ${inv.number} is for ${formatMinor(inv.currency as CurrencyCode, Number(inv.amountMinor))}` },
+    { fact: `Invoice ${inv.number} is for ${formatMoney(inv.currency as CurrencyCode, Number(inv.amountMinor))}` },
   ];
   if (inv.dueAt) facts.push({ fact: `Invoice ${inv.number} is due on ${inv.dueAt.toISOString().slice(0, 10)}` });
   const paid = await db
@@ -260,7 +260,7 @@ async function ledgerFacts(invoiceId: string): Promise<LedgerFact[]> {
     .where(and(eq(transactions.invoiceId, invoiceId), eq(transactions.kind, "collection"), eq(transactions.status, "completed")));
   for (const t of paid) {
     facts.push({
-      fact: `A payment of ${formatMinor(t.currency as CurrencyCode, Number(t.amountMinor))} was received on ${(t.occurredAt ?? t.createdAt).toISOString().slice(0, 10)}`,
+      fact: `A payment of ${formatMoney(t.currency as CurrencyCode, Number(t.amountMinor))} was received on ${(t.occurredAt ?? t.createdAt).toISOString().slice(0, 10)}`,
     });
   }
   return facts;

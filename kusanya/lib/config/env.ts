@@ -49,6 +49,11 @@ const envSchema = z.object({
   BETTER_AUTH_URL: z.string().optional().default("http://localhost:3000"),
 
   RESEND_API_KEY: z.string().optional().default(""),
+  /** Brevo transactional email (preferred provider when set). */
+  BREVO_API_KEY: z.string().optional().default(""),
+  /** Must be a verified sender on the provider (Brevo: codewitheugene.top is authenticated). */
+  EMAIL_FROM_ADDRESS: z.string().email().optional().default("eugene@codewitheugene.top"),
+  EMAIL_FROM_NAME: z.string().optional().default("Kusanya"),
   AFRICASTALKING_USER: z.string().optional().default(""),
   AFRICASTALKING_KEY: z.string().optional().default(""),
 
@@ -100,7 +105,7 @@ export const env = {
   JEV_CONFIGURED: raw.TYPESAFE_API_KEY.length > 0,
   LLM_CONFIGURED: raw.OPENROUTER_API_KEY.length > 0,
   DB_CONFIGURED: raw.DATABASE_URL.length > 0,
-  NOTIFICATIONS_CONFIGURED: raw.RESEND_API_KEY.length > 0,
+  NOTIFICATIONS_CONFIGURED: raw.BREVO_API_KEY.length > 0 || raw.RESEND_API_KEY.length > 0,
 } as const;
 
 export type Env = typeof env;

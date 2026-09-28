@@ -13,7 +13,7 @@ import {
   type Transaction,
 } from "@/lib/db/schema";
 import { newId, newMerchantReference } from "@/lib/ids";
-import { toNumericColumn, minorToMajor, formatMinor } from "@/lib/money/format";
+import { toNumericColumn, minorToMajor, formatMinor, formatMoney } from "@/lib/money/format";
 import { accountEnquiry, initiatePayout } from "@/lib/payaza/endpoints";
 import {
   assertTxnTransition,
@@ -130,7 +130,7 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
       txnId: awaiting.txnId,
       payoutId: awaiting.payoutId,
       status: "awaiting_confirmation" as const,
-      amountDisplay: formatMinor("KES", payoutMinor),
+      amountDisplay: formatMoney("KES", payoutMinor),
       message: `Payout of ${formatMinor("KES", payoutMinor)} is waiting for your confirmation code.`,
     };
   }
@@ -192,7 +192,7 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
     txnId,
     payoutId,
     status: "awaiting_confirmation" as const,
-    amountDisplay: formatMinor("KES", payoutMinor),
+    amountDisplay: formatMoney("KES", payoutMinor),
     message: `Payout of ${formatMinor("KES", payoutMinor)} to ${isMpesa ? "M-Pesa" : "bank"} ${maskAccount(accountNumber)} created. Confirm to send.`,
   };
 }
@@ -307,7 +307,7 @@ export async function executePayout(
       txnId,
       payoutId,
       status: "pending" as const,
-      amountDisplay: formatMinor("KES", payoutMinor),
+      amountDisplay: formatMoney("KES", payoutMinor),
       message: `Payout of ${formatMinor("KES", payoutMinor)} initiated to ${isMpesa ? "M-Pesa" : "bank"} ${maskAccount(accountNumber)}.`,
     };
   } catch (err) {
@@ -560,7 +560,7 @@ export async function reconcilePendingPayouts(limit = 20) {
 async function notifyPayoutOutcome(inv: Invoice, amountMinor: number, success: boolean) {
   const owner = await getOwnerContact(inv.businessId);
   if (!owner) return;
-  const amountDisplay = formatMinor("KES", amountMinor);
+  const amountDisplay = formatMoney("KES", amountMinor);
   const [rail] = await db
     .select()
     .from(payoutRails)

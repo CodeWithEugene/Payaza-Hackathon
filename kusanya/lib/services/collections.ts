@@ -12,7 +12,7 @@ import {
   type Transaction,
 } from "@/lib/db/schema";
 import { newId, newMerchantReference } from "@/lib/ids";
-import { toNumericColumn, minorToMajor, formatMinor } from "@/lib/money/format";
+import { toNumericColumn, minorToMajor, formatMoney } from "@/lib/money/format";
 import { minorFactor, type CurrencyCode } from "@/lib/money/currencies";
 import {
   processCollection,
@@ -34,7 +34,7 @@ import { writeAudit } from "@/lib/db/audit";
 import { publish } from "./events";
 import { getOwnerContact } from "./business";
 import { sendEmail } from "@/lib/notify/email";
-import { receiptEmail } from "@/lib/notify/templates";
+import { merchantPaidEmail, receiptEmail } from "@/lib/notify/templates";
 import { sendSms } from "@/lib/notify/sms";
 import { env } from "@/lib/config/env";
 import { notifyPaidOnTelegram } from "@/lib/telegram/notify";
@@ -46,6 +46,17 @@ import { notifyPaidOnTelegram } from "@/lib/telegram/notify";
  */
 
 const COUNTRY_CURRENCY: Record<string, CurrencyCode> = { KE: "KES", UG: "UGX", TZ: "TZS" };
+/** How the buyer paid, for the merchant's payment email. */
+const CHANNEL_LABEL: Partial<Record<Transaction["channel"], string>> = {
+  card: "Card (Payaza Checkout)",
+  apple_pay: "Apple Pay",
+  google_pay: "Google Pay",
+  payment_link: "Payaza payment link",
+  momo_ke: "M-Pesa (Kenya)",
+  momo_ug: "Mobile money (Uganda)",
+  momo_tz: "Mobile money (Tanzania)",
+};
+
 const COUNTRY_CHANNEL: Record<string, Transaction["channel"]> = {
   KE: "momo_ke",
   UG: "momo_ug",
@@ -326,7 +337,7 @@ export async function applyCollectionResult(
           const { markSplitsSettled } = await import("./splits");
           await markSplitsSettled(inv.id, amountMinor);
         }
-        await notifyPaymentReceived(inv, amountMinor, cur, needsMerchantAlert, input.amountValidation);
+        await notifyPaymentReceived(inv, amountMinor, cur, needsMerchantAlert, input.amountValidation, input.channelOverride ?? txn.channel);
       } catch (err) {
         // Invoice already advanced (e.g. duplicate webhook after partial) — record, don't crash.
         await writeAudit({
@@ -521,8 +532,10 @@ async function notifyPaymentReceived(
   currency: CurrencyCode,
   needsMerchantAlert: boolean,
   validation: string | null | undefined,
+  channel: Transaction["channel"],
 ) {
-  const amountDisplay = formatMinor(currency, amountMinor);
+  const amountDisplay = formatMoney(currency, amountMinor);
+  const appUrl = env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
   const [buyerRow] = await db.select().from(buyers).where(eq(buyers.id, inv.buyerId)).limit(1);
   const owner = await getOwnerContact(inv.businessId);
   const paidAt = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
@@ -537,18 +550,28 @@ async function notifyPaymentReceived(
         amountDisplay,
         reference: inv.number,
         paidAt,
+        receiptUrl: `${appUrl}/api/buyer/receipt?token=${encodeURIComponent(inv.token)}`,
       }),
       tag: "receipt",
     });
   }
   if (owner?.email) {
     const note = needsMerchantAlert
-      ? `⚠ ${validation === "UNDERPAYMENT" ? "UNDERPAYMENT" : "OVERPAYMENT"} detected. Review the transparency panel.`
-      : "";
+      ? `The buyer paid ${validation === "UNDERPAYMENT" ? "less" : "more"} than the invoice total. Review the transparency panel.`
+      : null;
     await sendEmail({
       to: owner.email,
-      subject: `Paid: ${inv.number}, ${amountDisplay}${note ? " (Attention)" : ""}`,
-      html: `<p>Invoice <strong>${inv.number}</strong> received <strong>${amountDisplay}</strong> at ${paidAt}.</p><p>${note}</p>`,
+      subject: `Payment Received: ${inv.number}, ${amountDisplay}${note ? " (Needs Attention)" : ""}`,
+      html: merchantPaidEmail({
+        merchantName: owner.name?.split(" ")[0] || owner.business.name,
+        invoiceNumber: inv.number,
+        buyerName: buyerRow?.name ?? "Your buyer",
+        amountDisplay,
+        methodDisplay: CHANNEL_LABEL[channel] ?? "Payaza",
+        paidAt,
+        invoiceUrl: `${appUrl}/app/invoices/${inv.id}`,
+        attention: note,
+      }),
       tag: "merchant-paid",
     });
   }
