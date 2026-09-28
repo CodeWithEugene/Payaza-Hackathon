@@ -12,6 +12,7 @@ import { newId } from "@/lib/ids";
 import { verifyPayazaSignature, isDemoReplay } from "@/lib/payaza/webhook-verify";
 import {
   collectionWebhookSchema,
+  parsePayazaTimestamp,
   transferWebhookSchema,
   type CollectionWebhook,
   type TransferWebhook,
@@ -189,7 +190,11 @@ function classify(payload: unknown): "collection" | "transfer" | null {
 async function handleCollectionEvent(
   data: CollectionWebhook,
 ): Promise<{ matched: boolean; detail?: string }> {
-  const [txn] = await findCollectionTxn(data.merchant_reference, data.transaction_reference);
+  // MoMo webhooks carry no merchant_reference; transaction_reference echoes ours.
+  const [txn] = await findCollectionTxn(
+    data.merchant_reference ?? data.transaction_reference,
+    data.transaction_reference,
+  );
   if (!txn) {
     return { matched: false, detail: `no txn for ${data.merchant_reference ?? data.transaction_reference}` };
   }
@@ -197,13 +202,13 @@ async function handleCollectionEvent(
     txn,
     status: collectionWebhookToTxnStatus(data.transaction_status),
     amountReceivedMajor: data.amount_received,
-    feeMajor: data.transaction_fee,
+    feeMajor: data.transaction_fee ?? null,
     amountValidation: data.amount_validation ?? "EXACT",
     payerName: data.received_from?.account_name ?? null,
     payerAccount: data.received_from?.account_number ?? null,
     payazaStatusRaw: `${data.transaction_status}:${data.status_reason ?? ""}`,
     channelOverride: channelFromWebhook(data.channel),
-    occurredAt: data.current_status_date ? new Date(data.current_status_date.replace(" ", "T") + "Z") : new Date(),
+    occurredAt: parsePayazaTimestamp(data.current_status_date) ?? new Date(),
     payload: data,
     source: "webhook",
   });

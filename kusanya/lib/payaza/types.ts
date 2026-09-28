@@ -367,7 +367,8 @@ export const collectionWebhookSchema = z.object({
   transaction_reference: z.string(),
   transaction_status: z.enum(["Funds Received", "Transaction Failed"]),
   virtual_account_number: z.string().nullish(),
-  transaction_fee: z.number(),
+  /** Absent on real KENYA_COLLECTIONS momo webhooks (sandbox, 2026-09-28). */
+  transaction_fee: z.number().nullish(),
   amount_received: z.number(),
   initiated_date: z.string().nullish(),
   current_status_date: z.string().nullish(),
@@ -442,3 +443,15 @@ export const checkoutCallbackSchema = z
   })
   .passthrough();
 export type CheckoutCallback = z.infer<typeof checkoutCallbackSchema>;
+
+/**
+ * Payaza timestamps ("2026-09-28 18:07:41") carry no zone and are Lagos time
+ * (UTC+1): a sandbox call at 16:37 UTC came back stamped 17:37:53.
+ */
+export function parsePayazaTimestamp(value: string | null | undefined): Date | null {
+  if (!value) return null;
+  const iso = value.trim().replace(" ", "T");
+  const hasZone = /(?:Z|[+-]\d{2}:?\d{2})$/.test(iso);
+  const date = new Date(hasZone ? iso : `${iso}+01:00`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
