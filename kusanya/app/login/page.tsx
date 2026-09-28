@@ -17,7 +17,7 @@ export default function LoginPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <BrandPanel sandbox={env.SANDBOX_RAILS} />
-      <div className="bg-muted/30 relative flex flex-col items-center justify-center p-4 py-10 md:p-8">
+      <div className="k-auth-canvas relative flex flex-col items-center justify-center p-4 py-10 md:p-8">
         <Button variant="ghost" size="sm" asChild className="absolute left-4 top-4">
           <Link href="/">
             <ArrowLeft data-icon="inline-start" />

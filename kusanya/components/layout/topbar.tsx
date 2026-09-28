@@ -14,7 +14,7 @@ interface TopbarProps {
 
 export function Topbar(props: TopbarProps) {
   return (
-    <header className="bg-background/80 sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b px-4 backdrop-blur">
+    <header className="k-topbar top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b px-4 backdrop-blur-md">
       <SidebarTrigger className="-ml-1" />
       <div className="ml-2 flex min-w-0 items-center gap-2">
         {props.demoMode && (

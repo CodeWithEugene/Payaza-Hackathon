@@ -400,3 +400,150 @@ html[data-a11y-motion="reduce"] .k-float,
 html[data-a11y-motion="reduce"] .k-float-slow {
   animation: none !important;
 }
+
+/* ---------------------------------------------------------------------------
+ * App shell brand layer (signed-in pages + auth). Unlayered on purpose so it
+ * sits above Tailwind utilities; scoped to [data-app-shell] / .k-auth-*.
+ * Same palette as the landing page: indigo primary, sunset + lagoon glows.
+ * ------------------------------------------------------------------------- */
+
+/* Soft aurora behind every signed-in page. */
+.k-app-canvas {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(1100px 520px at 105% -12%, color-mix(in oklch, var(--hero-violet) 14%, transparent), transparent 70%),
+    radial-gradient(900px 420px at -8% -6%, color-mix(in oklch, var(--hero-sun) 10%, transparent), transparent 70%),
+    radial-gradient(900px 600px at 50% 120%, color-mix(in oklch, var(--hero-cyan) 8%, transparent), transparent 70%);
+  background-attachment: fixed;
+}
+.dark .k-app-canvas {
+  background-image:
+    radial-gradient(1100px 520px at 105% -12%, color-mix(in oklch, var(--hero-violet) 18%, transparent), transparent 70%),
+    radial-gradient(900px 420px at -8% -6%, color-mix(in oklch, var(--hero-magenta) 8%, transparent), transparent 70%);
+}
+
+/* Page titles: bigger, tighter, ink-to-indigo gradient. */
+[data-app-shell] main h1 {
+  font-size: 1.75rem;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  background-image: linear-gradient(95deg, var(--foreground) 35%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@media (min-width: 48rem) {
+  [data-app-shell] main h1 {
+    font-size: 2.125rem;
+  }
+}
+
+/* Cards: layered depth with a brand-tinted shadow and a gentle lift. */
+[data-app-shell] main [data-slot="card"] {
+  border-color: color-mix(in oklch, var(--primary) 12%, var(--border));
+  box-shadow:
+    0 1px 2px color-mix(in oklch, var(--foreground) 5%, transparent),
+    0 12px 32px -18px color-mix(in oklch, var(--primary) 35%, transparent);
+  transition:
+    box-shadow 200ms ease,
+    transform 200ms ease;
+}
+[data-app-shell] main [data-slot="card"]:hover {
+  box-shadow:
+    0 1px 2px color-mix(in oklch, var(--foreground) 6%, transparent),
+    0 18px 40px -18px color-mix(in oklch, var(--primary) 45%, transparent);
+}
+
+/* Table headers pick up a faint brand tint. */
+[data-app-shell] main thead tr {
+  background: color-mix(in oklch, var(--primary) 5%, transparent);
+}
+
+/* Topbar: glass with a gradient hairline instead of a flat border. */
+.k-topbar {
+  position: sticky;
+  background: color-mix(in oklch, var(--background) 72%, transparent);
+  border-bottom-color: transparent;
+}
+.k-topbar::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--hero-sun), var(--hero-coral), var(--hero-magenta), var(--hero-violet), var(--hero-cyan));
+  opacity: 0.55;
+}
+
+/* Brand tile behind the logo mark (sidebar + auth). */
+.k-brand-tile {
+  background-image: linear-gradient(135deg, var(--hero-violet), var(--brand-violet) 45%, var(--hero-magenta));
+  color: #fff;
+  box-shadow: 0 6px 16px -6px color-mix(in oklch, var(--brand-violet) 60%, transparent);
+}
+
+/* Active sidebar item: indigo pill with a glowing edge. */
+[data-app-shell] [data-sidebar="menu-button"][data-active="true"] {
+  background: color-mix(in oklch, var(--primary) 12%, transparent);
+  color: var(--primary);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+/* Auth form side: faint aurora so it never feels like a blank page. */
+.k-auth-canvas {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(700px 420px at 100% 0%, color-mix(in oklch, var(--hero-violet) 12%, transparent), transparent 70%),
+    radial-gradient(600px 380px at 0% 100%, color-mix(in oklch, var(--hero-sun) 10%, transparent), transparent 70%);
+}
+
+/* Accessibility overrides still win. */
+html[data-a11y-contrast="high"] [data-app-shell] main h1 {
+  background-image: none;
+  color: var(--foreground);
+}
+html[data-a11y-contrast="high"] .k-app-canvas,
+html[data-a11y-contrast="high"] .k-auth-canvas {
+  background-image: none;
+}
+html[data-a11y-motion="reduce"] [data-app-shell] main [data-slot="card"] {
+  transition: none;
+}
+.k-auth-canvas [data-slot="card"] {
+  border-color: color-mix(in oklch, var(--primary) 14%, var(--border));
+  box-shadow:
+    0 1px 2px color-mix(in oklch, var(--foreground) 5%, transparent),
+    0 24px 48px -24px color-mix(in oklch, var(--primary) 40%, transparent);
+}
+
+/* Brand accent strip on app cards, cycling through the palette so a page of
+   cards reads as colorful, not grey. */
+[data-app-shell] main [data-slot="card"] {
+  position: relative;
+  overflow: hidden;
+}
+[data-app-shell] main [data-slot="card"]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--hero-violet), var(--hero-cyan));
+  pointer-events: none;
+}
+[data-app-shell] main :nth-child(4n + 2 of [data-slot="card"])::before {
+  background: linear-gradient(90deg, var(--hero-sun), var(--hero-coral));
+}
+[data-app-shell] main :nth-child(4n + 3 of [data-slot="card"])::before {
+  background: linear-gradient(90deg, var(--brand-leaf), var(--hero-cyan));
+}
+[data-app-shell] main :nth-child(4n + 4 of [data-slot="card"])::before {
+  background: linear-gradient(90deg, var(--hero-magenta), var(--hero-violet));
+}
+/* Cards nested inside cards keep a clean edge. */
+[data-app-shell] main [data-slot="card"] [data-slot="card"]::before {
+  display: none;
+}
+html[data-a11y-contrast="high"] [data-app-shell] main [data-slot="card"]::before {
+  display: none;
+}

@@ -3,9 +3,31 @@ import { Badge } from "@/components/ui/badge";
 import type { LucideIcon } from "lucide-react";
 
 /**
- * Status pills — strict shadcn/ui (nova preset law): built-in Badge variants
- * + semantic tokens only, icons for differentiation. No raw palette colors.
+ * Status pills: shadcn Badge variants plus a semantic TONE from the brand
+ * tokens (no raw palette colors): money in = leaf green, in flight = indigo,
+ * waiting on a person = sunset. Icons + labels still carry the meaning, so
+ * color is never the only signal.
  */
+
+type Tone = "success" | "progress" | "attention";
+
+const TONE_CLASS: Record<Tone, string> = {
+  success: "border-transparent bg-brand-leaf/12 text-brand-leaf",
+  progress: "border-transparent bg-primary/12 text-primary",
+  attention: "border-transparent bg-brand-sunset/14 text-brand-sunset",
+};
+
+const TONE: Partial<Record<string, Tone>> = {
+  sent: "progress",
+  settling: "progress",
+  paying_out: "progress",
+  pending: "progress",
+  paid: "success",
+  settled: "success",
+  completed: "success",
+  partially_paid: "attention",
+  review: "attention",
+};
 
 const MAP: Record<
   string,
@@ -16,9 +38,9 @@ const MAP: Record<
   ready: { variant: "secondary", label: "Ready to send" },
   sent: { variant: "default", label: "Sent" },
   partially_paid: { variant: "secondary", label: "Partially paid", icon: Clock },
-  paid: { variant: "default", label: "Paid" },
+  paid: { variant: "default", label: "Paid", icon: CheckCircle2 },
   settling: { variant: "secondary", label: "Settling", icon: Clock },
-  settled: { variant: "secondary", label: "Settled" },
+  settled: { variant: "secondary", label: "Settled", icon: CheckCircle2 },
   paying_out: { variant: "secondary", label: "Paying out", icon: Clock },
   completed: { variant: "default", label: "Imefika! Completed", icon: CheckCircle2 },
   failed: { variant: "destructive", label: "Failed", icon: XCircle },
@@ -35,8 +57,9 @@ const MAP: Record<
 export function StatusBadge({ status }: { status: string }) {
   const s = MAP[status] ?? { variant: "outline" as const, label: status };
   const Icon = s.icon;
+  const tone = TONE[status];
   return (
-    <Badge variant={s.variant}>
+    <Badge variant={tone ? "outline" : s.variant} className={tone ? TONE_CLASS[tone] : undefined}>
       {Icon && <Icon data-icon="inline-start" />}
       {s.label}
     </Badge>

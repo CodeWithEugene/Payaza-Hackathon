@@ -22,7 +22,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     );
 
   return (
-    <SidebarProvider>
+    <SidebarProvider data-app-shell="" className="k-app-canvas">
       <AppSidebar businessName={business.name} reviewCount={Number(queue?.n ?? 0)} />
       <div className="flex min-h-svh w-full min-w-0 flex-1 flex-col">
         <Topbar

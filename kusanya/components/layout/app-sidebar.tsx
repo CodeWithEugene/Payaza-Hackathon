@@ -1,16 +1,4 @@
 import {
-  BarChart3,
-  Code2,
-  Coins,
-  Contact,
-  LayoutDashboard,
-  PlusCircle,
-  FileText,
-  Settings,
-  ShieldAlert,
-  Users,
-} from "lucide-react";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -18,26 +6,13 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { DemoOutboxButton } from "@/components/layout/demo-outbox";
 import { KusanyaMark } from "@/components/brand/logo";
-
-const NAV = [
-  { href: "/app", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/app/invoices/new", label: "New invoice", icon: PlusCircle },
-  { href: "/app/invoices", label: "Invoices", icon: FileText },
-  { href: "/app/payments", label: "Payments", icon: Coins },
-  { href: "/app/review", label: "Risk queue", icon: ShieldAlert },
-  { href: "/app/partners", label: "Partners", icon: Users },
-  { href: "/app/buyers", label: "Buyers", icon: Contact },
-  { href: "/app/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/app/developers", label: "Developers", icon: Code2 },
-  { href: "/app/settings", label: "Settings", icon: Settings },
-];
+import { NavMenu } from "@/components/layout/nav-menu";
 
 export function AppSidebar(props: {
   businessName: string;
@@ -50,7 +25,9 @@ export function AppSidebar(props: {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="/app">
-                <KusanyaMark className="size-8" />
+                <span className="k-brand-tile flex size-8 shrink-0 items-center justify-center rounded-lg">
+                  <KusanyaMark className="size-5" />
+                </span>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">kusanya</span>
                   <span className="text-muted-foreground truncate text-xs">
@@ -65,23 +42,7 @@ export function AppSidebar(props: {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {NAV.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton asChild tooltip={item.label}>
-                    <a href={item.href}>
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </a>
-                  </SidebarMenuButton>
-                  {item.href === "/app/review" && props.reviewCount > 0 ? (
-                    <SidebarMenuBadge className="bg-destructive/10 text-destructive">
-                      {props.reviewCount}
-                    </SidebarMenuBadge>
-                  ) : null}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            <NavMenu reviewCount={props.reviewCount} />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
