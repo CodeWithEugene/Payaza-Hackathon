@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Ban, CheckCircle2, ChevronDown, XCircle } from "lucide-react";
+import { Ban, CheckCircle2, ChevronDown, ReceiptText, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { buyers } from "@/lib/db/schema";
@@ -77,6 +78,8 @@ export default async function BuyerInvoicePage({ params }: Props) {
     .reduce((sum, t) => sum + Number(t.amountMinor), 0);
   const remainingMinor = Math.max(0, amountMinorNum - paidMinor);
   const latestCompleted = transactions.find((t) => t.status === "completed") ?? null;
+  // The token already in this page's URL is the capability; nothing else is added.
+  const receiptHref = `/api/buyer/receipt?token=${encodeURIComponent(invoice.token)}`;
 
   return (
     <div className="min-h-svh bg-muted/30">
@@ -178,6 +181,17 @@ export default async function BuyerInvoicePage({ params }: Props) {
           </CardContent>
         </Card>
 
+        {invoice.status === "partially_paid" && latestCompleted && (
+          <div className="flex justify-end">
+            <Button variant="outline" size="sm" asChild>
+              <a href={receiptHref} download>
+                <ReceiptText data-icon="inline-start" />
+                Download Receipt
+              </a>
+            </Button>
+          </div>
+        )}
+
         {/* Payment / outcome by status */}
         {payable && (
           <PayPanel
@@ -213,6 +227,14 @@ export default async function BuyerInvoicePage({ params }: Props) {
                   received{latestCompleted.occurredAt ? ` on ${fmtDate(latestCompleted.occurredAt)}` : ""}.
                   A receipt went to your email.
                 </p>
+              )}
+              {latestCompleted && (
+                <Button variant="outline" asChild>
+                  <a href={receiptHref} download>
+                    <ReceiptText data-icon="inline-start" />
+                    Download Receipt
+                  </a>
+                </Button>
               )}
             </CardContent>
           </Card>

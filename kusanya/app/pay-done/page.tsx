@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CheckCircle2, Clock, HelpCircle } from "lucide-react";
+import { CheckCircle2, Clock, HelpCircle, ReceiptText } from "lucide-react";
 import { handleCheckoutCallback } from "@/lib/services/collections";
+import { isWellFormedToken, receiptTokenForReference } from "@/lib/services/documents";
 import { getBuyerInvoice } from "@/lib/services/invoices";
 import { formatMinor } from "@/lib/money/format";
 import { isCurrency } from "@/lib/money/currencies";
@@ -42,11 +43,18 @@ export default async function PayDonePage({ searchParams }: Props) {
 
   let outcome: Outcome = "unknown";
   let detail: string | null = null;
+  // Invoice token for the receipt link, resolved server-side and only once
+  // money has landed. Never taken from anything but a verified outcome.
+  let receiptToken: string | null = null;
 
   if (rawRef.startsWith("KSN-")) {
     try {
       const result = await handleCheckoutCallback(rawRef);
       outcome = !result.found ? "unknown" : result.verified ? "verified" : "pending";
+      if (outcome === "verified") {
+        // A failed lookup only hides the receipt button; it never changes the outcome.
+        receiptToken = await receiptTokenForReference(rawRef).catch(() => null);
+      }
     } catch {
       // Verification call failed (Payaza unreachable etc.) — be honest: we
       // can't confirm yet; webhooks complete it server-side.
@@ -61,6 +69,7 @@ export default async function PayDonePage({ searchParams }: Props) {
         if (PAID_STATES.has(inv.status)) {
           outcome = "verified";
           const done = view.transactions.find((t) => t.status === "completed");
+          if (done && isWellFormedToken(rawRef)) receiptToken = rawRef;
           if (done && isCurrency(inv.currency)) {
             detail = `${inv.number} · ${formatMinor(inv.currency, Number(done.amountMinor))}`;
           } else {
@@ -126,7 +135,18 @@ export default async function PayDonePage({ searchParams }: Props) {
             </CardHeader>
           )}
 
-          <CardContent className="flex justify-center">
+          <CardContent className="flex flex-wrap justify-center gap-2">
+            {outcome === "verified" && receiptToken && (
+              <Button asChild>
+                <a
+                  href={`/api/buyer/receipt?token=${encodeURIComponent(receiptToken)}`}
+                  download
+                >
+                  <ReceiptText data-icon="inline-start" />
+                  Download Receipt
+                </a>
+              </Button>
+            )}
             <Button variant="outline" asChild>
               <Link href="/">Back To Kusanya</Link>
             </Button>

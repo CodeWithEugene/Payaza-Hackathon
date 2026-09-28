@@ -7,3 +7,4 @@ allowBuilds:
   esbuild: true
   tesseract.js: true
   '@electric-sql/pglite': true
+  core-js: false

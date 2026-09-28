@@ -36,6 +36,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ExportMenu } from "@/components/export/export-menu";
+import { dateTimeText, moneyText, statusText } from "@/lib/export/format";
+import type { ExportColumn, ExportRow } from "@/lib/export/types";
 import {
   Tooltip,
   TooltipContent,
@@ -62,6 +65,21 @@ const CHANNEL_LABELS: Record<string, string> = {
   virtual_account: "Virtual account",
   manual: "Manual",
 };
+
+const LEDGER_COLUMNS: ExportColumn[] = [
+  { key: "when", header: "When", nowrap: true },
+  { key: "invoice", header: "Invoice", nowrap: true },
+  { key: "type", header: "Type" },
+  { key: "channel", header: "Channel" },
+  { key: "status", header: "Status" },
+  { key: "amount", header: "Amount", align: "right" },
+  { key: "fee", header: "Fee", align: "right" },
+  { key: "net", header: "Net", align: "right" },
+  { key: "reference", header: "Reference", nowrap: true },
+  { key: "payazaReference", header: "Payaza Reference", nowrap: true },
+];
+
+const TAB_TITLES: Record<Tab, string> = { all: "All", in: "Collections", out: "Payouts" };
 
 /** Payaza's accountBalance arrives in MAJOR units; Amount speaks MINOR. */
 const MAJOR_DECIMALS: Record<string, number> = { USD: 2, KES: 2, UGX: 0, TZS: 0 };
@@ -102,6 +120,24 @@ export default async function PaymentsPage({
     .where(whereClause)
     .orderBy(desc(transactions.createdAt))
     .limit(100);
+
+  const ledgerRows: ExportRow[] = ledger.map(({ txn, invoiceNumber }) => {
+    const isOut = txn.direction === "out";
+    const signedMinor = isOut ? -Math.abs(Number(txn.amountMinor)) : Number(txn.amountMinor);
+    return {
+      when: dateTimeText(txn.occurredAt ?? txn.createdAt),
+      invoice: invoiceNumber ?? "",
+      type: isOut ? "Payout" : "Collection",
+      channel: CHANNEL_LABELS[txn.channel] ?? txn.channel,
+      status: statusText(txn.status),
+      amount: moneyText(txn.currency, signedMinor),
+      fee: moneyText(txn.currency, txn.feeMinor),
+      net: moneyText(txn.currency, txn.netMinor),
+      reference: txn.merchantReference,
+      payazaReference: txn.payazaReference ?? "",
+    };
+  });
+  const tabSlug = tab === "all" ? "" : `-${TAB_TITLES[tab].toLowerCase()}`;
 
   return (
     <TooltipProvider>
@@ -203,6 +239,16 @@ export default async function PaymentsPage({
               Last 100 {tab === "in" ? "collections" : tab === "out" ? "payouts" : "transactions"}{" "}
               · newest first
             </CardDescription>
+            <CardAction>
+              <ExportMenu
+                title="Payments Ledger"
+                filename={`kusanya-payments${tabSlug}`}
+                subtitle={`${TAB_TITLES[tab]} · last 100, newest first`}
+                businessName={business.name}
+                columns={LEDGER_COLUMNS}
+                rows={ledgerRows}
+              />
+            </CardAction>
           </CardHeader>
           <CardContent className="p-0">
             {ledger.length === 0 ? (

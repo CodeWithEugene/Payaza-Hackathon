@@ -26,8 +26,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ExportMenu } from "@/components/export/export-menu";
+import { dateText, moneyText } from "@/lib/export/format";
+import type { ExportColumn, ExportRow } from "@/lib/export/types";
 
 export const metadata: Metadata = { title: "Buyers" };
+
+const EXPORT_COLUMNS: ExportColumn[] = [
+  { key: "name", header: "Buyer" },
+  { key: "kind", header: "Type" },
+  { key: "country", header: "Country" },
+  { key: "email", header: "Email" },
+  { key: "phone", header: "Phone" },
+  { key: "invoices", header: "Invoices", align: "right" },
+  { key: "collected", header: "Collected", align: "right" },
+  { key: "flags", header: "Risk Flags" },
+  { key: "joined", header: "Joined" },
+];
 
 /** riskFlags is jsonb — render defensively, strings only. */
 function flagList(value: unknown): string[] {
@@ -83,16 +98,42 @@ export default async function BuyersPage() {
     collected.set(r.buyerId, list);
   }
 
+  // Per-currency totals stay separate ("USD 1,150.00; KES 48,500.00").
+  const exportRows: ExportRow[] = buyerRows.map((b) => ({
+    name: b.name,
+    kind: b.kind === "company" ? "Company" : "Person",
+    country: b.country,
+    email: b.email ?? "",
+    phone: b.phone ?? "",
+    invoices: String(counts.get(b.id) ?? 0),
+    collected: (collected.get(b.id) ?? []).map((t) => moneyText(t.currency, t.minor)).join("; "),
+    flags: flagList(b.riskFlags).join("; "),
+    joined: dateText(b.createdAt),
+  }));
+
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
-        <h1 className="font-heading text-2xl font-semibold tracking-tight">
-          Buyers
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Everyone you invoice — matched automatically from your messages or
-          added by hand.
-        </p>
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <h1 className="font-heading text-2xl font-semibold tracking-tight">
+            Buyers
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Everyone you invoice, matched automatically from your messages or
+            added by hand.
+          </p>
+        </div>
+        {buyerRows.length > 0 && (
+          <ExportMenu
+            title="Buyers"
+            filename="kusanya-buyers"
+            subtitle="Buyer directory"
+            businessName={business.name}
+            columns={EXPORT_COLUMNS}
+            rows={exportRows}
+            size="default"
+          />
+        )}
       </header>
 
       {buyerRows.length === 0 ? (

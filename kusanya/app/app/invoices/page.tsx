@@ -19,6 +19,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ExportMenu } from "@/components/export/export-menu";
+import { dateText, moneyText, statusText } from "@/lib/export/format";
+import type { ExportColumn, ExportRow } from "@/lib/export/types";
 
 export const metadata: Metadata = { title: "Invoices" };
 
@@ -36,6 +39,49 @@ const TABS: TabDef[] = [
   { key: "flagged", label: "Flagged", statuses: ["review", "on_hold"] },
   { key: "closed", label: "Cancelled + Failed", statuses: ["cancelled", "failed"] },
 ];
+
+/** Exports cover every invoice in the current view, not just this page. */
+const EXPORT_PAGE_SIZE = 100;
+const EXPORT_MAX_PAGES = 5;
+
+const EXPORT_COLUMNS: ExportColumn[] = [
+  { key: "number", header: "Invoice" },
+  { key: "buyer", header: "Buyer" },
+  { key: "country", header: "Country" },
+  { key: "issued", header: "Issued" },
+  { key: "due", header: "Due" },
+  { key: "status", header: "Status" },
+  { key: "amount", header: "Amount", align: "right" },
+  { key: "paid", header: "Paid", align: "right" },
+];
+
+type InvoiceListRow = Awaited<ReturnType<typeof listInvoices>>["rows"][number];
+
+function toExportRow({ invoice, buyerName, buyerCountry, paidMinor }: InvoiceListRow): ExportRow {
+  return {
+    number: invoice.number,
+    buyer: buyerName,
+    country: buyerCountry,
+    issued: dateText(invoice.issuedAt),
+    due: invoice.dueAt ? dateText(invoice.dueAt) : "On receipt",
+    status: statusText(invoice.status),
+    amount: moneyText(invoice.currency, invoice.amountMinor),
+    paid: Number(paidMinor) > 0 ? moneyText(invoice.currency, paidMinor) : "",
+  };
+}
+
+async function exportRowsFor(
+  businessId: string,
+  filter: { q?: string; status?: Invoice["status"][] },
+): Promise<ExportRow[]> {
+  const out: ExportRow[] = [];
+  for (let p = 1; p <= EXPORT_MAX_PAGES; p++) {
+    const batch = await listInvoices(businessId, { ...filter, page: p, pageSize: EXPORT_PAGE_SIZE });
+    out.push(...batch.rows.map(toExportRow));
+    if (out.length >= batch.total || batch.rows.length < EXPORT_PAGE_SIZE) break;
+  }
+  return out;
+}
 
 const dateFmt = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
@@ -62,6 +108,10 @@ export default async function InvoicesPage({
     page,
   });
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const exportRows =
+    total <= rows.length
+      ? rows.map(toExportRow)
+      : await exportRowsFor(business.id, { q: q || undefined, status: tab.statuses });
 
   function hrefWith(overrides: { q?: string; status?: string; page?: number }): string {
     const params = new URLSearchParams();
@@ -86,12 +136,23 @@ export default async function InvoicesPage({
             Every invoice you&apos;ve created, newest first.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/app/invoices/new">
-            <Plus data-icon="inline-start" />
-            New invoice
-          </Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <ExportMenu
+            title="Invoices"
+            filename={`kusanya-invoices${tab.key !== "all" ? `-${tab.key}` : ""}`}
+            subtitle={[tab.label, q ? `Search: ${q}` : null].filter(Boolean).join(" \u00B7 ")}
+            businessName={business.name}
+            columns={EXPORT_COLUMNS}
+            rows={exportRows}
+            size="default"
+          />
+          <Button asChild>
+            <Link href="/app/invoices/new">
+              <Plus data-icon="inline-start" />
+              New invoice
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3">

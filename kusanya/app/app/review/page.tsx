@@ -33,8 +33,32 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { ExportMenu } from "@/components/export/export-menu";
+import { dateText, moneyText, statusText } from "@/lib/export/format";
+import type { ExportColumn, ExportRow } from "@/lib/export/types";
 
 export const metadata: Metadata = { title: "Risk queue" };
+
+const EXPORT_COLUMNS: ExportColumn[] = [
+  { key: "invoice", header: "Invoice" },
+  { key: "buyer", header: "Buyer" },
+  { key: "country", header: "Country" },
+  { key: "amount", header: "Amount", align: "right" },
+  { key: "status", header: "Status" },
+  { key: "decision", header: "Decision" },
+  { key: "score", header: "Score", align: "right" },
+  { key: "screening", header: "Screening" },
+  { key: "flagged", header: "Flagged" },
+  { key: "due", header: "Due" },
+  { key: "signals", header: "Signals" },
+];
+
+function signalText(r: ReasonDto): string {
+  const label = r.label ?? r.key ?? "Signal";
+  const p = typeof r.probability === "number" ? `P=${r.probability.toFixed(2)}` : null;
+  const w = typeof r.weight === "number" ? `w${r.weight}` : null;
+  return [label, [p, w].filter(Boolean).join(" x ")].filter(Boolean).join(" ");
+}
 
 /** One entry of riskAssessments.reasons (jsonb) — render defensively. */
 interface ReasonDto {
@@ -96,16 +120,47 @@ export default async function ReviewPage() {
     if (!latest.has(a.invoiceId)) latest.set(a.invoiceId, a);
   }
 
+  const exportRows: ExportRow[] = rows.map((row) => {
+    const risk = latest.get(row.id);
+    const reasons: ReasonDto[] = Array.isArray(risk?.reasons) ? (risk?.reasons as ReasonDto[]) : [];
+    return {
+      invoice: row.number,
+      buyer: row.buyerName,
+      country: row.buyerCountry,
+      amount: moneyText(row.currency, row.amountMinor),
+      status: statusText(row.status),
+      decision: risk ? DECISION_BADGE[risk.decision].label : "",
+      score: risk ? `${risk.compositeScore}/100` : "",
+      screening: risk ? (risk.fallback ? "Fail-safe default" : "AI + rules") : "No assessment",
+      flagged: dateText(row.createdAt),
+      due: row.dueAt ? dateText(row.dueAt) : "On receipt",
+      signals: reasons.map(signalText).join("; "),
+    };
+  });
+
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
-        <h1 className="font-heading text-2xl font-semibold tracking-tight">
-          Risk queue
-        </h1>
-        <p className="max-w-2xl text-sm text-muted-foreground">
-          Composite score = weighted AI judgments + deterministic facts. Hold is
-          fail-closed: nothing sends until you decide.
-        </p>
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <h1 className="font-heading text-2xl font-semibold tracking-tight">
+            Risk queue
+          </h1>
+          <p className="max-w-2xl text-sm text-muted-foreground">
+            Composite score = weighted AI judgments + deterministic facts. Hold is
+            fail-closed: nothing sends until you decide.
+          </p>
+        </div>
+        {rows.length > 0 && (
+          <ExportMenu
+            title="Risk Review Queue"
+            filename="kusanya-risk-queue"
+            subtitle="Invoices flagged for review or on hold"
+            businessName={business.name}
+            columns={EXPORT_COLUMNS}
+            rows={exportRows}
+            size="default"
+          />
+        )}
       </header>
 
       {rows.length === 0 ? (
