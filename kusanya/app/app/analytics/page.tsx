@@ -52,8 +52,37 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ChartExportMenu } from "@/components/export/chart-export-menu";
+import { ExportMenu } from "@/components/export/export-menu";
+import { ReportButton } from "@/components/export/report-button";
+import { dateText, moneyText } from "@/lib/export/format";
+import type { ExportColumn, ExportKpi, ExportRow, ExportTable } from "@/lib/export/types";
 
 export const metadata: Metadata = { title: "Analytics" };
+
+/** DOM ids the chart export menus and the report rasterize from. */
+const CHART_IDS = {
+  collections: "chart-collections",
+  channels: "chart-channels",
+  status: "chart-status",
+} as const;
+
+const TOP_BUYER_COLUMNS: ExportColumn[] = [
+  { key: "rank", header: "Rank", align: "right" },
+  { key: "buyer", header: "Buyer" },
+  { key: "collections", header: "Completed Collections", align: "right" },
+  { key: "collected", header: "Collected (Per Currency)", align: "right" },
+];
+
+const CHANNEL_COLUMNS: ExportColumn[] = [
+  { key: "channel", header: "Channel" },
+  { key: "count", header: "Completed Collections", align: "right" },
+];
+
+const STATUS_COLUMNS: ExportColumn[] = [
+  { key: "status", header: "Status" },
+  { key: "count", header: "Invoices", align: "right" },
+];
 
 /** Channel → plain-English label (same sheet as the payments ledger). */
 const CHANNEL_LABELS: Record<string, string> = {
@@ -300,6 +329,50 @@ export default async function AnalyticsPage({
   };
   const windowLabel = windowStart.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 
+  // ------------------------------------------------------------ exports --
+  const topBuyerRows: ExportRow[] = topBuyers.map((b, i) => ({
+    rank: String(i + 1),
+    buyer: b.buyerName,
+    collections: String(b.collections),
+    collected: b.byCurrency.map((c) => moneyText(c.currency, c.totalMinor)).join("; "),
+  }));
+  const channelExportRows: ExportRow[] = pieData.map((d) => ({
+    channel: CHANNEL_LABELS[d.channel] ?? d.channel,
+    count: String(d.count),
+  }));
+  const statusExportRows: ExportRow[] = statusData.map((d) => ({
+    status: d.label.replace(/^Imefika! /, ""),
+    count: String(d.count),
+  }));
+  const rangeLabel = `${dateText(windowStart)} to ${dateText(today)}`;
+  const reportKpis: ExportKpi[] = [
+    {
+      label: `Collected (${currency}, last ${WINDOW_DAYS} days)`,
+      value: moneyText(currency, collectedMinor),
+      hint: "Gross of completed collections, before fees and splits",
+    },
+    {
+      label: "Avg. Issued To Paid",
+      value: avgDays !== null ? `${avgDays} days` : "Not enough data",
+      hint: `${dayDiffs.length} completed collections, all currencies`,
+    },
+    {
+      label: "Collection Success Rate",
+      value: successRate !== null ? `${successRate}%` : "Not enough data",
+      hint: `${completedN} completed vs ${failedN} failed attempts`,
+    },
+    {
+      label: "Completed Collections",
+      value: completedTotal.toLocaleString("en-KE"),
+      hint: "All currencies, all time",
+    },
+  ];
+  const reportTables: ExportTable[] = [
+    { title: "Top Buyers", columns: TOP_BUYER_COLUMNS, rows: topBuyerRows },
+    { title: "Channel Mix", columns: CHANNEL_COLUMNS, rows: channelExportRows },
+    { title: "Invoices By Status", columns: STATUS_COLUMNS, rows: statusExportRows },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
       {/* --------------------------------------------------------- header -- */}
@@ -310,7 +383,36 @@ export default async function AnalyticsPage({
             Honest numbers only — one currency at a time, real zeros, nothing smoothed.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <ReportButton
+            title="Analytics Report"
+            filename={`kusanya-analytics-report-${currency.toLowerCase()}`}
+            businessName={business.name}
+            rangeLabel={rangeLabel}
+            kpis={reportKpis}
+            tables={reportTables}
+            charts={[
+              {
+                targetId: CHART_IDS.collections,
+                title: `Completed Collections (${currency}, Last ${WINDOW_DAYS} Days)`,
+                description: "Daily gross totals. Days without a completed collection show a real zero.",
+              },
+              {
+                targetId: CHART_IDS.channels,
+                title: "Channel Mix",
+                description: "Completed collections per channel, all currencies, all time.",
+              },
+              {
+                targetId: CHART_IDS.status,
+                title: "Invoices By Status",
+                description: "Every invoice on the books right now, counted once each.",
+              },
+            ]}
+            notes={[
+              `Collections figures cover ${rangeLabel} in ${currency}. Channel mix, status and top buyers are all time.`,
+              "Amounts are never summed across currencies.",
+            ]}
+          />
           <span className="text-xs text-muted-foreground">Collections currency</span>
           <ToggleGroup type="single" variant="outline" size="sm" value={currency}>
             {CURRENCY_CODES.map((c) => (
@@ -408,13 +510,22 @@ export default async function AnalyticsPage({
             Daily gross totals of completed {currency} collections. Days without a completed
             collection show a real zero — nothing is interpolated.
           </CardDescription>
-          <CardAction>
+          <CardAction className="flex items-center gap-2">
             <Badge variant="secondary">{currency}</Badge>
+            {hasCollections && (
+              <ChartExportMenu
+                targetId={CHART_IDS.collections}
+                title={`Completed Collections (${currency}, Last ${WINDOW_DAYS} Days)`}
+                filename={`kusanya-collections-${currency.toLowerCase()}`}
+              />
+            )}
           </CardAction>
         </CardHeader>
         <CardContent>
           {hasCollections ? (
-            <CollectionsAreaChart data={series} config={areaConfig} currency={currency} />
+            <div id={CHART_IDS.collections}>
+              <CollectionsAreaChart data={series} config={areaConfig} currency={currency} />
+            </div>
           ) : (
             <Empty>
               <EmptyHeader>
@@ -441,10 +552,21 @@ export default async function AnalyticsPage({
               How many completed collections rode each channel — all currencies together.
               Counts are currency-neutral; amounts are never summed across currencies.
             </CardDescription>
+            {pieData.length > 0 && (
+              <CardAction>
+                <ChartExportMenu
+                  targetId={CHART_IDS.channels}
+                  title="Channel Mix"
+                  filename="kusanya-channel-mix"
+                />
+              </CardAction>
+            )}
           </CardHeader>
           <CardContent>
             {pieData.length > 0 ? (
-              <ChannelPieChart data={pieData} config={pieConfig} />
+              <div id={CHART_IDS.channels}>
+                <ChannelPieChart data={pieData} config={pieConfig} />
+              </div>
             ) : (
               <Empty>
                 <EmptyHeader>
@@ -468,10 +590,21 @@ export default async function AnalyticsPage({
               Every invoice on the books right now — {invoiceTotal.toLocaleString("en-KE")}{" "}
               total, counted once each.
             </CardDescription>
+            {statusData.length > 0 && (
+              <CardAction>
+                <ChartExportMenu
+                  targetId={CHART_IDS.status}
+                  title="Invoices By Status"
+                  filename="kusanya-invoices-by-status"
+                />
+              </CardAction>
+            )}
           </CardHeader>
           <CardContent>
             {statusData.length > 0 ? (
-              <StatusBarChart data={statusData} config={barConfig} />
+              <div id={CHART_IDS.status}>
+                <StatusBarChart data={statusData} config={barConfig} />
+              </div>
             ) : (
               <Empty>
                 <EmptyHeader>
@@ -498,6 +631,18 @@ export default async function AnalyticsPage({
             Ranked by number of completed collections. Totals are shown per currency — never
             summed across currencies.
           </CardDescription>
+          {topBuyers.length > 0 && (
+            <CardAction>
+              <ExportMenu
+                title="Top Buyers"
+                filename="kusanya-top-buyers"
+                subtitle="Ranked by completed collections, all time"
+                businessName={business.name}
+                columns={TOP_BUYER_COLUMNS}
+                rows={topBuyerRows}
+              />
+            </CardAction>
+          )}
         </CardHeader>
         <CardContent className="p-0">
           {topBuyers.length > 0 ? (

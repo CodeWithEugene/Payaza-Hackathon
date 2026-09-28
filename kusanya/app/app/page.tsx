@@ -35,8 +35,28 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
+import { ExportMenu } from "@/components/export/export-menu";
+import { ReportButton } from "@/components/export/report-button";
+import { dateText, dateTimeText, channelText, moneyText, statusText } from "@/lib/export/format";
+import type { ExportColumn, ExportKpi, ExportRow, ExportTable } from "@/lib/export/types";
 
 export const metadata: Metadata = { title: "Dashboard" };
+
+const MOTION_COLUMNS: ExportColumn[] = [
+  { key: "invoice", header: "Invoice", nowrap: true },
+  { key: "buyer", header: "Buyer" },
+  { key: "amount", header: "Amount", align: "right" },
+  { key: "status", header: "Status" },
+];
+
+const ACTIVITY_COLUMNS: ExportColumn[] = [
+  { key: "when", header: "When", nowrap: true },
+  { key: "invoice", header: "Invoice", nowrap: true },
+  { key: "type", header: "Type" },
+  { key: "channel", header: "Channel" },
+  { key: "status", header: "Status" },
+  { key: "amount", header: "Amount", align: "right" },
+];
 
 /** Tiny server-side relative time — no dependency, deterministic per render. */
 function relTime(at: Date | null): string {
@@ -137,6 +157,46 @@ export default async function DashboardPage() {
   const paidOutMinor = paidOutRow[0]?.totalMinor ?? "0";
   const reviewCount = Number(reviewRow[0]?.count ?? 0);
 
+  // ------------------------------------------------------------ exports --
+  const motionRows: ExportRow[] = motion.rows.map(({ invoice, buyerName }) => ({
+    invoice: invoice.number,
+    buyer: buyerName,
+    amount: moneyText(invoice.currency, invoice.amountMinor),
+    status: statusText(invoice.status),
+  }));
+  const activityRows: ExportRow[] = activity.map(({ txn, invoiceNumber }) => ({
+    when: dateTimeText(txn.occurredAt ?? txn.createdAt),
+    invoice: invoiceNumber ?? "Standalone transaction",
+    type: txn.direction === "out" ? "Payout" : "Collection",
+    channel: channelText(txn.channel),
+    status: statusText(txn.status),
+    amount: moneyText(
+      txn.currency,
+      txn.direction === "out" ? -Math.abs(Number(txn.amountMinor)) : txn.amountMinor,
+    ),
+  }));
+  const reportKpis: ExportKpi[] = [
+    {
+      label: "Outstanding Invoices",
+      value: String(outstandingCount),
+      hint:
+        outstandingByCurrency.length > 0
+          ? outstandingByCurrency.map((r) => moneyText(r.currency, r.totalMinor)).join("; ")
+          : "Nothing outstanding",
+    },
+    { label: "Awaiting Payout", value: String(awaitingCount), hint: "Paid, settling or settled" },
+    {
+      label: "Paid Out This Month",
+      value: moneyText("KES", paidOutMinor),
+      hint: `Completed payouts since ${dateText(monthStart)}`,
+    },
+    { label: "Needs Review", value: String(reviewCount), hint: "Flagged by risk screening" },
+  ];
+  const reportTables: ExportTable[] = [
+    { title: "Money In Motion", columns: MOTION_COLUMNS, rows: motionRows },
+    { title: "Recent Activity", columns: ACTIVITY_COLUMNS, rows: activityRows },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
       {/* Header + quick actions */}
@@ -148,6 +208,17 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <ReportButton
+            title="Dashboard Report"
+            filename="kusanya-dashboard-report"
+            businessName={business.name}
+            rangeLabel={`As of ${dateText(new Date())}`}
+            kpis={reportKpis}
+            tables={reportTables}
+            notes={[
+              "Amounts are shown per currency and never summed across currencies.",
+            ]}
+          />
           {reviewCount > 0 && (
             <Button variant="outline" asChild>
               <Link href="/app/review">
@@ -264,7 +335,17 @@ export default async function DashboardPage() {
             <CardDescription>
               Invoices being collected, settled, or paid out right now.
             </CardDescription>
-            <CardAction>
+            <CardAction className="flex items-center gap-1">
+              {motionRows.length > 0 && (
+                <ExportMenu
+                  title="Money In Motion"
+                  filename="kusanya-money-in-motion"
+                  subtitle="Invoices being collected, settled or paid out"
+                  businessName={business.name}
+                  columns={MOTION_COLUMNS}
+                  rows={motionRows}
+                />
+              )}
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/app/invoices">View all</Link>
               </Button>
@@ -326,6 +407,18 @@ export default async function DashboardPage() {
             <CardDescription>
               The latest movements across your transactions.
             </CardDescription>
+            {activityRows.length > 0 && (
+              <CardAction>
+                <ExportMenu
+                  title="Recent Activity"
+                  filename="kusanya-recent-activity"
+                  subtitle="Latest 8 transactions"
+                  businessName={business.name}
+                  columns={ACTIVITY_COLUMNS}
+                  rows={activityRows}
+                />
+              </CardAction>
+            )}
           </CardHeader>
           <CardContent>
             {activity.length === 0 ? (

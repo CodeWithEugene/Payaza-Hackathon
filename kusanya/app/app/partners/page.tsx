@@ -16,11 +16,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ExportMenu } from "@/components/export/export-menu";
+import { statusText } from "@/lib/export/format";
+import type { ExportColumn, ExportRow } from "@/lib/export/types";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Empty,
@@ -46,6 +50,46 @@ import {
 } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = { title: "Partners" };
+
+const PARTNER_COLUMNS: ExportColumn[] = [
+  { key: "name", header: "Name" },
+  { key: "email", header: "Email" },
+  { key: "rail", header: "Rail" },
+  { key: "account", header: "Account No." },
+  { key: "bankCode", header: "Bank Code" },
+  { key: "share", header: "Partner Share", align: "right" },
+  { key: "status", header: "Status" },
+];
+
+const STATEMENT_COLUMNS: ExportColumn[] = [
+  { key: "invoice", header: "Invoice" },
+  { key: "status", header: "Status" },
+  { key: "share", header: "Share", align: "right" },
+  { key: "expected", header: "Expected (KES)", align: "right" },
+  { key: "settled", header: "Settled (KES)", align: "right" },
+];
+
+type Statement = Awaited<ReturnType<typeof partnerStatement>>;
+
+/** Statement rows + a closing totals row (all KES, formatted by the service). */
+function statementExportRows(st: Statement): ExportRow[] {
+  return [
+    ...st.rows.map((r) => ({
+      invoice: r.invoiceNumber,
+      status: statusText(r.invoiceStatus),
+      share: `${r.sharePct}%`,
+      expected: r.expectedDisplay,
+      settled: r.settledDisplay ?? "Not settled yet",
+    })),
+    {
+      invoice: "Totals, last 90 days",
+      status: "",
+      share: "",
+      expected: st.expectedTotalDisplay,
+      settled: st.settledTotalDisplay,
+    },
+  ];
+}
 
 /** Mask the middle of an account number: first 2 + **** + last 3. */
 function maskAccountNo(value: string): string {
@@ -105,6 +149,17 @@ export default async function PartnersPage() {
     }),
   );
 
+  // Account numbers stay masked in exports, exactly as on screen.
+  const partnerRows: ExportRow[] = partners.map((p) => ({
+    name: p.name,
+    email: p.email ?? "",
+    rail: p.rail === "mpesa" ? "M-Pesa" : "Bank",
+    account: maskAccountNo(p.accountNo),
+    bankCode: p.bankCode ?? "",
+    share: `${p.sharePct}%`,
+    status: "Active",
+  }));
+
   return (
     <TooltipProvider>
       <div className="flex flex-col gap-6">
@@ -142,6 +197,18 @@ export default async function PartnersPage() {
                 ? `${partners.length} active partner${partners.length === 1 ? "" : "s"} · shares are what they receive; Payaza stores the inverse`
                 : "Nobody yet — add your first partner to start splitting collections."}
             </CardDescription>
+            {partners.length > 0 && (
+              <CardAction>
+                <ExportMenu
+                  title="Partners"
+                  filename="kusanya-partners"
+                  subtitle="Split beneficiaries"
+                  businessName={business.name}
+                  columns={PARTNER_COLUMNS}
+                  rows={partnerRows}
+                />
+              </CardAction>
+            )}
           </CardHeader>
           <CardContent className="p-0">
             {partners.length === 0 ? (
@@ -255,6 +322,17 @@ export default async function PartnersPage() {
                     <CollapsibleContent>
                       <div className="border-t px-1 py-2 sm:px-2">
                         {st && st.rows.length > 0 ? (
+                          <>
+                          <div className="flex justify-end px-1 pb-1">
+                            <ExportMenu
+                              title={`Partner Statement ${p.name}`}
+                              filename={`kusanya-statement-${p.name}`}
+                              subtitle="Last 90 days · all amounts in KES"
+                              businessName={business.name}
+                              columns={STATEMENT_COLUMNS}
+                              rows={statementExportRows(st)}
+                            />
+                          </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -302,6 +380,7 @@ export default async function PartnersPage() {
                               </TableRow>
                             </TableFooter>
                           </Table>
+                          </>
                         ) : (
                           <Empty>
                             <EmptyHeader>

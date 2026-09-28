@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { desc, eq } from "drizzle-orm";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileDown, ReceiptText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ExportMenu } from "@/components/export/export-menu";
+import { dateTimeText, moneyText, statusText } from "@/lib/export/format";
+import type { ExportColumn, ExportRow } from "@/lib/export/types";
+import { RECEIPT_STATUSES } from "@/lib/services/documents";
 import { requireBusiness } from "@/lib/auth/guards";
 import { db } from "@/lib/db/client";
 import { payoutRails } from "@/lib/db/schema";
@@ -24,7 +29,14 @@ import { SendButton } from "@/components/invoices/send-button";
 import { CopyLinkButton } from "@/components/invoices/copy-link-button";
 import { CancelButton } from "@/components/invoices/cancel-button";
 import { SimulateSettleButton } from "@/components/invoices/simulate-settle-button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const CHANNEL_LABELS: Record<string, string> = {
@@ -40,6 +52,24 @@ const CHANNEL_LABELS: Record<string, string> = {
   virtual_account: "Virtual account",
   manual: "Manual",
 };
+
+const ITEM_COLUMNS: ExportColumn[] = [
+  { key: "description", header: "Description" },
+  { key: "qty", header: "Qty", align: "right" },
+  { key: "unitPrice", header: "Unit Price", align: "right" },
+  { key: "total", header: "Total", align: "right" },
+];
+
+const TXN_COLUMNS: ExportColumn[] = [
+  { key: "reference", header: "Reference", nowrap: true },
+  { key: "payazaReference", header: "Payaza Reference", nowrap: true },
+  { key: "channel", header: "Channel" },
+  { key: "amount", header: "Amount", align: "right" },
+  { key: "fee", header: "Fee", align: "right" },
+  { key: "net", header: "Net", align: "right" },
+  { key: "status", header: "Status" },
+  { key: "when", header: "When", nowrap: true },
+];
 
 function channelLabel(channel: string): string {
   return CHANNEL_LABELS[channel] ?? channel;
@@ -207,6 +237,31 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
   // -------------------------------------------------------------- actions --
   const s = invoice.status;
   const canCancel = ["draft", "ready", "sent", "partially_paid", "review", "on_hold"].includes(s);
+  const canReceipt =
+    RECEIPT_STATUSES.includes(s) &&
+    txns.some((t) => t.kind === "collection" && t.status === "completed");
+
+  // ------------------------------------------------------------ exports --
+  const itemRows: ExportRow[] = items.map((item) => {
+    const qty = Number(item.qty);
+    const unit = Math.round(Number(item.unitPriceMinor));
+    return {
+      description: item.description,
+      qty: String(qty),
+      unitPrice: unit > 0 ? moneyText(item.currency, unit) : "",
+      total: qty > 0 && unit > 0 ? moneyText(item.currency, Math.round(qty * unit)) : "",
+    };
+  });
+  const txnRows: ExportRow[] = txns.map((t) => ({
+    reference: t.merchantReference,
+    payazaReference: t.payazaReference ?? "",
+    channel: channelLabel(t.channel),
+    amount: moneyText(t.currency, t.amountMinor),
+    fee: moneyText(t.currency, t.feeMinor),
+    net: moneyText(t.currency, t.netMinor),
+    status: statusText(t.status),
+    when: dateTimeText(t.occurredAt ?? t.createdAt),
+  }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -237,6 +292,20 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" asChild>
+            <a href={`/api/invoices/${invoice.id}/pdf`} download>
+              <FileDown data-icon="inline-start" />
+              Download PDF
+            </a>
+          </Button>
+          {canReceipt && (
+            <Button variant="outline" asChild>
+              <a href={`/api/invoices/${invoice.id}/receipt`} download>
+                <ReceiptText data-icon="inline-start" />
+                Download Receipt
+              </a>
+            </Button>
+          )}
           {s === "ready" && <SendButton invoiceId={invoice.id} action="send" />}
           {s === "sent" && <SendButton invoiceId={invoice.id} action="resend" />}
           {s === "sent" && <CopyLinkButton token={invoice.token} />}
@@ -273,6 +342,18 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
           <Card>
             <CardHeader>
               <CardTitle>Items</CardTitle>
+              {itemRows.length > 0 && (
+                <CardAction>
+                  <ExportMenu
+                    title={`Invoice ${invoice.number} Items`}
+                    filename={`kusanya-${invoice.number}-items`}
+                    subtitle={buyer ? `Billed to ${buyer.name}` : undefined}
+                    businessName={business.name}
+                    columns={ITEM_COLUMNS}
+                    rows={itemRows}
+                  />
+                </CardAction>
+              )}
             </CardHeader>
             <CardContent>
               {items.length === 0 ? (
@@ -346,6 +427,17 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
               <CardDescription>
                 Every movement on this invoice, exactly as Payaza reported it.
               </CardDescription>
+              {txnRows.length > 0 && (
+                <CardAction>
+                  <ExportMenu
+                    title={`Invoice ${invoice.number} Transactions`}
+                    filename={`kusanya-${invoice.number}-transactions`}
+                    businessName={business.name}
+                    columns={TXN_COLUMNS}
+                    rows={txnRows}
+                  />
+                </CardAction>
+              )}
             </CardHeader>
             <CardContent>
               {txns.length === 0 ? (
