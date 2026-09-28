@@ -145,7 +145,7 @@ export const HELP_ARTICLES: readonly HelpArticle[] = [
     audiences: ALL,
     title: "How Does The Demo Work?",
     answer:
-      "No real money moves here. Sign in with the demo account shown on the login page. For card payments use Visa 4508 7500 1574 1019 with expiry 01/39 to approve (05/39 declines), and for mobile money use any phone number. The payout confirmation code is 123456. You can reset the whole story from the Demo page.",
+      "No real money moves here. Sign in with the demo account shown on the login page. For card payments use Mastercard 5111 1111 1111 1118 (instant) or Visa 4508 7500 1574 1019, expiry 01/39 to approve (05/39 declines) and CVV 100. For mobile money use any phone number. The payout confirmation code is 123456. You can reset the whole story from the Demo page.",
     covers: "The demo, test card numbers, demo login, sandbox, resetting demo data",
     keywords: ["demo", "test", "sandbox", "test card", "try", "judge", "reset", "login", "sign in", "password"],
     link: { href: "/demo", label: "Open Demo" },
