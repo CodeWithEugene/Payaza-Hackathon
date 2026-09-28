@@ -274,8 +274,8 @@ export default async function ReviewPage() {
                               P=
                               {typeof r.probability === "number"
                                 ? r.probability.toFixed(2)
-                                : "—"}{" "}
-                              × w{typeof r.weight === "number" ? r.weight : "—"}
+                                : "n/a"}{" "}
+                              × w{typeof r.weight === "number" ? r.weight : "n/a"}
                             </span>
                           </div>
                           {r.criterion && (

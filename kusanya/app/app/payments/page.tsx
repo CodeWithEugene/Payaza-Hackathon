@@ -314,7 +314,7 @@ export default async function PaymentsPage({
                               {invoiceNumber}
                             </Link>
                           ) : (
-                            <span className="text-muted-foreground">—</span>
+                            <span className="text-muted-foreground">None</span>
                           )}
                         </TableCell>
                         <TableCell>
@@ -349,14 +349,14 @@ export default async function PaymentsPage({
                           {txn.feeMinor != null ? (
                             <Amount minor={txn.feeMinor} currency={txn.currency} />
                           ) : (
-                            <span className="text-muted-foreground">—</span>
+                            <span className="text-muted-foreground">None</span>
                           )}
                         </TableCell>
                         <TableCell className="text-right">
                           {txn.netMinor != null ? (
                             <Amount minor={txn.netMinor} currency={txn.currency} />
                           ) : (
-                            <span className="text-muted-foreground">—</span>
+                            <span className="text-muted-foreground">None</span>
                           )}
                         </TableCell>
                         <TableCell>

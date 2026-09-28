@@ -244,7 +244,7 @@ export default async function PartnersPage() {
                     <TableRow key={p.id}>
                       <TableCell className="font-medium">{p.name}</TableCell>
                       <TableCell className="text-muted-foreground">
-                        {p.email ?? <span aria-hidden>—</span>}
+                        {p.email ?? <span className="text-muted-foreground">None</span>}
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">
@@ -260,7 +260,7 @@ export default async function PartnersPage() {
                         <span className="font-mono text-xs">{maskAccountNo(p.accountNo)}</span>
                       </TableCell>
                       <TableCell>
-                        <span className="font-mono text-xs">{p.bankCode ?? "—"}</span>
+                        <span className="font-mono text-xs">{p.bankCode ?? "None"}</span>
                       </TableCell>
                       <TableCell>
                         <Tooltip>

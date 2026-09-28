@@ -385,7 +385,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
                             {unit > 0 ? (
                               <Amount minor={unit} currency={item.currency} />
                             ) : (
-                              <span className="text-muted-foreground">—</span>
+                              <span className="text-muted-foreground">None</span>
                             )}
                           </TableCell>
                           <TableCell className="text-right">
@@ -396,7 +396,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
                                 className="font-medium"
                               />
                             ) : (
-                              <span className="text-muted-foreground">—</span>
+                              <span className="text-muted-foreground">None</span>
                             )}
                           </TableCell>
                         </TableRow>
@@ -480,7 +480,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
                               className="text-muted-foreground"
                             />
                           ) : (
-                            <span className="text-muted-foreground">—</span>
+                            <span className="text-muted-foreground">None</span>
                           )}
                         </TableCell>
                         <TableCell className="text-right">
@@ -491,7 +491,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
                               className="text-muted-foreground"
                             />
                           ) : (
-                            <span className="text-muted-foreground">—</span>
+                            <span className="text-muted-foreground">None</span>
                           )}
                         </TableCell>
                         <TableCell>

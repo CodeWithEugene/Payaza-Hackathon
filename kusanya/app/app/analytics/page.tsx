@@ -450,7 +450,7 @@ export default async function AnalyticsPage({
           <CardHeader>
             <CardDescription>Avg. issued → paid</CardDescription>
             <CardTitle className="font-heading text-2xl font-semibold tracking-tight tabular-nums">
-              {avgDays !== null ? `${avgDays} days` : "—"}
+              {avgDays !== null ? `${avgDays} days` : "No data yet"}
             </CardTitle>
             <CardAction>
               <Timer className="size-4 text-muted-foreground" aria-hidden />
@@ -469,7 +469,7 @@ export default async function AnalyticsPage({
           <CardHeader>
             <CardDescription>Collection success rate</CardDescription>
             <CardTitle className="font-heading text-2xl font-semibold tracking-tight tabular-nums">
-              {successRate !== null ? `${successRate}%` : "—"}
+              {successRate !== null ? `${successRate}%` : "No data yet"}
             </CardTitle>
             <CardAction>
               <Percent className="size-4 text-muted-foreground" aria-hidden />

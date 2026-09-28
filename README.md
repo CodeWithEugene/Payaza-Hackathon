@@ -25,9 +25,13 @@ topbar badge says which mode is active.
 |---|---|
 | Login | `wanjiru@kusanya.demo` / `kusanya-demo-2026` |
 | Payout confirmation code | `123456` |
-| Test card (buyer portal) | Visa `4508 7500 1574 1019`, exp `01/39` (approve) · `05/39` (decline) |
+| Test card (buyer portal) | Mastercard `5111 1111 1111 1118` (no 3DS, instant) or Visa `4508 7500 1574 1019` (3DS) · expiry `01/39` approves, `05/39` declines · CVV `100` · mobile money: any phone number (sandbox auto-approves) |
 | Restore the canonical story | `/app/settings` → *Demo Mode* → Reset (or the `/demo` launcher) — wipes + reseeds; signs you out |
 | Dark mode | Toggle in the topbar / landing nav / buyer page, or press **`d`** anywhere — Light · Dark · System, persisted per browser |
+| Telegram bot | [@kusanya_invoice_bot](https://t.me/kusanya_invoice_bot): connect once in `/app/settings` → Telegram, then forward any buyer order; it replies with a screened invoice + Payaza link and a **Send To Buyer** button, and messages you when Payaza confirms payment |
+| Help chat + accessibility | Bottom-right on every page: GLM (OpenRouter) answers grounded in the curated help center; accessibility menu (text size, contrast, motion, links, spacing, theme) |
+| Exports | CSV/PDF on every table, PNG/SVG on every chart, PDF reports (dashboard, analytics), invoice + receipt PDFs (merchant and buyer) |
+| Developers | Public docs at [`/developers`](https://kusanya.codewitheugene.top/developers), API keys at `/app/developers`, REST API v1 (`Authorization: Bearer ksn_test_…`), OpenAPI at `/api/v1/openapi.json` |
 
 ### Brand
 

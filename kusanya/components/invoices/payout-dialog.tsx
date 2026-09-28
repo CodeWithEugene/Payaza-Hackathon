@@ -206,8 +206,8 @@ export function PayoutDialog({
                   )}
                   <span>
                     {selected.rail === "mpesa"
-                      ? selected.phone ?? "—"
-                      : [selected.bankCode, selected.accountNumber].filter(Boolean).join(" · ") || "—"}
+                      ? selected.phone ?? "None"
+                      : [selected.bankCode, selected.accountNumber].filter(Boolean).join(" · ") || "None"}
                     {selected.accountName ? ` (${selected.accountName})` : ""}
                   </span>
                 </div>

@@ -199,11 +199,11 @@ export default async function BuyersPage() {
                             {b.email}
                           </a>
                         ) : (
-                          <span className="text-muted-foreground">—</span>
+                          <span className="text-muted-foreground">None</span>
                         )}
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        {b.phone ?? <span className="text-muted-foreground">—</span>}
+                        {b.phone ?? <span className="text-muted-foreground">None</span>}
                       </TableCell>
                       <TableCell className="text-right font-mono tabular-nums">
                         {counts.get(b.id) ?? 0}
@@ -221,7 +221,7 @@ export default async function BuyersPage() {
                             ))}
                           </div>
                         ) : (
-                          <span className="text-muted-foreground">—</span>
+                          <span className="text-muted-foreground">None</span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -234,7 +234,7 @@ export default async function BuyersPage() {
                             ))}
                           </div>
                         ) : (
-                          <span className="text-muted-foreground">—</span>
+                          <span className="text-muted-foreground">None</span>
                         )}
                       </TableCell>
                       <TableCell className="text-muted-foreground">

@@ -253,7 +253,7 @@ export default async function InvoicesPage({
                         </div>
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {invoice.issuedAt ? dateFmt.format(invoice.issuedAt) : "—"}
+                        {invoice.issuedAt ? dateFmt.format(invoice.issuedAt) : "Not issued"}
                       </TableCell>
                       <TableCell>
                         {invoice.dueAt ? (
@@ -278,7 +278,7 @@ export default async function InvoicesPage({
                             className="text-muted-foreground"
                           />
                         ) : (
-                          <span className="text-muted-foreground">—</span>
+                          <span className="text-muted-foreground">None</span>
                         )}
                       </TableCell>
                       <TableCell>

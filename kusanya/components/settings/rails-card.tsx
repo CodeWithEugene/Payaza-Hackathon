@@ -214,8 +214,8 @@ export function RailsCard({
               const primary = isMpesa
                 ? rail.phone
                   ? displayPhone(rail.phone)
-                  : "—"
-                : rail.accountNumber ?? "—";
+                  : "None"
+                : rail.accountNumber ?? "None";
               return (
                 <Item key={rail.id} variant="outline">
                   <ItemMedia variant="icon">

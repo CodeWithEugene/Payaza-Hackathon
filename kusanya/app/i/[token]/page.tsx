@@ -128,7 +128,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
                         {Number(item.unitPriceMinor) > 0 ? (
                           <Amount minor={Number(item.unitPriceMinor)} currency={invoice.currency} />
                         ) : (
-                          <span className="text-muted-foreground">—</span>
+                          <span className="text-muted-foreground">None</span>
                         )}
                       </TableCell>
                     </TableRow>
@@ -306,7 +306,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
                         {CHANNEL_LABELS[txn.channel] ?? txn.channel}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {txn.occurredAt ? fmtDate(txn.occurredAt) : "—"}
+                        {txn.occurredAt ? fmtDate(txn.occurredAt) : "Pending"}
                       </span>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
