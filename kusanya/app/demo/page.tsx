@@ -20,13 +20,17 @@ export default function DemoPage() {
             </span>
           </Link>
           <h1 className="font-heading text-3xl font-semibold tracking-tight text-balance md:text-4xl">
-            Judges, start here
+            Judges, Start Here
           </h1>
           <p className="text-muted-foreground text-pretty md:text-lg">
-            Kusanya turns a WhatsApp order into a screened, sent and settled
-            invoice for Kenyan exporters — USD cards and East African mobile
+            Kusanya turns a Telegram order into a screened, sent and settled
+            invoice for Kenyan exporters. USD cards and East African mobile
             money in, KES out to M-Pesa, with every fee and the FX rate shown
-            before anything is sent. One button below loads the full story of
+            before anything is sent. Try it live: message{" "}
+            <a className="text-primary underline underline-offset-4" href="https://t.me/kusanya_invoice_bot" target="_blank" rel="noopener noreferrer">
+              @kusanya_invoice_bot
+            </a>{" "}
+            after connecting it in Settings. One button below loads the full story of
             FreshLeaf Exports Ltd, a Nairobi produce exporter, with invoices
             caught at every moment of the journey: mid-payment, underpaid,
             held by screening, and fully settled.

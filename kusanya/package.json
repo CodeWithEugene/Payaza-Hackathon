@@ -14,6 +14,7 @@
     "db:migrate": "node --conditions=react-server --import tsx scripts/migrate.ts",
     "seed:demo": "node --conditions=react-server --import tsx scripts/seed-demo.ts",
     "sandbox:smoke": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx scripts/sandbox-smoke.ts",
+    "telegram:setup": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx scripts/telegram-setup.ts",
     "replay:webhook": "node --env-file-if-exists=.env.local --conditions=react-server --import tsx scripts/replay-webhook.ts",
     "test": "vitest run",
     "test:watch": "vitest",

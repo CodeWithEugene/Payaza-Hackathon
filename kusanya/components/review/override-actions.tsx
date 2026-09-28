@@ -138,8 +138,8 @@ export function OverrideActions({
               onChange={(e) => setNote(e.target.value)}
               placeholder={
                 target === "cancelled"
-                  ? "e.g. Buyer cancelled the order on WhatsApp."
-                  : "e.g. Called the buyer — order and amount confirmed."
+                  ? "e.g. Buyer cancelled the order on Telegram."
+                  : "e.g. Called the buyer, order and amount confirmed."
               }
               aria-invalid={note.trim().length > 0 && note.trim().length < 2}
             />

@@ -37,6 +37,7 @@ import { sendEmail } from "@/lib/notify/email";
 import { receiptEmail } from "@/lib/notify/templates";
 import { sendSms } from "@/lib/notify/sms";
 import { env } from "@/lib/config/env";
+import { notifyPaidOnTelegram } from "@/lib/telegram/notify";
 
 /**
  * Collections service — momo prompts, Checkout SDK sessions, and the SINGLE
@@ -439,6 +440,37 @@ async function pollCollectionOnce(txn: Transaction): Promise<boolean> {
   return true;
 }
 
+/** Per-transaction throttle for buyer-page verification (serverless: per warm instance). */
+const lastVerifiedAt = new Map<string, number>();
+const BUYER_VERIFY_EVERY_MS = 8_000;
+/** Give the webhook (and the sandbox auto-approval) a head start. */
+const BUYER_VERIFY_MIN_AGE_MS = 5_000;
+
+/**
+ * Called by the buyer page's status poll: re-verify this invoice's PENDING
+ * collections with Payaza so "paid" shows even if a webhook never arrives
+ * (observed for sandbox card payments). Throttled; never throws.
+ */
+export async function refreshPendingCollections(invoiceId: string): Promise<void> {
+  const pending = await db
+    .select()
+    .from(transactions)
+    .where(and(eq(transactions.invoiceId, invoiceId), eq(transactions.kind, "collection"), eq(transactions.status, "pending")))
+    .limit(3);
+  const now = Date.now();
+  for (const txn of pending) {
+    const age = now - (txn.createdAt?.getTime() ?? now);
+    const last = lastVerifiedAt.get(txn.id) ?? 0;
+    if (age < BUYER_VERIFY_MIN_AGE_MS || now - last < BUYER_VERIFY_EVERY_MS) continue;
+    lastVerifiedAt.set(txn.id, now);
+    try {
+      await pollCollectionOnce(txn);
+    } catch (err) {
+      console.warn("[buyer-verify] poll failed for", txn.merchantReference, err);
+    }
+  }
+}
+
 /** Polling reconciliation for PENDING momo prompts (build.md §6.6). */
 export async function reconcilePendingCollections(limit = 20) {
   const stale = await db
@@ -498,7 +530,7 @@ async function notifyPaymentReceived(
   if (buyerRow?.email) {
     await sendEmail({
       to: buyerRow.email,
-      subject: `Receipt — invoice ${inv.number}`,
+      subject: `Receipt For Invoice ${inv.number}`,
       html: receiptEmail({
         buyerName: buyerRow.name.split(" ")[0]!,
         invoiceNumber: inv.number,
@@ -511,18 +543,24 @@ async function notifyPaymentReceived(
   }
   if (owner?.email) {
     const note = needsMerchantAlert
-      ? `⚠ ${validation === "UNDERPAYMENT" ? "UNDERPAYMENT" : "OVERPAYMENT"} detected — review the transparency panel.`
+      ? `⚠ ${validation === "UNDERPAYMENT" ? "UNDERPAYMENT" : "OVERPAYMENT"} detected. Review the transparency panel.`
       : "";
     await sendEmail({
       to: owner.email,
-      subject: `Paid: ${inv.number} — ${amountDisplay}${note ? " (attention)" : ""}`,
+      subject: `Paid: ${inv.number}, ${amountDisplay}${note ? " (Attention)" : ""}`,
       html: `<p>Invoice <strong>${inv.number}</strong> received <strong>${amountDisplay}</strong> at ${paidAt}.</p><p>${note}</p>`,
       tag: "merchant-paid",
     });
   }
   if (owner?.phone && !needsMerchantAlert) {
-    await sendSms(owner.phone, `KUSANYA: Cha kwanza! Invoice ${inv.number} paid — ${amountDisplay}.`);
+    await sendSms(owner.phone, `KUSANYA: Cha kwanza! Invoice ${inv.number} paid, ${amountDisplay}.`);
   }
+  await notifyPaidOnTelegram({
+    businessId: inv.businessId,
+    invoiceId: inv.id,
+    invoiceNumber: inv.number,
+    amountLabel: amountDisplay,
+  });
   if (needsMerchantAlert) {
     publish({
       type: "invoice.updated",

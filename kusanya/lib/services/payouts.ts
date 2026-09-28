@@ -33,6 +33,10 @@ import { sendSms } from "@/lib/notify/sms";
 import { env } from "@/lib/config/env";
 import { settlementEta } from "@/lib/money/fx";
 import type { CurrencyCode } from "@/lib/money/currencies";
+import { runInBackground } from "@/lib/runtime/background";
+
+/** Simulated Payaza transfer webhook lands this long after the payout starts. */
+const DEMO_SETTLEMENT_DELAY_MS = 1_500;
 
 /**
  * Payout service — KES to M-Pesa / kepss (build.md §6.4).
@@ -472,7 +476,9 @@ export async function confirmPayoutGate(payoutId: string, businessId: string, co
  * webhook_events row so the audit trail is complete.
  */
 function scheduleDemoSettlement(txnId: string) {
-  setTimeout(async () => {
+  // runInBackground, not a bare setTimeout: on Vercel a timer that outlives the
+  // response is frozen, which left payouts stuck on "Paying out".
+  runInBackground(async () => {
     try {
       const { demoWebhookPayoutSuccess } = await import("@/lib/payaza/demo-payloads");
       const [txn] = await db.select().from(transactions).where(eq(transactions.id, txnId)).limit(1);
@@ -507,7 +513,7 @@ function scheduleDemoSettlement(txnId: string) {
     } catch (err) {
       console.error("[demo-settle] failed:", err);
     }
-  }, 1_500);
+  }, DEMO_SETTLEMENT_DELAY_MS);
 }
 
 // ------------------------------------------------------------- reconcile ----

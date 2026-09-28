@@ -122,10 +122,11 @@ export function PasteStep({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Paste the buyer&apos;s message</CardTitle>
+        <CardTitle>Paste The Buyer&apos;s Message</CardTitle>
         <CardDescription>
-          A WhatsApp thread, an email or an order note — any language. Kusanya
-          extracts the fields; every amount and date is resolved in code.
+          A Telegram chat, an email or an order note, in any language. Kusanya
+          extracts the fields and every amount and date is resolved in code. Tip: forward
+          orders straight to @kusanya_invoice_bot on Telegram instead.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -135,7 +136,7 @@ export function PasteStep({
             <Textarea
               id="paste-message"
               rows={10}
-              placeholder="Paste the buyer's WhatsApp message, email or order note… (e.g. 'Hi Wanjiru, please send 500kg French beans at USD 2.30/kg, total 1,150. Payment by card in 5 days.')"
+              placeholder="Paste the buyer's Telegram message, email or order note… (e.g. 'Hi Wanjiru, please send 500kg French beans at USD 2.30/kg, total 1,150. Payment by card in 5 days.')"
               value={text}
               onChange={(e) => setText(e.target.value)}
               disabled={busy}

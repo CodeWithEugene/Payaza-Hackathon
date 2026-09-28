@@ -556,6 +556,34 @@ export const auditLog = pgTable(
   (t) => [index("audit_log_entity_idx").on(t.entityType, t.entityId)],
 );
 
+// --------------------------------------------------------------- telegram ---
+
+/**
+ * Telegram chats linked to a Kusanya user. Keyed by the user's EMAIL (no FK)
+ * on purpose: the demo reset deletes and recreates the demo user, and a judge's
+ * linked chat must survive that. Business is resolved at message time.
+ */
+export const telegramLinks = pgTable(
+  "telegram_links",
+  {
+    id: text("id").primaryKey(), // tgl_…
+    chatId: varchar("chat_id", { length: 32 }).notNull(),
+    userEmail: varchar("user_email", { length: 255 }).notNull(),
+    username: varchar("username", { length: 64 }),
+    firstName: varchar("first_name", { length: 128 }),
+    linkedAt: timestamp("linked_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("telegram_links_chat_idx").on(t.chatId), index("telegram_links_email_idx").on(t.userEmail)],
+);
+
+/** One-time deep-link codes (t.me/<bot>?start=<code>), 15 minute lifetime. */
+export const telegramLinkCodes = pgTable("telegram_link_codes", {
+  code: varchar("code", { length: 64 }).primaryKey(),
+  userEmail: varchar("user_email", { length: 255 }).notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  usedAt: timestamp("used_at", { withTimezone: true }),
+});
+
 // --------------------------------------------------------------- relations --
 
 export const businessesRelations = relations(businesses, ({ one, many }) => ({

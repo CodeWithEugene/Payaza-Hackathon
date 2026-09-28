@@ -13,17 +13,17 @@ import {
 const POINTS = [
   {
     icon: MessageCircle,
-    title: "WhatsApp order → invoice in seconds",
+    title: "Telegram Order To Invoice In Seconds",
     body: "Jev AI reads the message; deterministic code resolves every number and date. You review before anything is sent.",
   },
   {
     icon: ShieldCheck,
-    title: "Screened before it's sent",
+    title: "Screened Before It's Sent",
     body: "A fail-closed risk screen runs on every invoice — anything uncertain waits in the review queue, not in your sent folder.",
   },
   {
     icon: Wallet,
-    title: "KES in your M-Pesa",
+    title: "KES In Your M-Pesa",
     body: "USD cards and East African mobile money in; a confirmation-code gate pays you out. Nothing moves without you.",
   },
 ];
@@ -54,7 +54,7 @@ export function BrandPanel({ sandbox = false }: { sandbox?: boolean }) {
             Invoice-first international collections for Kenyan exporters
           </h2>
           <p className="text-muted-foreground max-w-md text-pretty">
-            A WhatsApp order becomes a screened, sent and settled invoice —
+            A Telegram order becomes a screened, sent and settled invoice,
             with every fee and the FX rate shown before you hit send.
           </p>
         </div>
@@ -113,7 +113,7 @@ export function BrandPanel({ sandbox = false }: { sandbox?: boolean }) {
 
       {/* Judges footer */}
       <p className="text-muted-foreground max-w-md text-xs">
-        Built on Payaza · Borderless Kenya Hackathon — Track 03.{" "}
+        Built on Payaza · Borderless Kenya Hackathon, Track 03.{" "}
         {sandbox
           ? "This demo runs on Payaza's real sandbox rails with test money; no real money moves."
           : "This demo runs in Demo Mode with synthetic payloads; no real money moves."}

@@ -20,23 +20,45 @@ import {
 import { cn } from "@/lib/utils";
 
 /**
- * Kusanya Help: a curated-answer assistant. The server (POST /api/help) only
- * returns article ids picked by Jev; every answer shown here is vetted copy
- * from lib/help/knowledge.ts, so the assistant never invents fees or promises.
+ * Kusanya Help. Typed questions: GLM (via /api/help) answers conversationally,
+ * grounded only in the curated knowledge base, and Jev picks related article
+ * chips. Tapped chips render the vetted article copy directly (no network).
+ * If GLM is unavailable the server falls back to the Jev-picked article.
  */
 
 type Message =
   | { id: number; role: "user"; text: string }
   | { id: number; role: "assistant"; kind: "welcome" | "unsure" | "error"; text: string; suggestions: string[] }
-  | { id: number; role: "assistant"; kind: "answer"; articleId: string; suggestions: string[]; source: "jev" | "rules" | "picked" };
+  | { id: number; role: "assistant"; kind: "answer"; articleId: string; suggestions: string[]; source: "jev" | "rules" | "picked" }
+  | { id: number; role: "assistant"; kind: "llm"; text: string; suggestions: string[] };
 
 /** Omit that keeps the union's variants apart. */
 type NewMessage = Message extends infer M ? (M extends Message ? Omit<M, "id"> : never) : never;
 
 interface HelpRouting {
+  answerText?: string;
   answerId: string | null;
   suggestionIds: string[];
-  source: "jev" | "rules";
+  source: "jev" | "rules" | "llm";
+}
+
+const HISTORY_TURNS = 6;
+
+/** Recent turns as plain text so GLM can follow up ("and for UGX?"). */
+type Turn = { role: "user" | "assistant"; content: string };
+
+function historyFor(messages: Message[]): Turn[] {
+  return messages
+    .flatMap((m): Turn[] => {
+      if (m.role === "user") return [{ role: "user" as const, content: m.text }];
+      if (m.kind === "llm") return [{ role: "assistant" as const, content: m.text }];
+      if (m.kind === "answer") {
+        const a = getArticle(m.articleId);
+        return a ? [{ role: "assistant" as const, content: a.answer }] : [];
+      }
+      return [];
+    })
+    .slice(-HISTORY_TURNS);
 }
 
 const WELCOME =
@@ -66,13 +88,14 @@ export function HelpChat() {
     const text = draft.trim();
     if (!text || busy) return;
     setDraft("");
+    const history = historyFor(messages);
     push({ role: "user", text });
     setBusy(true);
     try {
       const res = await fetch("/api/help", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ message: text, audience }),
+        body: JSON.stringify({ message: text, audience, history }),
       });
       const body = (await res.json().catch(() => null)) as (HelpRouting & { error?: string }) | null;
       if (!res.ok || !body) {
@@ -80,8 +103,11 @@ export function HelpChat() {
         return;
       }
       const known = body.suggestionIds.filter((id) => getArticle(id));
-      if (body.answerId && getArticle(body.answerId)) {
-        push({ role: "assistant", kind: "answer", articleId: body.answerId, suggestions: known.slice(0, 2), source: body.source });
+      if (body.source === "llm" && body.answerText) {
+        push({ role: "assistant", kind: "llm", text: body.answerText, suggestions: known });
+      } else if (body.answerId && getArticle(body.answerId)) {
+        const source = body.source === "rules" ? "rules" : "jev";
+        push({ role: "assistant", kind: "answer", articleId: body.answerId, suggestions: known.slice(0, 2), source });
       } else {
         const fallback = known.length > 0 ? known : [...HELP_STARTERS[audience]];
         push({ role: "assistant", kind: "unsure", text: UNSURE, suggestions: [...new Set([...fallback, "contact_human"])] });
@@ -118,7 +144,7 @@ export function HelpChat() {
           </div>
           <div className="flex min-w-0 flex-1 flex-col">
             <h2 className="font-heading text-sm font-semibold">Kusanya Help</h2>
-            <p className="text-muted-foreground text-xs">Curated answers, picked by Jev AI</p>
+            <p className="text-muted-foreground text-xs">AI answers from Kusanya&apos;s help center</p>
           </div>
           <Button variant="ghost" size="icon-sm" aria-label="Close help chat" onClick={() => setOpen(false)}>
             <X />
@@ -212,6 +238,11 @@ function AssistantMessage({
                 {message.source === "jev" ? "Matched by Jev AI" : "Matched by keywords"}
               </p>
             )}
+          </div>
+        ) : message.kind === "llm" ? (
+          <div className="flex flex-col gap-2">
+            <p className="whitespace-pre-line">{message.text}</p>
+            <p className="text-muted-foreground text-xs">AI answer based on Kusanya help articles</p>
           </div>
         ) : (
           <p>{"text" in message ? message.text : ""}</p>

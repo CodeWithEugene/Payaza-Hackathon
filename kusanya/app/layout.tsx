@@ -12,9 +12,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  title: { default: "Kusanya — invoice-first international collections", template: "%s · Kusanya" },
+  title: { default: "Kusanya · Invoice-First International Collections", template: "%s · Kusanya" },
   description:
-    "Kusanya turns WhatsApp orders into paid invoices for Kenyan exporters — USD cards and regional mobile money in, KES in your M-Pesa, with every fee shown. Built on Payaza.",
+    "Kusanya turns Telegram orders into paid invoices for Kenyan exporters. USD cards and regional mobile money in, KES in your M-Pesa, with every fee shown. Built on Payaza.",
 };
 
 export default function RootLayout({

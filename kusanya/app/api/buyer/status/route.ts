@@ -1,5 +1,6 @@
 import { err, json } from "@/lib/api/http";
 import { getBuyerInvoice } from "@/lib/services/invoices";
+import { refreshPendingCollections } from "@/lib/services/collections";
 
 /**
  * GET /api/buyer/status?token=… — public polling endpoint for the buyer's
@@ -12,8 +13,12 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   try {
     const token = new URL(req.url).searchParams.get("token");
-    const inv = token ? await getBuyerInvoice(token) : null;
+    let inv = token ? await getBuyerInvoice(token) : null;
     if (!inv) return err(404, "Invoice link not found");
+    if (inv.transactions.some((t) => t.status === "pending")) {
+      await refreshPendingCollections(inv.invoice.id);
+      inv = (await getBuyerInvoice(token!)) ?? inv;
+    }
 
     return json({
       status: inv.invoice.status,

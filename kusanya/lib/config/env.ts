@@ -33,6 +33,16 @@ const envSchema = z.object({
   TYPESAFE_API_KEY: z.string().optional().default(""),
   TYPESAFE_MODEL: z.string().optional().default(""),
 
+  /** Telegram bot: chat orders → invoices (lib/telegram). */
+  TELEGRAM_BOT_TOKEN: z.string().optional().default(""),
+  TELEGRAM_BOT_USERNAME: z.string().optional().default("kusanya_invoice_bot"),
+  /** Optional override; otherwise derived from the bot token (lib/telegram/client.ts). */
+  TELEGRAM_WEBHOOK_SECRET: z.string().optional().default(""),
+
+  /** Help chatbot answers (free-form, grounded in lib/help/knowledge.ts). */
+  OPENROUTER_API_KEY: z.string().optional().default(""),
+  OPENROUTER_MODEL: z.string().optional().default("z-ai/glm-5.3"),
+
   DATABASE_URL: z.string().optional().default(""),
 
   BETTER_AUTH_SECRET: z.string().optional().default(""),
@@ -88,6 +98,7 @@ export const env = {
   SANDBOX_RAILS: !(demoForced || !payazaConfigured) && raw.PAYAZA_TENANT === "test",
   PAYAZA_CONFIGURED: payazaConfigured,
   JEV_CONFIGURED: raw.TYPESAFE_API_KEY.length > 0,
+  LLM_CONFIGURED: raw.OPENROUTER_API_KEY.length > 0,
   DB_CONFIGURED: raw.DATABASE_URL.length > 0,
   NOTIFICATIONS_CONFIGURED: raw.RESEND_API_KEY.length > 0,
 } as const;

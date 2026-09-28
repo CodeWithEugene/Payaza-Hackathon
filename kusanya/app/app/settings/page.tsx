@@ -27,6 +27,8 @@ import {
 import { DemoCard } from "@/components/settings/demo-card";
 import { PreferencesCard } from "@/components/settings/preferences-card";
 import { RailsCard, type RailRow } from "@/components/settings/rails-card";
+import { TelegramCard } from "@/components/settings/telegram-card";
+import { linksForEmail } from "@/lib/telegram/links";
 
 export const metadata: Metadata = { title: "Settings" };
 
@@ -39,7 +41,8 @@ const COUNTRY_NAMES: Record<string, string> = {
 };
 
 export default async function SettingsPage() {
-  const { business } = await requireBusiness();
+  const { user, business } = await requireBusiness();
+  const telegramChats = await linksForEmail(user.email);
 
   const rails = await db
     .select()
@@ -150,6 +153,11 @@ export default async function SettingsPage() {
         </CardContent>
       </Card>
 
+      <TelegramCard
+        botUsername={env.TELEGRAM_BOT_USERNAME}
+        configured={env.TELEGRAM_BOT_TOKEN.length > 0}
+        chats={telegramChats.map((c) => ({ ...c, linkedAt: c.linkedAt.toISOString() }))}
+      />
       <RailsCard rails={railRows} bankOptions={bankOptions} />
       <PreferencesCard settings={settings} demoMode={env.DEMO_TOOLS} />
       <DemoCard demoMode={env.DEMO_TOOLS} sandbox={!env.DEMO_MODE} />

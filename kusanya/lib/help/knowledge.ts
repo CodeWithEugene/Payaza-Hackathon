@@ -32,7 +32,7 @@ export const HELP_ARTICLES: readonly HelpArticle[] = [
     audiences: ALL,
     title: "What Is Kusanya?",
     answer:
-      "Kusanya turns a buyer's WhatsApp order into a professional invoice with a Payaza payment link. Buyers abroad pay in USD by card, Apple Pay or Google Pay, and buyers in the region can pay in KES, UGX or TZS by mobile money. The exporter receives KES in M-Pesa or a bank account, with every fee and the FX rate shown up front.",
+      "Kusanya turns a buyer's Telegram order into a professional invoice with a Payaza payment link. Buyers abroad pay in USD by card, Apple Pay or Google Pay, and buyers in the region can pay in KES, UGX or TZS by mobile money. The exporter receives KES in M-Pesa or a bank account, with every fee and the FX rate shown up front.",
     covers: "What the product is and who it is for",
     keywords: ["what is", "kusanya", "about", "who", "product", "does it do", "explain"],
   },
@@ -41,10 +41,20 @@ export const HELP_ARTICLES: readonly HelpArticle[] = [
     audiences: SELLERS,
     title: "How Do I Create An Invoice?",
     answer:
-      "Open Invoices and choose New Invoice. Paste the buyer's WhatsApp message and Kusanya reads the buyer, items, total and due date. Each field shows how sure the AI is, and fields it is unsure about need your confirmation. Amounts and dates are always resolved by code, never guessed. Review, then create and send.",
-    covers: "Creating, pasting a WhatsApp order, AI extraction, editing and sending an invoice",
-    keywords: ["create", "new invoice", "make", "whatsapp", "paste", "extract", "send invoice", "invoice"],
+      "Two ways. Forward the buyer's order to @kusanya_invoice_bot on Telegram (connect it once in Settings) and it replies with a screened invoice you send with one tap. Or open Invoices, choose New Invoice and paste the message. Either way Kusanya reads the buyer, items, total and due date, and amounts and dates are always resolved by code, never guessed.",
+    covers: "Creating an invoice from a Telegram message or by pasting an order, AI extraction, editing and sending",
+    keywords: ["create", "new invoice", "make", "telegram", "whatsapp", "paste", "extract", "send invoice", "invoice", "bot"],
     link: { href: "/app/invoices/new", label: "New Invoice" },
+  },
+  {
+    id: "telegram_bot",
+    audiences: SELLERS,
+    title: "How Does The Telegram Bot Work?",
+    answer:
+      "In Kusanya, open Settings, then Telegram, and tap Connect Telegram to link @kusanya_invoice_bot to your account. Then forward or paste any buyer order to the bot. It reads the buyer, items, total and due date, runs the risk screen and creates the Payaza payment link. Tap Send To Buyer to send it, and the bot messages you when Payaza confirms the payment.",
+    covers: "Using the Kusanya Telegram bot to create and send invoices from chat orders, connecting Telegram",
+    keywords: ["telegram", "bot", "forward", "chat", "connect telegram", "kusanya_invoice_bot", "message the bot"],
+    link: { href: "/app/settings", label: "Connect Telegram" },
   },
   {
     id: "fees",
@@ -198,7 +208,7 @@ export const HELP_ARTICLES: readonly HelpArticle[] = [
 
 /** Starter chips per audience (ids, in display order). */
 export const HELP_STARTERS: Record<HelpAudience, readonly string[]> = {
-  merchant: ["create_invoice", "settlement_time", "fees", "payouts"],
+  merchant: ["telegram_bot", "settlement_time", "fees", "payouts"],
   buyer: ["buyer_how_to_pay", "buyer_paid_not_updated", "buyer_fees", "safety"],
   visitor: ["what_is_kusanya", "demo", "fees", "payment_methods"],
 };
