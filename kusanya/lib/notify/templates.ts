@@ -24,9 +24,9 @@ ${cta ? `<p style="margin:22px 0 0"><a href="${cta.href}" style="background:${BR
 
 export function magicLinkEmail(url: string): string {
   return shell(
-    "Sign in to Kusanya",
-    `<p>Tap below to sign in — this link expires in 10 minutes.</p>`,
-    { label: "Sign in", href: url },
+    "Sign In To Kusanya",
+    `<p>Tap below to sign in. This link expires in 10 minutes.</p>`,
+    { label: "Sign In", href: url },
   );
 }
 
@@ -40,10 +40,10 @@ export function invoiceEmail(opts: {
   paymentMethods: string;
 }): string {
   return shell(
-    `Invoice ${opts.invoiceNumber} from ${opts.merchantName}`,
+    `Invoice ${opts.invoiceNumber} From ${opts.merchantName}`,
     `<p>Hi ${opts.buyerName},</p>
 <p>${opts.merchantName} has sent you an invoice for <strong>${opts.amountDisplay}</strong>, due <strong>${opts.dueDisplay}</strong>.</p>
-<p>Pay in about 2 minutes — no account needed. Methods: ${opts.paymentMethods}.</p>`,
+<p>Pay in about 2 minutes, no account needed. Methods: ${opts.paymentMethods}.</p>`,
     { label: `Pay ${opts.amountDisplay}`, href: opts.payUrl },
   );
 }
@@ -56,7 +56,7 @@ export function receiptEmail(opts: {
   paidAt: string;
 }): string {
   return shell(
-    "Payment received ✓",
+    "Payment Received ✓",
     `<p>Hi ${opts.buyerName},</p>
 <p>We received <strong>${opts.amountDisplay}</strong> for invoice <strong>${opts.invoiceNumber}</strong> on ${opts.paidAt}.</p>
 <p style="color:#6b7c6e;font-size:13px">Reference: ${opts.reference}</p>`,
@@ -72,12 +72,12 @@ export function reminderEmail(opts: {
   merchantName: string;
 }): string {
   return shell(
-    `Friendly reminder: ${opts.invoiceNumber}`,
+    `Friendly Reminder: ${opts.invoiceNumber}`,
     `<p>Hi ${opts.buyerName},</p>
 <p>Just a reminder that invoice <strong>${opts.invoiceNumber}</strong> for <strong>${opts.amountDisplay}</strong> is due <strong>${opts.dueDisplay}</strong>.</p>
-<p>If you've already paid, you can ignore this — thank you!</p>
-<p style="color:#6b7c6e;font-size:13px">— sent on behalf of ${opts.merchantName}</p>`,
-    { label: "View & pay invoice", href: opts.payUrl },
+<p>If you've already paid, you can ignore this. Thank you!</p>
+<p style="color:#6b7c6e;font-size:13px">Sent on behalf of ${opts.merchantName}</p>`,
+    { label: "View & Pay Invoice", href: opts.payUrl },
   );
 }
 
@@ -89,7 +89,7 @@ export function payoutSentEmail(opts: {
   invoiceNumber: string;
 }): string {
   return shell(
-    "Imefika! 🎉 Your payout is on the way",
+    "Imefika! 🎉 Your Payout Is On The Way",
     `<p>Habari ${opts.merchantName},</p>
 <p><strong>${opts.amountDisplay}</strong> from invoice ${opts.invoiceNumber} is on its way to <strong>${opts.destination}</strong>.</p>
 <p>Expected: <strong>${opts.etaDisplay}</strong> (Payaza settlement SLA).</p>
@@ -103,10 +103,10 @@ export function payoutFailedEmail(opts: {
   reason: string;
 }): string {
   return shell(
-    "Payout needs your attention",
+    "Payout Needs Your Attention",
     `<p>Habari ${opts.merchantName},</p>
 <p>Your payout of <strong>${opts.amountDisplay}</strong> could not complete: ${opts.reason}.</p>
-<p>Your funds are safe in your settlement balance. Update your payout details and retry — it takes one tap.</p>`,
+<p>Your funds are safe in your settlement balance. Update your payout details and retry; it takes one tap.</p>`,
   );
 }
 
@@ -124,7 +124,7 @@ export function splitStatementEmail(opts: {
     )
     .join("");
   return shell(
-    `Your statement from ${opts.merchantName}`,
+    `Your Statement From ${opts.merchantName}`,
     `<p>Hi ${opts.partnerName}, here is your split settlement statement for ${opts.period}:</p>
 <table role="presentation" width="100%" style="border-collapse:collapse;font-size:14px">${rows}
 <tr><td style="padding:10px 0;font-weight:800">Total settled</td><td style="padding:10px 0;text-align:right;font-weight:800;font-family:ui-monospace,monospace">${opts.totalDisplay}</td></tr></table>`,

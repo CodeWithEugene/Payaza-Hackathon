@@ -223,14 +223,14 @@ export default async function DashboardPage() {
             <Button variant="outline" asChild>
               <Link href="/app/review">
                 <ShieldAlert data-icon="inline-start" />
-                View risk queue
+                View Risk Queue
               </Link>
             </Button>
           )}
           <Button asChild>
             <Link href="/app/invoices/new">
               <Plus data-icon="inline-start" />
-              New invoice
+              New Invoice
             </Link>
           </Button>
         </div>
@@ -265,7 +265,7 @@ export default async function DashboardPage() {
               </ul>
             ) : (
               <p className="mt-1 text-xs text-muted-foreground">
-                Nothing outstanding — every sent invoice has been paid.
+                Nothing outstanding. Every sent invoice has been paid.
               </p>
             )}
           </CardContent>
@@ -273,7 +273,7 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Awaiting payout</CardTitle>
+            <CardTitle>Awaiting Payout</CardTitle>
             <CardDescription>paid, settling, or settled</CardDescription>
           </CardHeader>
           <CardContent>
@@ -288,7 +288,7 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Paid out this month</CardTitle>
+            <CardTitle>Paid Out This Month</CardTitle>
             <CardDescription>completed payouts to your rails</CardDescription>
           </CardHeader>
           <CardContent>
@@ -308,7 +308,7 @@ export default async function DashboardPage() {
         <Link href="/app/review" className="group flex">
           <Card className="w-full transition-colors group-hover:bg-muted/50">
             <CardHeader>
-              <CardTitle>Needs review</CardTitle>
+              <CardTitle>Needs Review</CardTitle>
               <CardDescription>flagged by risk screening</CardDescription>
               <CardAction>
                 <Badge variant={reviewCount > 0 ? "destructive" : "secondary"}>
@@ -319,8 +319,8 @@ export default async function DashboardPage() {
             <CardContent>
               <p className="text-xs text-muted-foreground">
                 {reviewCount > 0
-                  ? `Waiting for your decision — open the risk queue.`
-                  : "All clear — nothing flagged right now."}
+                  ? `Waiting for your decision. Open the risk queue.`
+                  : "All clear, nothing flagged right now."}
               </p>
             </CardContent>
           </Card>
@@ -331,7 +331,7 @@ export default async function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Money in motion</CardTitle>
+            <CardTitle>Money In Motion</CardTitle>
             <CardDescription>
               Invoices being collected, settled, or paid out right now.
             </CardDescription>
@@ -347,7 +347,7 @@ export default async function DashboardPage() {
                 />
               )}
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/app/invoices">View all</Link>
+                <Link href="/app/invoices">View All</Link>
               </Button>
             </CardAction>
           </CardHeader>
@@ -358,7 +358,7 @@ export default async function DashboardPage() {
                   <EmptyMedia variant="icon">
                     <FileText />
                   </EmptyMedia>
-                  <EmptyTitle>Nothing in motion</EmptyTitle>
+                  <EmptyTitle>Nothing In Motion</EmptyTitle>
                   <EmptyDescription>
                     Send an invoice and it will show up here while the money moves.
                   </EmptyDescription>
@@ -367,7 +367,7 @@ export default async function DashboardPage() {
                   <Button asChild>
                     <Link href="/app/invoices/new">
                       <Plus data-icon="inline-start" />
-                      New invoice
+                      New Invoice
                     </Link>
                   </Button>
                 </EmptyContent>
@@ -403,7 +403,7 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Recent activity</CardTitle>
+            <CardTitle>Recent Activity</CardTitle>
             <CardDescription>
               The latest movements across your transactions.
             </CardDescription>
@@ -427,7 +427,7 @@ export default async function DashboardPage() {
                   <EmptyMedia variant="icon">
                     <CreditCard />
                   </EmptyMedia>
-                  <EmptyTitle>No activity yet</EmptyTitle>
+                  <EmptyTitle>No Activity Yet</EmptyTitle>
                   <EmptyDescription>
                     Payments, mobile-money collections, and payouts will appear here
                     the moment they happen.

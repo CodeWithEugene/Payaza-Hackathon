@@ -66,7 +66,7 @@ export async function startMomoCollection(input: StartMomoInput) {
   const expected = COUNTRY_CURRENCY[input.country];
   if (inv.currency !== expected) {
     throw new Error(
-      `Invoice is in ${inv.currency} — mobile money for ${input.country} collects ${expected}. Buyers paying by card use the Pay button instead.`,
+      `Invoice is in ${inv.currency}, but mobile money for ${input.country} collects ${expected}. Buyers paying by card use the Pay button instead.`,
     );
   }
   const msisdn = normalizeMsisdn(input.country, input.phone);
@@ -138,7 +138,7 @@ export async function startMomoCollection(input: StartMomoInput) {
       status,
       message:
         status === "pending"
-          ? `Prompt sent to ${maskMsisdn(msisdn)} — approve it on the phone.`
+          ? `Prompt sent to ${maskMsisdn(msisdn)}. Approve it on the phone.`
           : resp.response_message,
     };
   } catch (err) {

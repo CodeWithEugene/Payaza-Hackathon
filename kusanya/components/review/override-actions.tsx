@@ -65,7 +65,7 @@ export function OverrideActions({
         return;
       }
       if (target === "ready") {
-        toast.success("Approved — open the invoice to send it.");
+        toast.success("Approved. Open the invoice to send it.");
       } else {
         toast.success("Invoice cancelled. The buyer's payment link is off.");
       }
@@ -100,7 +100,7 @@ export function OverrideActions({
         disabled={busy}
       >
         <Ban data-icon="inline-start" />
-        Cancel invoice
+        Cancel Invoice
       </Button>
       <span className="text-xs text-muted-foreground">
         Every override is written to the audit log with your note.
@@ -116,13 +116,13 @@ export function OverrideActions({
           <DialogHeader>
             <DialogTitle>
               {target === "cancelled"
-                ? "Cancel this invoice?"
-                : "Approve and mark ready?"}
+                ? "Cancel This Invoice?"
+                : "Approve And Mark Ready?"}
             </DialogTitle>
             <DialogDescription>
               The risk screen {flagCopy}.{" "}
               {target === "cancelled"
-                ? "Cancelling closes it for good — the buyer gets no payment link."
+                ? "Cancelling closes it for good, and the buyer gets no payment link."
                 : "Approving moves it to Ready; you still send it yourself from the invoice page."}
             </DialogDescription>
           </DialogHeader>
@@ -145,7 +145,7 @@ export function OverrideActions({
             />
             <FieldDescription>
               {note.trim().length < 2
-                ? "Minimum 2 characters — this note is saved with your name."
+                ? "Minimum 2 characters. This note is saved with your name."
                 : "Saved to the audit log with your name."}
             </FieldDescription>
           </Field>
@@ -153,7 +153,7 @@ export function OverrideActions({
           <DialogFooter>
             <DialogClose asChild>
               <Button type="button" variant="ghost" disabled={busy}>
-                Keep as is
+                Keep As Is
               </Button>
             </DialogClose>
             <Button
@@ -169,7 +169,7 @@ export function OverrideActions({
               ) : (
                 <Check data-icon="inline-start" />
               )}
-              {target === "cancelled" ? "Cancel invoice" : "Approve"}
+              {target === "cancelled" ? "Cancel Invoice" : "Approve"}
             </Button>
           </DialogFooter>
         </DialogContent>

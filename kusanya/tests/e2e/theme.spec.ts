@@ -40,7 +40,7 @@ test("dark mode: stored theme, token flip, toggle, hotkey", async ({ page }) => 
   expect(await bodyBgHex()).toBe("#0a0a0a"); // oklch(0.145 0 0) — shadcn dark --background
 
   // Toggle via the dropdown → Light
-  const toggle = page.getByRole("button", { name: "Toggle theme" });
+  const toggle = page.getByRole("button", { name: "Toggle Theme" });
   await expect(toggle).toBeVisible();
   await toggle.click();
   const menu = page.getByRole("menu");
@@ -57,5 +57,5 @@ test("dark mode: stored theme, token flip, toggle, hotkey", async ({ page }) => 
   // Login page: toggle present + stored dark theme applied
   await page.goto("/login");
   await expect(page.locator("html")).toHaveClass(/dark/);
-  await expect(page.getByRole("button", { name: "Toggle theme" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Toggle Theme" })).toBeVisible();
 });

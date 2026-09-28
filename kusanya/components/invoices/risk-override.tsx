@@ -71,7 +71,7 @@ export function RiskOverride({
         return;
       }
       toast.success(
-        `Decision updated — invoice moved to ${TARGET_LABELS[to].toLowerCase()}.`,
+        `Decision updated. Invoice moved to ${TARGET_LABELS[to].toLowerCase()}.`,
       );
       setOpen(false);
       setNote("");
@@ -89,12 +89,12 @@ export function RiskOverride({
       <DialogTrigger asChild>
         <Button variant="outline">
           <ShieldAlert data-icon="inline-start" />
-          Override decision
+          Override Decision
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Override risk decision</DialogTitle>
+          <DialogTitle>Override Risk Decision</DialogTitle>
           <DialogDescription>
             You&apos;re taking a flagged invoice back into your own hands. Overrides
             are written to the audit log with your note.
@@ -132,14 +132,14 @@ export function RiskOverride({
           <FieldLabel htmlFor="override-note">Note</FieldLabel>
           <Textarea
             id="override-note"
-            placeholder="e.g. Called the buyer — they confirmed the order by phone."
+            placeholder="e.g. Called the buyer; they confirmed the order by phone."
             value={note}
             onChange={(e) => setNote(e.target.value)}
             disabled={busy}
             aria-invalid={noteTooShort && note.length > 0}
           />
           <FieldDescription>
-            Required (min 2 characters) — this is your audit trail for the override.
+            Required (min 2 characters). This is your audit trail for the override.
           </FieldDescription>
         </Field>
 
@@ -149,7 +149,7 @@ export function RiskOverride({
           </Button>
           <Button onClick={submit} disabled={busy || noteTooShort}>
             {busy && <Spinner data-icon="inline-start" />}
-            Apply override
+            Apply Override
           </Button>
         </DialogFooter>
       </DialogContent>

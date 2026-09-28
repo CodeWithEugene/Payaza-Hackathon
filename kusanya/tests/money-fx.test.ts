@@ -23,7 +23,7 @@ describe("settlementEta (honest SLAs)", () => {
     // Friday 2026-09-25 UTC
     const fri = new Date("2026-09-25T00:00:00Z");
     const eta = settlementEta("USD", fri);
-    expect(eta.label).toBe("T+3–5 business days");
+    expect(eta.label).toBe("T+3 to 5 business days");
     // +3 business days over the weekend → Wed 2026-09-30
     expect(eta.earliest.toISOString().slice(0, 10)).toBe("2026-09-30");
     // +5 → Fri 2026-10-02

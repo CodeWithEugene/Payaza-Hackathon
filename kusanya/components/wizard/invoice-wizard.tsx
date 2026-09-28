@@ -34,7 +34,7 @@ export function InvoiceWizard({
       <TabsList>
         <TabsTrigger value="ai">
           <Sparkles data-icon="inline-start" />
-          AI wizard
+          AI Wizard
         </TabsTrigger>
         <TabsTrigger value="manual">
           <PenLine data-icon="inline-start" />

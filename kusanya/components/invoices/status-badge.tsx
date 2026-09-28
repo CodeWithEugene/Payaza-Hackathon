@@ -35,18 +35,18 @@ const MAP: Record<
 > = {
   // invoice lifecycle
   draft: { variant: "outline", label: "Draft" },
-  ready: { variant: "secondary", label: "Ready to send" },
+  ready: { variant: "secondary", label: "Ready To Send" },
   sent: { variant: "default", label: "Sent" },
-  partially_paid: { variant: "secondary", label: "Partially paid", icon: Clock },
+  partially_paid: { variant: "secondary", label: "Partially Paid", icon: Clock },
   paid: { variant: "default", label: "Paid", icon: CheckCircle2 },
   settling: { variant: "secondary", label: "Settling", icon: Clock },
   settled: { variant: "secondary", label: "Settled", icon: CheckCircle2 },
-  paying_out: { variant: "secondary", label: "Paying out", icon: Clock },
+  paying_out: { variant: "secondary", label: "Paying Out", icon: Clock },
   completed: { variant: "default", label: "Imefika! Completed", icon: CheckCircle2 },
   failed: { variant: "destructive", label: "Failed", icon: XCircle },
   cancelled: { variant: "outline", label: "Cancelled", icon: XCircle },
-  review: { variant: "secondary", label: "Needs review", icon: AlertTriangle },
-  on_hold: { variant: "destructive", label: "On hold", icon: Ban },
+  review: { variant: "secondary", label: "Needs Review", icon: AlertTriangle },
+  on_hold: { variant: "destructive", label: "On Hold", icon: Ban },
   // txn / payout statuses
   initialized: { variant: "outline", label: "Initialized" },
   pending: { variant: "secondary", label: "Pending", icon: Clock },

@@ -361,13 +361,13 @@ export function ReviewStep({
       const { invoiceId, riskDecision } = res.data;
       if (riskDecision !== "pass") {
         toast.error(
-          `Risk screen: ${riskDecision}. Invoice held for review — nothing was sent.`,
+          `Risk screen: ${riskDecision}. Invoice held for review, and nothing was sent.`,
         );
       } else {
         toast.success(
           sendNow
             ? "Invoice created, screened and sent 🎉"
-            : "Invoice created — ready to send",
+            : "Invoice created and ready to send",
         );
       }
       router.push(`/app/invoices/${invoiceId}`);
@@ -386,12 +386,12 @@ export function ReviewStep({
     <Card>
       <CardHeader>
         <CardTitle>
-          {extraction ? "Review what Kusanya read" : "Create an invoice"}
+          {extraction ? "Review What Kusanya Read" : "Create An Invoice"}
         </CardTitle>
         <CardDescription>
           {extraction
-            ? "Edit anything freely — highlighted fields need your eye, low-confidence fields need your explicit confirmation."
-            : "Fill in the details by hand — same risk screening and payment link as the AI flow."}
+            ? "Edit anything freely. Highlighted fields need your eye, and low-confidence fields need your explicit confirmation."
+            : "Fill in the details by hand, with the same risk screening and payment link as the AI flow."}
         </CardDescription>
         {extraction && result && (
           <CardAction>
@@ -418,9 +418,9 @@ export function ReviewStep({
           {result?.firmOrder.value === false && (
             <Alert>
               <TriangleAlert />
-              <AlertTitle>Enquiry, not a firm order?</AlertTitle>
+              <AlertTitle>Enquiry, Not A Firm Order?</AlertTitle>
               <AlertDescription>
-                This reads like an enquiry, not a firm order — you can still
+                This reads like an enquiry, not a firm order. You can still
                 invoice, but confirm with the buyer.
               </AlertDescription>
             </Alert>
@@ -456,7 +456,7 @@ export function ReviewStep({
                 candidates.length === 0 ? (
                   <Field>
                     <FieldDescription>
-                      No saved buyers yet — switch to “New buyer” and we&apos;ll
+                      No saved buyers yet. Switch to “New buyer” and we&apos;ll
                       create the record for you.
                     </FieldDescription>
                   </Field>
@@ -556,7 +556,7 @@ export function ReviewStep({
               <FieldLabel>Line items</FieldLabel>
               <Button type="button" variant="outline" size="sm" onClick={addRow} disabled={busy}>
                 <Plus data-icon="inline-start" />
-                Add item
+                Add Item
               </Button>
             </div>
             <Table>
@@ -708,9 +708,9 @@ export function ReviewStep({
             />
             <FieldDescription>
               {!totalTouched && derivedTotalMinor != null
-                ? "Computed live from your line items — edit to override."
+                ? "Computed live from your line items. Edit to override."
                 : totalTouched
-                  ? "You set this total yourself — line items stay untouched."
+                  ? "You set this total yourself, so line items stay untouched."
                   : "In major units (e.g. 1150.00). Fills in automatically once every line has a qty and price."}
             </FieldDescription>
           </ConfidenceField>
@@ -766,8 +766,8 @@ export function ReviewStep({
             </ToggleGroup>
             <FieldDescription>
               {feeBearer === "business"
-                ? "Fees come out of your payout — the buyer pays exactly the invoice total."
-                : "Fees are added on top for the buyer — you receive the full invoice amount."}
+                ? "Fees come out of your payout, so the buyer pays exactly the invoice total."
+                : "Fees are added on top for the buyer, so you receive the full invoice amount."}
             </FieldDescription>
           </Field>
 
@@ -778,7 +778,7 @@ export function ReviewStep({
               </FieldLabel>
               <FieldDescription>
                 Every invoice is screened before anything goes out. If a flag
-                fires, it lands in your risk queue instead — fail-closed.
+                fires, it lands in your risk queue instead (fail-closed).
               </FieldDescription>
             </FieldContent>
             <Switch
@@ -801,7 +801,7 @@ export function ReviewStep({
         {!extraction && (
           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <PenLine aria-hidden="true" className="size-3" />
-            Manual entry — no AI involved
+            Manual entry, no AI involved
           </span>
         )}
         {lowUnconfirmedCount > 0 && (
@@ -817,7 +817,7 @@ export function ReviewStep({
           ) : (
             <Send data-icon="inline-start" />
           )}
-          {busy ? "Creating & screening…" : "Create invoice"}
+          {busy ? "Creating & Screening…" : "Create Invoice"}
         </Button>
       </CardFooter>
     </Card>

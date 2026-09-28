@@ -166,7 +166,7 @@ export function RailsCard({
     setBusy(false);
     if (res.ok) {
       setOpen(false);
-      toast.success(editing ? "Rail updated." : "Rail added — payouts can land here.");
+      toast.success(editing ? "Rail updated." : "Rail added. Payouts can land here.");
       router.refresh();
     } else {
       toast.error(res.error ?? "Could not save rail.");
@@ -176,7 +176,7 @@ export function RailsCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Payout rails — where your KES lands</CardTitle>
+        <CardTitle>Payout Rails: Where Your KES Lands</CardTitle>
         <CardDescription>
           Every payout lands on one of these: M-Pesa (minutes) or a kepss bank account (same
           day). The default rail is what auto-payout and one-tap payout use.
@@ -184,7 +184,7 @@ export function RailsCard({
         <CardAction>
           <Button onClick={openAdd}>
             <Plus data-icon="inline-start" />
-            Add rail
+            Add Rail
           </Button>
         </CardAction>
       </CardHeader>
@@ -195,7 +195,7 @@ export function RailsCard({
               <EmptyMedia variant="icon">
                 <Smartphone />
               </EmptyMedia>
-              <EmptyTitle>No payout rails yet</EmptyTitle>
+              <EmptyTitle>No Payout Rails Yet</EmptyTitle>
               <EmptyDescription>
                 Add your M-Pesa number or bank account so settled invoices have somewhere to
                 land.
@@ -203,7 +203,7 @@ export function RailsCard({
             </EmptyHeader>
             <Button onClick={openAdd}>
               <Plus data-icon="inline-start" />
-              Add your first rail
+              Add Your First Rail
             </Button>
           </Empty>
         ) : (
@@ -222,7 +222,7 @@ export function RailsCard({
                     <Icon />
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle>{rail.accountName || "Unnamed rail"}</ItemTitle>
+                    <ItemTitle>{rail.accountName || "Unnamed Rail"}</ItemTitle>
                     <ItemDescription>
                       <span className="font-mono text-foreground">{primary}</span>
                       {rail.bankCode ? (
@@ -258,11 +258,11 @@ export function RailsCard({
       <Dialog open={open} onOpenChange={(next) => !busy && setOpen(next)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editing ? "Edit payout rail" : "Add a payout rail"}</DialogTitle>
+            <DialogTitle>{editing ? "Edit Payout Rail" : "Add A Payout Rail"}</DialogTitle>
             <DialogDescription>
               {editing
                 ? "Update where this rail sends money. Changes apply to the next payout."
-                : "Payouts convert everything to KES and land here — M-Pesa or a Kenyan bank account."}
+                : "Payouts convert everything to KES and land here: M-Pesa or a Kenyan bank account."}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} noValidate>
@@ -303,7 +303,7 @@ export function RailsCard({
                     autoComplete="off"
                     inputMode="tel"
                   />
-                  <FieldDescription>Safaricom M-Pesa — payouts land in minutes.</FieldDescription>
+                  <FieldDescription>Safaricom M-Pesa. Payouts land in minutes.</FieldDescription>
                 </Field>
               ) : (
                 <>
@@ -351,7 +351,7 @@ export function RailsCard({
                     <FieldDescription>
                       {bankOptions.length > 0
                         ? "Kenyan kepss bank codes, live from Payaza."
-                        : "Bank codes couldn't be loaded — enter the kepss code."}
+                        : "Bank codes couldn't be loaded. Enter the kepss code."}
                     </FieldDescription>
                   </Field>
                 </>
@@ -388,7 +388,7 @@ export function RailsCard({
               </Button>
               <Button type="submit" disabled={busy}>
                 {busy ? <Spinner data-icon="inline-start" /> : null}
-                {editing ? "Save changes" : "Add rail"}
+                {editing ? "Save Changes" : "Add Rail"}
               </Button>
             </DialogFooter>
           </form>

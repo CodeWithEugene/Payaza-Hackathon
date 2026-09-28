@@ -100,12 +100,12 @@ export function AttachSplitsDialog({
       allocations.push({ partnerId: p.id, sharePct: pct });
     }
     if (allocations.length === 0) {
-      toast.error("Switch on at least one partner — or close the dialog to leave the invoice without splits.");
+      toast.error("Switch on at least one partner, or close the dialog to leave the invoice without splits.");
       return;
     }
     const total = allocations.reduce((s, a) => s + a.sharePct, 0);
     if (total > 100) {
-      toast.error(`Split shares sum to ${total}% — must be ≤ 100%.`);
+      toast.error(`Split shares sum to ${total}%, but they must be ≤ 100%.`);
       return;
     }
     setBusy(true);
@@ -114,7 +114,7 @@ export function AttachSplitsDialog({
     if (res.ok) {
       setOpen(false);
       toast.success(
-        `Splits attached to ${selected.number} — ${allocations.length} partner${allocations.length === 1 ? "" : "s"} will be paid automatically when it's collected.`,
+        `Splits attached to ${selected.number}. ${allocations.length} partner${allocations.length === 1 ? "" : "s"} will be paid automatically when it's collected.`,
       );
       router.refresh();
     } else {
@@ -136,12 +136,12 @@ export function AttachSplitsDialog({
       <DialogTrigger asChild>
         <Button variant="outline" disabled={partners.length === 0}>
           <Split data-icon="inline-start" />
-          Attach splits to an invoice
+          Attach Splits To An Invoice
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Attach splits to an invoice</DialogTitle>
+          <DialogTitle>Attach Splits To An Invoice</DialogTitle>
           <DialogDescription>
             Switch on the partners this invoice should pay, and adjust their share for it.
             Existing allocations on the invoice are replaced.
@@ -153,9 +153,9 @@ export function AttachSplitsDialog({
               <EmptyMedia variant="icon">
                 <Link2 />
               </EmptyMedia>
-              <EmptyTitle>No attachable invoices</EmptyTitle>
+              <EmptyTitle>No Attachable Invoices</EmptyTitle>
               <EmptyDescription>
-                Splits attach to invoices that are ready, sent, partially paid or paid — before
+                Splits attach to invoices that are ready, sent, partially paid or paid, before
                 payment starts moving.
               </EmptyDescription>
             </EmptyHeader>
@@ -193,7 +193,7 @@ export function AttachSplitsDialog({
               <Field>
                 <FieldLabel>Partners on this invoice</FieldLabel>
                 <FieldDescription>
-                  Shares are percentages of the invoice gross — Payaza pays them from the
+                  Shares are percentages of the invoice gross. Payaza pays them from the
                   collection itself.
                 </FieldDescription>
                 <div className="flex flex-col gap-2">
@@ -256,7 +256,7 @@ export function AttachSplitsDialog({
               </Button>
               <Button type="submit" disabled={busy}>
                 {busy ? <Spinner data-icon="inline-start" /> : <Link2 data-icon="inline-start" />}
-                Attach splits
+                Attach Splits
               </Button>
             </DialogFooter>
           </form>

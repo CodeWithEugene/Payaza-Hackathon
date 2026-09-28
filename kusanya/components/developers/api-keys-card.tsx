@@ -218,7 +218,7 @@ export function ApiKeysCard({ keys }: { keys: KeyRow[] }) {
           </DialogHeader>
           <Alert variant="destructive">
             <TriangleAlert />
-            <AlertTitle>You will only see this key once</AlertTitle>
+            <AlertTitle>You Will Only See This Key Once</AlertTitle>
             <AlertDescription>
               Kusanya keeps only a hash. If you lose the key, revoke it and create a new one.
             </AlertDescription>

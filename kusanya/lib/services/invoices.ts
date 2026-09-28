@@ -208,7 +208,7 @@ export async function sendInvoice(
   if (opts.email && buyerRow?.email) {
     await sendEmail({
       to: buyerRow.email,
-      subject: `Invoice ${fresh.number} from ${biz.name}`,
+      subject: `Invoice ${fresh.number} From ${biz.name}`,
       html: invoiceEmail({
         buyerName: buyerRow.name.split(" ")[0]!,
         merchantName: biz.name,

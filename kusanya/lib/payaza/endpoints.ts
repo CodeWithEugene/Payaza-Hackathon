@@ -359,7 +359,7 @@ export function personaErrorCopy(err: unknown): string {
   if (msg.includes("pin")) return "Payout PIN rejected. Reset it in Payaza dashboard settings.";
   if (msg.includes("whitelist") || msg.includes("ip")) return "This server's IP is not whitelisted for live payouts yet.";
   if (msg.includes("pnd") || msg.includes("post no debit")) return "Payouts are temporarily frozen on the wallet (PND). Contact Payaza support.";
-  if (code === "09" || msg.includes("pending")) return "The payment prompt was sent — approve it on your phone.";
+  if (code === "09" || msg.includes("pending")) return "The payment prompt was sent. Approve it on your phone.";
   if (err.httpStatus === 401 || err.httpStatus === 403) return "Payaza rejected our credentials. The team has been alerted.";
   if (err.httpStatus >= 500) return "Payaza is having a moment. We'll retry automatically.";
   return err.responseMessage ?? "Payment could not be processed. Please try again.";

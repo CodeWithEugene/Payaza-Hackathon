@@ -74,7 +74,7 @@ export function AddPartnerDialog({ bankOptions }: { bankOptions: BankOption[] })
 
   function validate(): string | null {
     if (form.name.trim().length < 2) return "Enter the partner's full name.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return "Enter a valid email — Payaza sends split receipts there.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return "Enter a valid email. Payaza sends split receipts there.";
     if (form.accountNo.trim().length < 4) return "Enter the partner's account or M-Pesa number.";
     if (form.accountName.trim().length < 2) return "Enter the name registered on that account.";
     if (form.bankCode.trim().length < 2) return "Pick the bank or M-Pesa code.";
@@ -114,7 +114,7 @@ export function AddPartnerDialog({ bankOptions }: { bankOptions: BankOption[] })
       setOpen(false);
       setForm(EMPTY);
       setInvalid({});
-      toast.success("Partner created — Payaza split account registered.");
+      toast.success("Partner created and Payaza split account registered.");
       router.refresh();
     } else {
       toast.error(res.error ?? "Could not add partner.");
@@ -135,12 +135,12 @@ export function AddPartnerDialog({ bankOptions }: { bankOptions: BankOption[] })
       <DialogTrigger asChild>
         <Button>
           <Plus data-icon="inline-start" />
-          Add partner
+          Add Partner
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add a partner</DialogTitle>
+          <DialogTitle>Add A Partner</DialogTitle>
           <DialogDescription>
             Registers a Payaza split account. From the invoices you attach them to, their share
             is paid out automatically the moment a collection completes.
@@ -226,7 +226,7 @@ export function AddPartnerDialog({ bankOptions }: { bankOptions: BankOption[] })
               <FieldDescription>
                 {bankOptions.length > 0
                   ? "Kenyan bank and M-Pesa codes, live from Payaza."
-                  : "Bank codes couldn't be loaded — enter the code (e.g. SAFKEN for M-Pesa)."}
+                  : "Bank codes couldn't be loaded. Enter the code (e.g. SAFKEN for M-Pesa)."}
               </FieldDescription>
             </Field>
             <Field data-invalid={invalid.sharePct || undefined}>
@@ -252,7 +252,7 @@ export function AddPartnerDialog({ bankOptions }: { bankOptions: BankOption[] })
             </Button>
             <Button type="submit" disabled={busy}>
               {busy ? <Spinner data-icon="inline-start" /> : <UserPlus data-icon="inline-start" />}
-              Create partner
+              Create Partner
             </Button>
           </DialogFooter>
         </form>

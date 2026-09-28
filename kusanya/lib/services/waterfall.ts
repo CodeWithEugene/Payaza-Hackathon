@@ -101,6 +101,6 @@ export async function invoiceWaterfall(
     grossMinor,
     railFeeMinor,
     payoutFeeMinor,
-    settleEtaDays: currency === "USD" ? "T+3–5 business days" : "T+1 business day",
+    settleEtaDays: currency === "USD" ? "T+3 to 5 business days" : "T+1 business day",
   };
 }

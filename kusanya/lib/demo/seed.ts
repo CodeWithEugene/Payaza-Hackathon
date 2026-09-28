@@ -402,7 +402,7 @@ export async function seedDemo(): Promise<{ businessId: string; invoiceIds: Reco
       decision: "review",
       reasons: [
         { key: "sanctions", label: "Sanctions / prohibited-goods language", probability: 0.02, weight: 40, criterion: "Text screened for trade-control evasion and prohibited goods" },
-        { key: "anomaly", label: "Amount anomaly vs buyer history", probability: 0.95, weight: 20, criterion: "No history — amount far above merchant average" },
+        { key: "anomaly", label: "Amount anomaly vs buyer history", probability: 0.95, weight: 20, criterion: "No history, and the amount is far above the merchant average" },
         { key: "first", label: "First-time buyer", probability: 1, weight: 15, criterion: "No prior settled invoices with this buyer (deterministic fact)" },
         { key: "jurisdiction", label: "Jurisdiction risk", probability: 0.05, weight: 15, criterion: "Buyer country NO not on elevated-review list" },
         { key: "mismatch", label: "Name mismatch", probability: 0.2, weight: 10, criterion: "Presented name diverges slightly from directory name" },

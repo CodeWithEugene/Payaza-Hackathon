@@ -66,7 +66,7 @@ export async function signUpWithBusiness(
   } catch (e) {
     const msg = String(e);
     if (/exist|already|duplicate/i.test(msg)) {
-      return { ok: false, error: "An account with this email already exists — sign in instead." };
+      return { ok: false, error: "An account with this email already exists. Sign in instead." };
     }
     return { ok: false, error: "Signup failed. Try again in a moment." };
   }

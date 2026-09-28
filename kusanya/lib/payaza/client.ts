@@ -172,7 +172,7 @@ function logPayazaCall(
 export function assertLiveMode(op: string): void {
   if (env.DEMO_MODE) {
     throw new Error(
-      `${op} requires live Payaza credentials — app is in Demo Mode (set PAYAZA_PUBLIC_KEY)`,
+      `${op} requires live Payaza credentials, but the app is in Demo Mode (set PAYAZA_PUBLIC_KEY)`,
     );
   }
 }

@@ -54,7 +54,7 @@ export function Timeline({ events }: { events: TimelineEvent[] }) {
           <EmptyMedia variant="icon">
             <Circle />
           </EmptyMedia>
-          <EmptyTitle>Nothing has happened yet</EmptyTitle>
+          <EmptyTitle>Nothing Has Happened Yet</EmptyTitle>
           <EmptyDescription>
             Every send, payment, settlement, and payout will appear here as it happens.
           </EmptyDescription>

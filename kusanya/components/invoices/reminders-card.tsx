@@ -64,7 +64,7 @@ function StatusPill({ row }: { row: ReminderRow }) {
         </Badge>
       );
     case "draft":
-      return <Badge variant="secondary">Draft — awaiting your OK</Badge>;
+      return <Badge variant="secondary">Draft: awaiting your OK</Badge>;
     case "blocked":
       return (
         <Badge variant="destructive">
@@ -99,7 +99,7 @@ export function RemindersCard({
       <CardHeader>
         <CardTitle>Reminders</CardTitle>
         <CardDescription>
-          Polite nudges, drafted and fact-checked — nothing sends without you.
+          Polite nudges, drafted and fact-checked. Nothing sends without you.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
@@ -150,7 +150,7 @@ export function RemindersCard({
               {blocked && (
                 <div className="flex flex-col gap-1">
                   <p className="text-sm text-destructive">
-                    The guardrail blocked this draft — it won&apos;t send.
+                    The guardrail blocked this draft, so it won&apos;t send.
                     {blockedText ? ` ${blockedText}.` : ""}
                   </p>
                   {!blockedText && row.guardrail != null && (

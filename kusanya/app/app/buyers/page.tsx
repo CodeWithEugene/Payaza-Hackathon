@@ -142,9 +142,9 @@ export default async function BuyersPage() {
             <EmptyMedia variant="icon">
               <Contact />
             </EmptyMedia>
-            <EmptyTitle>No buyers yet</EmptyTitle>
+            <EmptyTitle>No Buyers Yet</EmptyTitle>
             <EmptyDescription>
-              Buyers appear here after your first invoice — Jev matches names in
+              Buyers appear here after your first invoice. Jev matches names in
               the messages you paste against this directory.
             </EmptyDescription>
           </EmptyHeader>
@@ -152,7 +152,7 @@ export default async function BuyersPage() {
             <Button asChild>
               <Link href="/app/invoices/new">
                 <Plus data-icon="inline-start" />
-                New invoice
+                New Invoice
               </Link>
             </Button>
           </EmptyContent>

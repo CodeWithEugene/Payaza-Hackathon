@@ -153,13 +153,13 @@ function PayPanelInner({
       <Card>
         <CardHeader className="items-center text-center">
           <Spinner className="size-6" />
-          <CardTitle>Waiting for you to approve the prompt…</CardTitle>
+          <CardTitle>Waiting For You To Approve The Prompt…</CardTitle>
           {pendingMsg && <CardDescription>{pendingMsg}</CardDescription>}
         </CardHeader>
         <CardContent>
           <p className="text-center text-xs text-muted-foreground">
             {slowNote
-              ? "Still pending — this page updates automatically; you can close it."
+              ? "Still pending. This page updates automatically, so you can close it."
               : "This page updates itself as soon as your payment lands."}
           </p>
         </CardContent>
@@ -174,7 +174,7 @@ function PayPanelInner({
           <span className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
             <CheckCircle2 className="size-8" />
           </span>
-          <h2 className="text-lg font-semibold">Payment received — asante!</h2>
+          <h2 className="text-lg font-semibold">Payment Received, Asante!</h2>
           <StatusBadge status={currentStatus} />
           <p className="text-sm text-muted-foreground">
             The merchant has been notified. A receipt is on its way by email.
@@ -189,12 +189,12 @@ function PayPanelInner({
       <Card>
         <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
           <XCircle className="size-10 text-destructive" />
-          <h2 className="text-lg font-semibold">The payment didn&apos;t go through.</h2>
+          <h2 className="text-lg font-semibold">The Payment Didn&apos;t Go Through</h2>
           <p className="text-sm text-muted-foreground">
-            Nothing is lost — pick a method and try once more.
+            Nothing is lost. Pick a method and try once more.
           </p>
           <Button type="button" onClick={() => setView("choose")}>
-            Try again
+            Try Again
           </Button>
         </CardContent>
       </Card>
@@ -205,10 +205,10 @@ function PayPanelInner({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Pay this invoice</CardTitle>
+        <CardTitle>Pay This Invoice</CardTitle>
         <CardDescription>
           {amountLabel}
-          {momoCountry ? " — mobile money or card" : " — securely by card"}
+          {momoCountry ? ", mobile money or card" : ", securely by card"}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
@@ -235,7 +235,7 @@ function PayPanelInner({
         )}
         {demoMode && (
           <p className="text-xs text-muted-foreground">
-            Demo Mode is on — payments here are simulated. The merchant&apos;s Demo controls can
+            Demo Mode is on, so payments here are simulated. The merchant&apos;s Demo controls can
             complete or fail this payment instantly.
           </p>
         )}

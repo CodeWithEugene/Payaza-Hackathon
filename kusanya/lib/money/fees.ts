@@ -67,7 +67,7 @@ export function buildWaterfall(
       minor: -input.railFeeMinor,
       currency: invoiceCurrency,
       kind: "fee",
-      note: estimated ? "estimate — actual from settlement webhook" : undefined,
+      note: estimated ? "estimate; actual comes from the settlement webhook" : undefined,
     });
   }
 

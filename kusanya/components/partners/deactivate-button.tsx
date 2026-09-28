@@ -42,7 +42,7 @@ export function DeactivatePartnerButton({
     setBusy(false);
     if (res.ok) {
       setOpen(false);
-      toast.success(`${partnerName} deactivated — future collections won't split to them.`);
+      toast.success(`${partnerName} deactivated. Future collections won't split to them.`);
       router.refresh();
     } else {
       toast.error(res.error ?? "Could not deactivate partner.");
@@ -84,7 +84,7 @@ export function DeactivatePartnerButton({
             }}
           >
             {busy ? <Spinner data-icon="inline-start" /> : <UserX data-icon="inline-start" />}
-            Deactivate partner
+            Deactivate Partner
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

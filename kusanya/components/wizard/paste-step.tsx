@@ -107,7 +107,7 @@ export function PasteStep({
         | (ExtractApiResponse & { error?: string })
         | null;
       if (!res.ok || !data || !data.result) {
-        toast.error(data?.error ?? "Extraction failed — please try again.");
+        toast.error(data?.error ?? "Extraction failed. Please try again.");
         return;
       }
       setEnquiryWarning(data.result.firmOrder.value === false);
@@ -149,9 +149,9 @@ export function PasteStep({
           {enquiryWarning && (
             <Alert>
               <TriangleAlert />
-              <AlertTitle>Enquiry, not a firm order?</AlertTitle>
+              <AlertTitle>Enquiry, Not A Firm Order?</AlertTitle>
               <AlertDescription>
-                This reads like an enquiry, not a firm order — you can still
+                This reads like an enquiry, not a firm order. You can still
                 invoice, but confirm with the buyer.
               </AlertDescription>
             </Alert>
@@ -164,7 +164,7 @@ export function PasteStep({
               onClick={() => setText(SAMPLE_MESSAGE)}
               disabled={busy}
             >
-              Fill sample message
+              Fill Sample Message
             </Button>
             <Button type="button" onClick={extract} disabled={busy}>
               {busy ? (
@@ -172,7 +172,7 @@ export function PasteStep({
               ) : (
                 <Sparkles data-icon="inline-start" />
               )}
-              Extract with Jev AI
+              Extract With Jev AI
             </Button>
           </div>
 

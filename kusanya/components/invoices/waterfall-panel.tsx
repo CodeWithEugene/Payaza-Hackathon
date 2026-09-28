@@ -21,9 +21,9 @@ export function WaterfallPanel({ waterfall }: { waterfall: InvoiceWaterfall }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Where your money goes</CardTitle>
+        <CardTitle>Where Your Money Goes</CardTitle>
         <CardDescription>
-          Every fee, split, and conversion — before the money reaches your pocket.
+          Every fee, split, and conversion before the money reaches your pocket.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
@@ -76,7 +76,7 @@ export function WaterfallPanel({ waterfall }: { waterfall: InvoiceWaterfall }) {
           <Alert>
             <Info />
             <AlertDescription>
-              Figures are estimates until Payaza confirms the collection — actuals
+              Figures are estimates until Payaza confirms the collection. Actuals
               replace them automatically.
             </AlertDescription>
           </Alert>

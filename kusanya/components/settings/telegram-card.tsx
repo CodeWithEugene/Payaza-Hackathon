@@ -85,7 +85,7 @@ export function TelegramCard({
                   <MessageCircle />
                 </ItemMedia>
                 <ItemContent>
-                  <ItemTitle>{c.username ? `@${c.username}` : (c.firstName ?? "Telegram chat")}</ItemTitle>
+                  <ItemTitle>{c.username ? `@${c.username}` : (c.firstName ?? "Telegram Chat")}</ItemTitle>
                   <ItemDescription>Connected {new Date(c.linkedAt).toLocaleDateString()}</ItemDescription>
                 </ItemContent>
                 <ItemActions>

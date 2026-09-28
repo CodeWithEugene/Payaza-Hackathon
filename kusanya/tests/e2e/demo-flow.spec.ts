@@ -19,7 +19,7 @@ async function login(page: Page) {
   await page.goto("/login");
   await page.locator("#login-email").fill(DEMO_EMAIL);
   await page.locator("#login-password").fill(DEMO_PASSWORD);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.getByRole("button", { name: "Sign In" }).click();
   await page.waitForURL(/\/app/, { timeout: 20_000 });
 }
 

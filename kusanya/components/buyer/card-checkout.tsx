@@ -115,10 +115,10 @@ export function CardCheckout({
         aria-label={`Pay ${amountLabel} by card to ${businessName}`}
       >
         {busy ? <Spinner data-icon="inline-start" /> : <CreditCard data-icon="inline-start" />}
-        Pay {amountLabel} by card
+        Pay {amountLabel} By Card
       </Button>
       <p className="text-xs text-muted-foreground">
-        Visa · Mastercard · Apple Pay · Google Pay — secured by Payaza Checkout
+        Visa · Mastercard · Apple Pay · Google Pay, secured by Payaza Checkout
       </p>
 
       {demoReason && (
@@ -136,7 +136,7 @@ export function CardCheckout({
       {noKeys && (
         <p className="text-xs text-muted-foreground">
           Card checkout isn&apos;t configured with Payaza keys yet
-          {payazaLinkUrl ? " — use the payment link below instead." : "."}
+          {payazaLinkUrl ? ". Use the payment link below instead." : "."}
         </p>
       )}
 
@@ -152,7 +152,7 @@ export function CardCheckout({
           <span className="text-xs text-muted-foreground">Having trouble?</span>
           <Button variant="outline" size="sm" asChild>
             <a href={payazaLinkUrl} target="_blank" rel="noopener">
-              Use the payment link instead
+              Use The Payment Link Instead
             </a>
           </Button>
         </div>

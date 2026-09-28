@@ -89,7 +89,7 @@ export function SignupForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create your Kusanya account</CardTitle>
+        <CardTitle>Create Your Kusanya Account</CardTitle>
         <CardDescription>
           One form sets up your login, your business profile and your default
           M-Pesa payout rail.
@@ -101,7 +101,7 @@ export function SignupForm() {
             {error ? (
               <Alert variant="destructive">
                 <CircleAlert />
-                <AlertTitle>Couldn&apos;t create your account</AlertTitle>
+                <AlertTitle>Couldn&apos;t Create Your Account</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             ) : null}
@@ -212,7 +212,7 @@ export function SignupForm() {
                 </FieldError>
               ) : (
                 <FieldDescription>
-                  Becomes your default payout rail — where your KES lands.
+                  Becomes your default payout rail, where your KES lands.
                 </FieldDescription>
               )}
             </Field>
@@ -223,7 +223,7 @@ export function SignupForm() {
               ) : (
                 <UserPlus data-icon="inline-start" />
               )}
-              {busy ? "Setting up your account…" : "Create account"}
+              {busy ? "Setting Up Your Account…" : "Create Account"}
             </Button>
           </FieldGroup>
         </form>

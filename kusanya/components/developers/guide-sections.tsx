@@ -164,7 +164,7 @@ export function TestModeSection() {
     <DocSection id="test-mode" title="Test Mode">
       <Alert>
         <ShieldCheck />
-        <AlertTitle>All keys run on the Payaza sandbox</AlertTitle>
+        <AlertTitle>All Keys Run On The Payaza Sandbox</AlertTitle>
         <AlertDescription>
           Kusanya issues test keys only. Payment links, card checkouts and mobile money prompts use Payaza test
           rails, so no real money moves.

@@ -35,7 +35,7 @@ export function CancelButton({ invoiceId }: { invoiceId: string }) {
     try {
       const res = await cancelInvoiceAction(invoiceId, reason.trim());
       if (res.ok) {
-        toast.success("Invoice cancelled — the buyer's payment link is closed.");
+        toast.success("Invoice cancelled. The buyer's payment link is closed.");
         setOpen(false);
         setReason("");
         router.refresh();
@@ -59,10 +59,10 @@ export function CancelButton({ invoiceId }: { invoiceId: string }) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Cancel this invoice?</AlertDialogTitle>
+          <AlertDialogTitle>Cancel This Invoice?</AlertDialogTitle>
           <AlertDialogDescription>
             The buyer&apos;s payment link stops working immediately. The invoice stays on
-            record — cancellation is written to your audit log.
+            record, and the cancellation is written to your audit log.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <Field>
@@ -78,14 +78,14 @@ export function CancelButton({ invoiceId }: { invoiceId: string }) {
           <FieldDescription>A few honest words for the audit trail.</FieldDescription>
         </Field>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={busy}>Keep invoice</AlertDialogCancel>
+          <AlertDialogCancel disabled={busy}>Keep Invoice</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={busy || reason.trim().length === 0}
             onClick={confirmCancel}
           >
             {busy && <Spinner data-icon="inline-start" />}
-            Cancel invoice
+            Cancel Invoice
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
