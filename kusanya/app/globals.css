@@ -517,49 +517,44 @@ html[data-a11y-motion="reduce"] [data-app-shell] main [data-slot="card"] {
     0 24px 48px -24px color-mix(in oklch, var(--primary) 40%, transparent);
 }
 
-/* Brand accent strip on app cards, cycling through the palette so a page of
-   cards reads as colorful, not grey. */
+/* App cards: soft tinted fill cycling through the palette (no top strip),
+   so a page of cards reads as colorful, not grey. */
 [data-app-shell] main [data-slot="card"] {
-  position: relative;
-  overflow: hidden;
+  --k-card-tint: var(--hero-violet);
+  --k-card-tint-2: var(--hero-cyan);
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--k-card-tint) 18%, var(--card)) 0%,
+    color-mix(in oklch, var(--k-card-tint-2) 10%, var(--card)) 100%
+  );
+  border-color: color-mix(in oklch, var(--k-card-tint) 30%, var(--border));
 }
-[data-app-shell] main [data-slot="card"]::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--hero-violet), var(--hero-cyan));
-  pointer-events: none;
+[data-app-shell] main :nth-child(4n + 2 of [data-slot="card"]) {
+  --k-card-tint: var(--hero-sun);
+  --k-card-tint-2: var(--hero-coral);
 }
-[data-app-shell] main :nth-child(4n + 2 of [data-slot="card"])::before {
-  background: linear-gradient(90deg, var(--hero-sun), var(--hero-coral));
+[data-app-shell] main :nth-child(4n + 3 of [data-slot="card"]) {
+  --k-card-tint: var(--brand-leaf);
+  --k-card-tint-2: var(--hero-cyan);
 }
-[data-app-shell] main :nth-child(4n + 3 of [data-slot="card"])::before {
-  background: linear-gradient(90deg, var(--brand-leaf), var(--hero-cyan));
+[data-app-shell] main :nth-child(4n + 4 of [data-slot="card"]) {
+  --k-card-tint: var(--hero-magenta);
+  --k-card-tint-2: var(--hero-violet);
 }
-[data-app-shell] main :nth-child(4n + 4 of [data-slot="card"])::before {
-  background: linear-gradient(90deg, var(--hero-magenta), var(--hero-violet));
+.dark [data-app-shell] main [data-slot="card"] {
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--k-card-tint) 16%, var(--card)) 0%,
+    color-mix(in oklch, var(--k-card-tint-2) 8%, var(--card)) 100%
+  );
 }
-/* Cards nested inside cards keep a clean edge. */
-[data-app-shell] main [data-slot="card"] [data-slot="card"]::before {
-  display: none;
+/* Cards nested inside cards stay plain so content stays readable. */
+[data-app-shell] main [data-slot="card"] [data-slot="card"] {
+  background-image: none;
+  border-color: var(--border);
 }
-html[data-a11y-contrast="high"] [data-app-shell] main [data-slot="card"]::before {
-  display: none;
+html[data-a11y-contrast="high"] [data-app-shell] main [data-slot="card"] {
+  background-image: none;
+  border-color: var(--border);
 }
-/* Buyer + auth cards share the brand accent strip. */
-.k-auth-canvas [data-slot="card"] {
-  position: relative;
-  overflow: hidden;
-}
-.k-auth-canvas [data-slot="card"]::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--hero-sun), var(--hero-magenta), var(--hero-violet), var(--hero-cyan));
-  pointer-events: none;
-}
-html[data-a11y-contrast="high"] .k-auth-canvas [data-slot="card"]::before {
-  display: none;
-}
+
