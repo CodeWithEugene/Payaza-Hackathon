@@ -547,3 +547,19 @@ html[data-a11y-motion="reduce"] [data-app-shell] main [data-slot="card"] {
 html[data-a11y-contrast="high"] [data-app-shell] main [data-slot="card"]::before {
   display: none;
 }
+/* Buyer + auth cards share the brand accent strip. */
+.k-auth-canvas [data-slot="card"] {
+  position: relative;
+  overflow: hidden;
+}
+.k-auth-canvas [data-slot="card"]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--hero-sun), var(--hero-magenta), var(--hero-violet), var(--hero-cyan));
+  pointer-events: none;
+}
+html[data-a11y-contrast="high"] .k-auth-canvas [data-slot="card"]::before {
+  display: none;
+}

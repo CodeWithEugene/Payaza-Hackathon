@@ -85,7 +85,7 @@ export default async function PayDonePage({ searchParams }: Props) {
   }
 
   return (
-    <main className="flex min-h-svh items-center justify-center bg-muted/30 px-4 py-10">
+    <main className="k-auth-canvas flex min-h-svh items-center justify-center px-4 py-10">
       <div className="flex w-full max-w-md flex-col gap-6">
         <p className="text-center font-mono text-sm font-semibold tracking-tight text-muted-foreground">
           kusanya

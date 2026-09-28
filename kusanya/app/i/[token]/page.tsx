@@ -82,7 +82,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
   const receiptHref = `/api/buyer/receipt?token=${encodeURIComponent(invoice.token)}`;
 
   return (
-    <div className="min-h-svh bg-muted/30">
+    <div className="k-auth-canvas min-h-svh">
       <main className="mx-auto flex w-full max-w-2xl flex-col gap-5 px-4 py-8 sm:py-12">
         {/* Header: who is billing + the kusanya wordmark */}
         <header className="flex items-center justify-between gap-3">
@@ -205,7 +205,9 @@ export default async function BuyerInvoicePage({ params }: Props) {
             buyerEmail={buyerRow?.email ?? ""}
             demoMode={env.DEMO_MODE}
             sandbox={env.SANDBOX_RAILS}
-            payazaLinkUrl={invoice.payazaLinkUrl}
+            // Payaza serves test-mode payment links as "Link not found", so the
+            // hosted-link fallback is offered on the live tenant only.
+            payazaLinkUrl={env.PAYAZA_TENANT === "live" ? invoice.payazaLinkUrl : null}
           />
         )}
 
