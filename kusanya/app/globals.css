@@ -7,6 +7,20 @@
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);
+    --color-brand-violet: var(--brand-violet);
+    --color-brand-sunset: var(--brand-sunset);
+    --color-brand-coral: var(--brand-coral);
+    --color-brand-lagoon: var(--brand-lagoon);
+    --color-brand-leaf: var(--brand-leaf);
+    --color-brand-rose: var(--brand-rose);
+    --color-brand-ink: var(--brand-ink);
+    --color-brand-ink-foreground: var(--brand-ink-foreground);
+    --color-brand-ink-muted: var(--brand-ink-muted);
+    --color-hero-sun: var(--hero-sun);
+    --color-hero-coral: var(--hero-coral);
+    --color-hero-magenta: var(--hero-magenta);
+    --color-hero-violet: var(--hero-violet);
+    --color-hero-cyan: var(--hero-cyan);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,72 +62,110 @@
 }
 
 :root {
+    /*
+     * Brand palette. Primary is a deep "payments indigo" (#5146ee): it reads as
+     * trustworthy money infrastructure (the register Stripe made familiar),
+     * clears WCAG AA as text on white (6.1:1) and under white button text.
+     * Kusanya is Kenyan, so the supporting accents carry savanna-sunset warmth
+     * (amber, coral) plus lagoon and leaf greens (M-Pesa, paid, settled). The
+     * hero gradient blends all of them. Every --brand-* tone used as text or
+     * an icon is tuned per theme to >= 4.5:1 on its surface.
+     */
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
+    --primary: oklch(0.52 0.24 277); /* #5146ee */
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.97 0.006 280);
+    --secondary-foreground: oklch(0.24 0.04 277);
     --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
+    --muted-foreground: oklch(0.52 0.01 277); /* 5.3:1 on white */
+    --accent: oklch(0.962 0.022 280); /* #eff1ff, indigo-tinted hover surface */
+    --accent-foreground: oklch(0.35 0.15 277);
     --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    --border: oklch(0.922 0.006 280);
+    --input: oklch(0.905 0.008 280);
+    --ring: oklch(0.6 0.2 277); /* #676cf4 */
+    /* Charts: Okabe-Ito-inspired hues (indigo, amber, teal, sky, pink); they
+       differ in lightness as well as hue, so series stay distinct under
+       deuteranopia, protanopia and tritanopia. */
+    --chart-1: oklch(0.55 0.22 277); /* #5957ed indigo */
+    --chart-2: oklch(0.78 0.16 70); /* #f7a224 amber */
+    --chart-3: oklch(0.62 0.13 168); /* #009e77 teal */
+    --chart-4: oklch(0.72 0.12 235); /* #4cb0e5 sky */
+    --chart-5: oklch(0.64 0.17 350); /* #d4599b pink */
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
+    --sidebar: oklch(0.985 0.003 280);
     --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary: oklch(0.52 0.24 277);
     --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --sidebar-accent: oklch(0.955 0.02 280);
+    --sidebar-accent-foreground: oklch(0.3 0.12 277);
+    --sidebar-border: oklch(0.922 0.006 280);
+    --sidebar-ring: oklch(0.6 0.2 277);
+    /* Page-level brand accents (landing bento, stats, icons). */
+    --brand-violet: oklch(0.52 0.24 277); /* #5146ee */
+    --brand-sunset: oklch(0.58 0.16 55); /* #bf5900 */
+    --brand-coral: oklch(0.57 0.2 30); /* #d33222 */
+    --brand-lagoon: oklch(0.55 0.11 225); /* #007ea2 */
+    --brand-leaf: oklch(0.55 0.13 160); /* #008856 */
+    --brand-rose: oklch(0.55 0.2 355); /* #c32777 */
+    --brand-ink: oklch(0.2 0.06 275); /* #0f1231, the dark contrast band */
+    --brand-ink-foreground: oklch(0.985 0 0);
+    --brand-ink-muted: oklch(0.82 0.03 275);
+    /* Hero gradient stops (bright; text never sits on them unwashed). */
+    --hero-sun: oklch(0.8 0.17 70); /* #ffa714 */
+    --hero-coral: oklch(0.68 0.2 30); /* #fb5a46 */
+    --hero-magenta: oklch(0.66 0.24 340); /* #ea3fbf */
+    --hero-violet: oklch(0.64 0.23 285); /* #846bff */
+    --hero-cyan: oklch(0.78 0.14 220); /* #12cbf5 */
 }
 
 .dark {
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
+    --card: oklch(0.205 0.006 280);
     --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
+    --popover: oklch(0.205 0.006 280);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
+    /* Lighter periwinkle so it glows on near-black; dark ink text on top. */
+    --primary: oklch(0.72 0.16 280); /* #9296ff, 7.6:1 on the dark background */
+    --primary-foreground: oklch(0.17 0.05 280); /* #0c0c24 */
+    --secondary: oklch(0.27 0.02 280);
     --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
+    --muted: oklch(0.269 0.006 280);
+    --muted-foreground: oklch(0.72 0.012 280);
+    --accent: oklch(0.28 0.05 280); /* #242641 */
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.704 0.191 22.216);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
+    --ring: oklch(0.62 0.17 280); /* #7575e9 */
+    --chart-1: oklch(0.66 0.19 279); /* #7d7fff */
+    --chart-2: oklch(0.8 0.15 72); /* #f8ac3d */
+    --chart-3: oklch(0.7 0.13 168); /* #2eb88f */
+    --chart-4: oklch(0.78 0.11 232); /* #67c4f2 */
+    --chart-5: oklch(0.72 0.15 350); /* #e97ab2 */
+    --sidebar: oklch(0.19 0.006 280);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-primary: oklch(0.72 0.16 280);
+    --sidebar-primary-foreground: oklch(0.17 0.05 280);
+    --sidebar-accent: oklch(0.27 0.04 280);
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --sidebar-ring: oklch(0.62 0.17 280);
+    --brand-violet: oklch(0.72 0.16 280); /* #9296ff */
+    --brand-sunset: oklch(0.8 0.15 70); /* #faab3f */
+    --brand-coral: oklch(0.72 0.17 30); /* #fd7562 */
+    --brand-lagoon: oklch(0.78 0.11 225); /* #5ec6ec */
+    --brand-leaf: oklch(0.76 0.14 160); /* #4fcc92 */
+    --brand-rose: oklch(0.74 0.15 350); /* #f080b8 */
+    --brand-ink: oklch(0.19 0.045 275);
+    --brand-ink-foreground: oklch(0.985 0 0);
+    --brand-ink-muted: oklch(0.8 0.03 275);
 }
 
 @layer base {
@@ -150,6 +202,22 @@ html[data-a11y-contrast="high"] {
   --input: oklch(0.45 0 0);
   --ring: oklch(0.2 0 0);
   --sidebar-border: oklch(0.45 0 0);
+  /* Brand colors deepen so primary text and buttons pass AAA-level ratios. */
+  --primary: oklch(0.4 0.22 277); /* #371eb9, 10.2:1 on white */
+  --primary-foreground: oklch(1 0 0);
+  --accent-foreground: oklch(0.28 0.14 277);
+  --secondary-foreground: oklch(0.15 0.04 277);
+  --sidebar-primary: oklch(0.4 0.22 277);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent-foreground: oklch(0.2 0.1 277);
+  --brand-violet: oklch(0.4 0.22 277);
+  --brand-sunset: oklch(0.45 0.13 55);
+  --brand-coral: oklch(0.45 0.17 30);
+  --brand-lagoon: oklch(0.42 0.09 225);
+  --brand-leaf: oklch(0.42 0.1 160);
+  --brand-rose: oklch(0.42 0.17 355);
+  --brand-ink: oklch(0 0 0);
+  --brand-ink-muted: oklch(0.92 0 0);
 }
 html.dark[data-a11y-contrast="high"] {
   --background: oklch(0 0 0);
@@ -163,6 +231,21 @@ html.dark[data-a11y-contrast="high"] {
   --input: oklch(1 0 0 / 60%);
   --ring: oklch(0.95 0 0);
   --sidebar-border: oklch(1 0 0 / 55%);
+  --primary: oklch(0.84 0.1 280); /* #bdc4ff, 11.8:1 on black */
+  --primary-foreground: oklch(0 0 0);
+  --accent-foreground: oklch(1 0 0);
+  --secondary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.84 0.1 280);
+  --sidebar-primary-foreground: oklch(0 0 0);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --brand-violet: oklch(0.86 0.09 280);
+  --brand-sunset: oklch(0.87 0.12 75);
+  --brand-coral: oklch(0.84 0.1 30);
+  --brand-lagoon: oklch(0.87 0.08 225);
+  --brand-leaf: oklch(0.87 0.1 160);
+  --brand-rose: oklch(0.86 0.09 350);
+  --brand-ink: oklch(0.1 0.02 275);
+  --brand-ink-muted: oklch(0.92 0 0);
 }
 html[data-a11y-contrast="high"] :focus-visible {
   outline: 3px solid var(--ring);
@@ -193,4 +276,127 @@ html[data-a11y-spacing="wide"] body {
 html[data-a11y-spacing="wide"] p,
 html[data-a11y-spacing="wide"] li {
   line-height: 1.75;
+}
+
+/* ---------------------------------------------------------------------------
+ * Landing page (app/page.tsx, components/landing/*). Page-level classes only;
+ * shadcn components stay untouched and pick up the brand via tokens.
+ * ------------------------------------------------------------------------- */
+
+/* The signature band: layered radial blobs over a sunset-to-lagoon sweep,
+   each layer drifting at its own size so the colors slowly swirl. */
+.k-hero-gradient {
+  background-color: var(--hero-violet);
+  background-image:
+    radial-gradient(38% 60% at 12% 25%, var(--hero-sun) 0%, transparent 70%),
+    radial-gradient(40% 65% at 38% 12%, var(--hero-coral) 0%, transparent 70%),
+    radial-gradient(42% 70% at 66% 38%, var(--hero-magenta) 0%, transparent 72%),
+    radial-gradient(48% 80% at 92% 62%, var(--hero-cyan) 0%, transparent 72%),
+    linear-gradient(
+      115deg,
+      var(--hero-sun) 0%,
+      var(--hero-coral) 24%,
+      var(--hero-magenta) 48%,
+      var(--hero-violet) 72%,
+      var(--hero-cyan) 100%
+    );
+  background-size:
+    160% 160%,
+    180% 180%,
+    170% 170%,
+    190% 190%,
+    300% 300%;
+  animation: k-gradient-drift 24s ease-in-out infinite alternate;
+}
+.dark .k-hero-gradient {
+  /* Deepen the band so light text and cards stay readable on it. */
+  filter: brightness(0.62) saturate(1.1);
+}
+@keyframes k-gradient-drift {
+  0% {
+    background-position: 0% 0%, 20% 0%, 60% 40%, 100% 60%, 0% 50%;
+  }
+  50% {
+    background-position: 30% 40%, 60% 30%, 20% 60%, 70% 20%, 50% 50%;
+  }
+  100% {
+    background-position: 60% 20%, 10% 60%, 80% 10%, 40% 90%, 100% 50%;
+  }
+}
+
+/* Wash between the band and the copy: text always sits on a near-solid
+   background, while the product mock floats over full color. */
+.k-hero-wash {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--background) 30%, transparent) 0%,
+    color-mix(in oklch, var(--background) 86%, transparent) 14%,
+    color-mix(in oklch, var(--background) 86%, transparent) 50%,
+    color-mix(in oklch, var(--background) 10%, transparent) 72%,
+    transparent 100%
+  );
+}
+@media (min-width: 64rem) {
+  .k-hero-wash {
+    background: linear-gradient(
+      100deg,
+      color-mix(in oklch, var(--background) 92%, transparent) 0%,
+      color-mix(in oklch, var(--background) 86%, transparent) 40%,
+      transparent 62%
+    );
+  }
+}
+html[data-a11y-contrast="high"] .k-hero-wash {
+  background: color-mix(in oklch, var(--background) 94%, transparent);
+}
+
+/* Diagonal lower edge of the band (Stripe-style skew, no transforms). */
+.k-hero-band {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 90%);
+}
+@media (min-width: 64rem) {
+  .k-hero-band {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 64%);
+  }
+}
+
+/* Gentle float for the product mock. */
+.k-float {
+  animation: k-float 7s ease-in-out infinite;
+}
+.k-float-slow {
+  animation: k-float 9s ease-in-out -3s infinite;
+}
+@keyframes k-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Soft brand glow for the dark stats band. */
+.k-ink-glow {
+  background-color: var(--brand-ink);
+  background-image:
+    radial-gradient(50% 80% at 0% 0%, color-mix(in oklch, var(--hero-violet) 38%, transparent), transparent 70%),
+    radial-gradient(40% 70% at 100% 100%, color-mix(in oklch, var(--hero-sun) 22%, transparent), transparent 70%);
+}
+html[data-a11y-contrast="high"] .k-ink-glow {
+  background-image: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-hero-gradient,
+  .k-float,
+  .k-float-slow {
+    animation: none;
+  }
+}
+html[data-a11y-motion="reduce"] .k-hero-gradient,
+html[data-a11y-motion="reduce"] .k-float,
+html[data-a11y-motion="reduce"] .k-float-slow {
+  animation: none !important;
 }
