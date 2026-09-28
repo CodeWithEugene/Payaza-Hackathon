@@ -51,6 +51,8 @@ export interface PayPanelProps {
   buyerName: string;
   buyerEmail: string;
   demoMode: boolean;
+  /** Real Payaza test rails: test cards / any phone number, no real money. */
+  sandbox?: boolean;
   payazaLinkUrl?: string | null;
 }
 
@@ -82,6 +84,7 @@ function PayPanelInner({
   buyerName,
   buyerEmail,
   demoMode,
+  sandbox = false,
   payazaLinkUrl,
 }: PayPanelProps) {
   const router = useRouter();
@@ -234,6 +237,12 @@ function PayPanelInner({
           <p className="text-xs text-muted-foreground">
             Demo Mode is on — payments here are simulated. The merchant&apos;s Demo controls can
             complete or fail this payment instantly.
+          </p>
+        )}
+        {sandbox && (
+          <p className="text-xs text-muted-foreground">
+            Payaza sandbox: this runs on Payaza&apos;s real test rails. Use a test card or any
+            phone number. No real money moves.
           </p>
         )}
       </CardContent>

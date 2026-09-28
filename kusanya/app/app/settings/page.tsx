@@ -151,8 +151,8 @@ export default async function SettingsPage() {
       </Card>
 
       <RailsCard rails={railRows} bankOptions={bankOptions} />
-      <PreferencesCard settings={settings} demoMode={env.DEMO_MODE} />
-      <DemoCard demoMode={env.DEMO_MODE} />
+      <PreferencesCard settings={settings} demoMode={env.DEMO_TOOLS} />
+      <DemoCard demoMode={env.DEMO_TOOLS} sandbox={!env.DEMO_MODE} />
     </div>
   );
 }

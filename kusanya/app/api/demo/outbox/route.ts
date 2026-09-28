@@ -6,7 +6,7 @@ import { env } from "@/lib/config/env";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!env.DEMO_MODE) return Response.json([], { status: 404 });
+  if (!env.DEMO_TOOLS) return Response.json([], { status: 404 });
   const emails = demoOutbox().map((e) => ({ ...e, kind: "email" as const }));
   const sms = smsOutbox().map((s) => ({
     to: s.to,

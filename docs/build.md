@@ -932,3 +932,35 @@ custom domain; `lib/auth/config.ts` trustedOrigins now lists BOTH production ori
 explicitly, so sign-in passes CSRF on custom domain and gamma alike in either env order
 (pre-cutover probe: custom origin 403 INVALID_ORIGIN, gamma 200 — exactly the failure mode
 trustedOrigins removes).
+
+**Real sandbox rails + the Demo Mode split (2026-09-28).** Payaza Integration Support
+confirmed momo, transfers, checkout test cards and split settlements are all on by default
+in test mode. Wiring the keys surfaced four bugs Demo Mode had hidden (it intercepts before
+any fetch):
+1. `new URL(path, "https://api.payaza.africa/live")` with a leading-slash path DROPS `/live`
+   → every live call hit `api.payaza.africa/payaza-account/…` and got a bare 403. Fixed with
+   `payazaUrl()` (string join), pinned by `tests/payaza-url.test.ts`.
+2. Payment links: `country_code` must match `currency_code` (USD+KEN → "Currency not
+   supported"; USD+USA ✓, KES+KEN ✓, UGX+UGA ✓). `payment_link_name` is unique
+   account-wide and invoice numbers repeat after a demo reset → name carries the token tail.
+   Payaza's edge 403s a `localhost` `redirect_url` → https-only. Amount used `/100` for every
+   currency (UGX/TZS have 0 decimals) → `minorToMajor`. All in `lib/payaza/payment-link.ts`
+   (`tests/payment-link.test.ts`).
+3. `pnpm sandbox:smoke` never loaded `.env.local` → `node --env-file-if-exists`.
+4. Sandbox `GET …/banks/KES` answers 403 "Authentication failed" to a key that
+   authenticates every other endpoint (Payaza-side; smoke treats it as a warning).
+
+One flag used to mean both "fixtures" and "demo tooling"; it is now three
+(`lib/config/env.ts`): `DEMO_MODE` (fixtures; forced or no keys), `DEMO_TOOLS`
+(`NEXT_PUBLIC_DEMO_TOOLS=true`: reset/replay/outbox/simulated settlement/relaxed auth rate
+limits), `PAYOUTS_SIMULATED` (`PAYAZA_PAYOUTS=simulated`: payouts + wallet enquiry on
+fixtures, because the test account has **no wallets** so there is no `account_reference`).
+The public webhook route's replay-header signature bypass stays on `DEMO_MODE` only; with
+live keys every webhook must be HMAC-valid. `SANDBOX_RAILS` (live keys + test tenant)
+auto-approves a momo prompt: `after()` calls the test-funding endpoint 4s later (nobody taps
+"approve" on a sandbox phone), Payaza sends the signed webhook, and one status poll 6s later
+is the backup; both converge on `applyCollectionResult`. Verified locally: KES 48,500 prompt
+→ Paid in ~18s. Production env: `NEXT_PUBLIC_DEMO_MODE=false`, `NEXT_PUBLIC_DEMO_TOOLS=true`,
+`PAYAZA_PAYOUTS=simulated`, `PAYAZA_TENANT=test`, Payaza keys + `TYPESAFE_API_KEY` (sensitive).
+Dashboard (Settings → Developers → Webhooks): collection + payout webhook URL
+`/api/payaza/webhook`, collection callback `/pay-done`.

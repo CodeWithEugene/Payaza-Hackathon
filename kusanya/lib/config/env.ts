@@ -8,6 +8,12 @@ import { z } from "zod";
  * Demo Mode rule: explicitly on via NEXT_PUBLIC_DEMO_MODE=true, OR automatically
  * on when Payaza keys are absent — the app must never crash for missing keys,
  * it degrades to Demo Mode (fixtures + recorded payloads).
+ *
+ * Sandbox split (2026-09-28): DEMO_MODE (fixtures) and DEMO_TOOLS (reset,
+ * replay, outbox, simulated settlement) are separate, so production can move
+ * real sandbox money while staying resettable for judges. PAYAZA_PAYOUTS
+ * keeps payouts + wallet enquiry on labeled fixtures until Payaza provisions
+ * the test account's KES wallet (enquiry/main returns no wallets today).
  */
 
 const envSchema = z.object({
@@ -23,7 +29,6 @@ const envSchema = z.object({
   PAYAZA_BASE_URL: z.string().url().default("https://api.payaza.africa/live"),
   PAYAZA_CHECKOUT_MODE: z.enum(["Test", "Live"]).default("Test"),
   PAYAZA_PAYOUT_PIN: z.string().optional().default(""),
-  NEXT_PUBLIC_PAYAZA_MERCHANT_KEY: z.string().optional().default(""),
 
   TYPESAFE_API_KEY: z.string().optional().default(""),
   TYPESAFE_MODEL: z.string().optional().default(""),
@@ -42,6 +47,10 @@ const envSchema = z.object({
     .optional()
     .default("true"),
   DEMO_SEED: z.string().optional().default("wanjiru"),
+  /** Demo tooling without fixtures: "true" keeps reset/replay/settle on live keys. */
+  NEXT_PUBLIC_DEMO_TOOLS: z.enum(["true", "false"]).optional().default("false"),
+  /** "simulated" = payouts + wallet enquiry use fixtures even with live keys. */
+  PAYAZA_PAYOUTS: z.enum(["live", "simulated"]).optional().default("live"),
 
   /** Vercel cron secret; empty in dev = crons open (localhost only). */
   CRON_SECRET: z.string().optional().default(""),
@@ -71,6 +80,12 @@ export const env = {
    * Auto-on when PAYAZA_PUBLIC_KEY is empty — Demo Mode is the safe default.
    */
   DEMO_MODE: demoForced || !payazaConfigured,
+  /** Reset / replay / outbox / simulated settlement. Always on with fixtures. */
+  DEMO_TOOLS: demoForced || !payazaConfigured || raw.NEXT_PUBLIC_DEMO_TOOLS === "true",
+  /** Payouts + wallet balances on fixtures (full Demo Mode, or wallet pending). */
+  PAYOUTS_SIMULATED: demoForced || !payazaConfigured || raw.PAYAZA_PAYOUTS === "simulated",
+  /** Live keys on the test tenant: real Payaza sandbox rails (auto-approves momo prompts). */
+  SANDBOX_RAILS: !(demoForced || !payazaConfigured) && raw.PAYAZA_TENANT === "test",
   PAYAZA_CONFIGURED: payazaConfigured,
   JEV_CONFIGURED: raw.TYPESAFE_API_KEY.length > 0,
   DB_CONFIGURED: raw.DATABASE_URL.length > 0,

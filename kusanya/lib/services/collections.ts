@@ -1,4 +1,5 @@
 import "server-only";
+import { after } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import {
@@ -16,6 +17,7 @@ import { minorFactor, type CurrencyCode } from "@/lib/money/currencies";
 import {
   processCollection,
   checkCollectionStatus,
+  fundTestCollection,
   merchantTransactionQuery,
   normalizeMsisdn,
   MOMO_BANK_CODES,
@@ -93,20 +95,21 @@ export async function startMomoCollection(input: StartMomoInput) {
 
   const amountMajor = minorToMajor(inv.currency as CurrencyCode, Number(inv.amountMinor));
   const [firstName, ...rest] = buyerRow.name.split(" ");
+  const collectionRequest = {
+    amount: amountMajor,
+    customer_number: msisdn,
+    transaction_reference: merchantReference,
+    transaction_description: `Invoice ${inv.number}`,
+    customer_bank_code: bankCode,
+    currency_code: inv.currency,
+    customer_email: buyerRow.email ?? "buyer@kusanya.app",
+    customer_first_name: firstName ?? "Buyer",
+    customer_last_name: rest.join(" ") || ".",
+    customer_phone_number: msisdn,
+    country_code: input.country,
+  };
   try {
-    const resp = await processCollection({
-      amount: amountMajor,
-      customer_number: msisdn,
-      transaction_reference: merchantReference,
-      transaction_description: `Invoice ${inv.number}`,
-      customer_bank_code: bankCode,
-      currency_code: inv.currency,
-      customer_email: buyerRow.email ?? "buyer@kusanya.app",
-      customer_first_name: firstName ?? "Buyer",
-      customer_last_name: rest.join(" ") || ".",
-      customer_phone_number: msisdn,
-      country_code: input.country,
-    });
+    const resp = await processCollection(collectionRequest);
     const status = collectionCodeToTxnStatus(resp.response_code, resp.response_message);
     await db
       .update(transactions)
@@ -125,6 +128,9 @@ export async function startMomoCollection(input: StartMomoInput) {
       after: { reference: merchantReference, code: resp.response_code, msisdn: maskMsisdn(msisdn) },
     });
     publish({ type: "transaction.updated", businessId: input.businessId, entityId: txnId, at: new Date().toISOString() });
+    if (status === "pending" && env.SANDBOX_RAILS) {
+      after(() => simulateSandboxApproval(txnId, collectionRequest));
+    }
     return {
       txnId,
       merchantReference,
@@ -355,6 +361,60 @@ export async function applyCollectionResult(
   return { applied: true };
 }
 
+/** Sandbox approval delay: long enough for the buyer page to show "prompt sent". */
+const SANDBOX_APPROVE_DELAY_MS = 4_000;
+/** Head start for Payaza's (signed) webhook before we poll as a backup. */
+const SANDBOX_WEBHOOK_GRACE_MS = 6_000;
+
+/**
+ * SANDBOX ONLY (test tenant, live keys): nobody taps "approve" on a real phone,
+ * so we call Payaza's test-funding endpoint, which settles the prompt and makes
+ * Payaza send the real signed webhook. One status poll afterwards is the backup;
+ * both converge on applyCollectionResult (idempotent).
+ */
+async function simulateSandboxApproval(
+  txnId: string,
+  request: Parameters<typeof fundTestCollection>[0],
+): Promise<void> {
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  try {
+    await sleep(SANDBOX_APPROVE_DELAY_MS);
+    const funded = await fundTestCollection(request);
+    await writeAudit({
+      actor: "system:sandbox",
+      action: "collection.sandbox_approved",
+      entityType: "transactions",
+      entityId: txnId,
+      after: { code: funded.response_code, message: funded.response_message },
+    });
+    await sleep(SANDBOX_WEBHOOK_GRACE_MS);
+    const [txn] = await db.select().from(transactions).where(eq(transactions.id, txnId)).limit(1);
+    if (txn?.status === "pending") await pollCollectionOnce(txn);
+  } catch (err) {
+    console.warn("[sandbox] auto-approval failed for", txnId, err);
+  }
+}
+
+/** One status-query round for a PENDING collection; true when it reached a final state. */
+async function pollCollectionOnce(txn: Transaction): Promise<boolean> {
+  const country = txn.channel === "momo_ug" ? "UG" : txn.channel === "momo_tz" ? "TZ" : "KE";
+  const status = await checkCollectionStatus(txn.merchantReference, country);
+  const mapped = collectionCodeToTxnStatus(status.response_code, status.transaction_status ?? undefined);
+  if (mapped !== "completed" && mapped !== "failed") return false;
+  await applyCollectionResult({
+    txn,
+    status: mapped,
+    amountReceivedMajor: status.transaction_amount ?? null,
+    feeMajor: status.transaction_fee ?? null,
+    amountValidation: "EXACT",
+    payerName: status.payer_name ?? null,
+    payerAccount: status.payer_account_number ?? null,
+    payazaStatusRaw: `poll:${status.response_code}:${status.transaction_status ?? ""}`.slice(0, 48),
+    source: "poll",
+  });
+  return true;
+}
+
 /** Polling reconciliation for PENDING momo prompts (build.md §6.6). */
 export async function reconcilePendingCollections(limit = 20) {
   const stale = await db
@@ -366,22 +426,8 @@ export async function reconcilePendingCollections(limit = 20) {
   for (const txn of stale) {
     const ageMin = (Date.now() - (txn.createdAt?.getTime() ?? Date.now())) / 60_000;
     if (ageMin < 2) continue; // give the webhook its 2-minute head start
-    const country = txn.channel === "momo_ug" ? "UG" : txn.channel === "momo_tz" ? "TZ" : "KE";
     try {
-      const status = await checkCollectionStatus(txn.merchantReference, country);
-      const mapped = collectionCodeToTxnStatus(status.response_code, status.transaction_status ?? undefined);
-      if (mapped === "completed" || mapped === "failed") {
-        await applyCollectionResult({
-          txn,
-          status: mapped,
-          amountReceivedMajor: status.transaction_amount ?? null,
-          feeMajor: status.transaction_fee ?? null,
-          amountValidation: "EXACT",
-          payerName: status.payer_name ?? null,
-          payerAccount: status.payer_account_number ?? null,
-          payazaStatusRaw: `poll:${status.response_code}:${status.transaction_status ?? ""}`.slice(0, 48),
-          source: "poll",
-        });
+      if (await pollCollectionOnce(txn)) {
         advanced++;
       } else if (ageMin > 60 * 24) {
         // 24h stale prompt → failed (customer never approved)

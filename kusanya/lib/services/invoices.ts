@@ -20,6 +20,7 @@ import { writeAudit } from "@/lib/db/audit";
 import { assertInvoiceTransition } from "@/lib/payaza/state-machine";
 import { publish } from "./events";
 import { createPaymentLink } from "@/lib/payaza/endpoints";
+import { buildPaymentLinkRequest } from "@/lib/payaza/payment-link";
 import { toNumericColumn, formatMinor } from "@/lib/money/format";
 import { isCurrency, type CurrencyCode } from "@/lib/money/currencies";
 import { sendEmail } from "@/lib/notify/email";
@@ -152,27 +153,19 @@ export async function finalizeInvoice(
   const biz = await mustGetBusiness(businessId);
 
   if (!inv.payazaLinkUrl) {
-    // Payaza custom_url allows only /^[a-z0-9-]+$/ (max 60). Tokens look
-    // like "tok_01…" — the underscore is illegal, so sanitize instead of
-    // truncating (keeps full-token uniqueness; 35 chars total, well under).
-    const slug = `ksn-${inv.token
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 50)}`;
-    const link = await createPaymentLink({
-      payment_link_name: `Invoice ${inv.number}`,
-      payment_description: `Invoice ${inv.number} — ${biz.name}`,
-      has_fixed_amount: true,
-      payment_amount: Number(inv.amountMinor) / 100, // wire = major units
-      country_code: "KEN",
-      currency_code: inv.currency,
-      custom_url: slug,
-      collect_customer_first_and_last_name: true,
-      collect_customer_email: true,
-      fee_bearer_type: inv.feeBearer === "customer" ? "Customer" : "Business",
-      redirect_url: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/pay-done?ref=${encodeURIComponent(inv.token)}`,
-    });
+    const link = await createPaymentLink(
+      buildPaymentLinkRequest(
+        {
+          number: inv.number,
+          token: inv.token,
+          currency: inv.currency as CurrencyCode,
+          amountMinor: Number(inv.amountMinor),
+          feeBearer: inv.feeBearer,
+        },
+        biz.name,
+        process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+      ),
+    );
     await db
       .update(invoices)
       .set({

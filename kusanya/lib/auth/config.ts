@@ -69,7 +69,7 @@ export const auth = betterAuth({
    * Playwright suite logs in several times a minute. The default sign-in
    * limit (≈10/min) locked the demo out mid-script ("Too many requests").
    */
-  rateLimit: env.DEMO_MODE
+  rateLimit: env.DEMO_TOOLS
     ? {
         enabled: true,
         window: 60,

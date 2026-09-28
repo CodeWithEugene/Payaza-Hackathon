@@ -43,6 +43,8 @@ import {
  */
 
 const DEMO = () => env.DEMO_MODE;
+/** Payout rail + wallet enquiry: fixtures in Demo Mode OR while the sandbox wallet is pending. */
+const PAYOUT_FIXTURES = () => env.PAYOUTS_SIMULATED;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // ------------------------------------------------------------ collections ----
@@ -230,7 +232,7 @@ export async function initiatePayout(input: PayoutRequest): Promise<PayoutRespon
     }
     body.service_payload.transaction_pin = Number(env.PAYAZA_PAYOUT_PIN);
   }
-  if (DEMO()) {
+  if (PAYOUT_FIXTURES()) {
     await sleep(demo.DEMO_LATENCY_MS.prompt);
     return demo.demoPayoutInitiated();
   }
@@ -241,7 +243,7 @@ export async function initiatePayout(input: PayoutRequest): Promise<PayoutRespon
 }
 
 export async function payoutStatus(transaction_reference: string) {
-  if (DEMO()) {
+  if (PAYOUT_FIXTURES()) {
     await sleep(demo.DEMO_LATENCY_MS.fast);
     return { status: true, message: "demo", data: { transaction_status: "NIP_SUCCESS", transaction_reference } };
   }
@@ -255,7 +257,7 @@ export async function payoutStatus(transaction_reference: string) {
 
 /** Wallet balances + payazaAccountReference per currency (cached 60s by caller). */
 export async function accountEnquiry(): Promise<AccountEnquiryResponse> {
-  if (DEMO()) {
+  if (PAYOUT_FIXTURES()) {
     await sleep(demo.DEMO_LATENCY_MS.fast);
     return demo.demoAccountEnquiry();
   }

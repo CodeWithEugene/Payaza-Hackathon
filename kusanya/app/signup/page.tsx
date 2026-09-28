@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { SignupForm } from "@/components/auth/signup-form";
 import { BrandPanel } from "@/components/auth/brand-panel";
+import { env } from "@/lib/config/env";
 import { ModeToggle } from "@/components/mode-toggle";
 import { KusanyaMark } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 export default function SignupPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
-      <BrandPanel />
+      <BrandPanel sandbox={env.SANDBOX_RAILS} />
       <div className="bg-muted/30 relative flex flex-col items-center justify-center p-4 py-10 md:p-8">
         <Button variant="ghost" size="sm" asChild className="absolute left-4 top-4">
           <Link href="/">

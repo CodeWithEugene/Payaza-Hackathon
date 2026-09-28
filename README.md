@@ -14,9 +14,12 @@ Nairobi hackathon solving cross-border payments for East African trade.
 
 Hosted on **Vercel** (Node serverless + **Neon Postgres** free tier, `iad1`); push to `main`
 on GitHub (`CodeWithEugene/Payaza-Hackathon`, Root Directory `kusanya/`) auto-deploys production.
-`https://kusanya-gamma.vercel.app` remains a working mirror alias. Runs in **Demo Mode**:
-Payaza/Jev calls hit labeled fixtures (`demo-rules-v1`, recorded webhook payloads) — zero
-external keys, nothing leaves the app.
+`https://kusanya-gamma.vercel.app` remains a working mirror alias. Runs on **Payaza's real
+sandbox rails** (test tenant, since 2026-09-28): M-Pesa/momo collections, payment links and
+split accounts hit Payaza's API; webhooks arrive HMAC-signed; invoice extraction is live
+TypeSafe Jev. **Payouts stay simulated** (labeled) until Payaza provisions the test account's
+KES wallet, and **demo tools** (reset, replay, simulated settlement) stay on for judging. The
+topbar badge says which mode is active.
 
 | | |
 |---|---|
@@ -83,7 +86,10 @@ judgments. Full story: [`docs/solution.md`](docs/solution.md).
 - [x] Phase 3 AI layer — Jev extraction + guardrails + risk engine (fail-closed)
 - [x] Phase 4 settlement & trust — waterfall, splits (inversion documented), payouts, rails
 - [x] Phase 5 demo hardening — Demo Mode replay hub, seeded personas, e2e green
-- [ ] Payaza sandbox access confirmed (email draft ready — solution.md Appendix B)
+- [x] Payaza sandbox access confirmed (Payaza Integration Support, 2026-09-28: momo, payouts,
+      checkout and splits all enabled in test mode) — production switched to real sandbox rails
+- [ ] Payaza to provision the test account's KES wallet (`enquiry/main` returns no wallets →
+      payouts can't get an `account_reference`; payouts simulated until then)
 
 ### Verification (as-built)
 
@@ -92,8 +98,9 @@ judgments. Full story: [`docs/solution.md`](docs/solution.md).
 | `pnpm build` (Next 16, production) | exit 0 — 37 routes, no WASM aborts |
 | `pnpm typecheck` (tsc strict) | 0 errors |
 | `pnpm lint` (ESLint 10) | 0 errors (4 documented preview-rule warnings) |
-| `pnpm test` (Vitest) | **98/98 passing** — money, FX, waterfall, state machine, webhook signature, risk, extraction, guardrails |
-| `pnpm test:e2e` (Playwright, system Chrome) | **3/3 passing (13.5s)** — collection: reset → SENT invoice → M-Pesa replay → Paid · payout: Settled → confirmation gate (wrong code refused, money unmoved) → Imefika! Completed · wizard: WhatsApp paste → Jev extraction → reviewed invoice created, screened & sent |
+| `pnpm test` (Vitest) | **105/105 passing** — money, FX, waterfall, state machine, webhook signature, risk, extraction, guardrails, Payaza URL join, payment-link builder |
+| `pnpm sandbox:smoke -- --collect` | **real Payaza sandbox**: KES 10 M-Pesa prompt `09 PENDING` → test funding `00` → check-status `Completed` (fee 0, payer name, currency) |
+| `pnpm test:e2e` (Playwright, system Chrome) | **4/4 passing against live sandbox keys + live Jev** (wizard creates a real Payaza USD payment link) — collection: reset → SENT invoice → M-Pesa replay → Paid · payout: Settled → confirmation gate (wrong code refused, money unmoved) → Imefika! Completed · wizard: WhatsApp paste → Jev extraction → reviewed invoice created, screened & sent |
 | Runtime smoke (production server) | all public + 9 authed routes 200 · extraction returns Dubai Fresh FZE / USD 1,150.00 / due +5d · lifecycle sent → paid → settled · wallets + notification outbox live |
 
 ## Stack (as-built — see build.md §2 + §19)

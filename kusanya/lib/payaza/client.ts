@@ -30,6 +30,14 @@ export class PayazaError extends Error {
   }
 }
 
+/**
+ * Join base + path WITHOUT `new URL(path, base)`: a leading-slash path would
+ * discard the base's `/live` prefix (→ api.payaza.africa/payaza-account/…, 403).
+ */
+export function payazaUrl(base: string, path: string): URL {
+  return new URL(`${base.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`);
+}
+
 interface PayazaFetchOpts {
   method?: "GET" | "POST" | "PUT" | "DELETE";
   body?: unknown;
@@ -47,7 +55,7 @@ export async function payazaFetch<T>(
   const method = opts.method ?? "GET";
   const needsProductId =
     opts.productId ?? path.startsWith("/subsidiary/");
-  const url = new URL(path, env.PAYAZA_BASE_URL);
+  const url = payazaUrl(env.PAYAZA_BASE_URL, path);
   for (const [k, v] of Object.entries(opts.query ?? {})) {
     if (v !== undefined) url.searchParams.set(k, String(v));
   }

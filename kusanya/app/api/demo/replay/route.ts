@@ -40,7 +40,7 @@ const bodySchema = z.object({
 });
 
 export async function POST(req: Request) {
-  if (!env.DEMO_MODE) return err(404, "Not found");
+  if (!env.DEMO_TOOLS) return err(404, "Not found");
   const session = await routeSession(req);
   if (!session) return err(401, "Not signed in.");
   let payload: unknown;

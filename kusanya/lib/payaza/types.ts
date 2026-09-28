@@ -18,7 +18,7 @@ export const currencyCodeSchema = z.enum(
 export const momoCountrySchema = z.enum(["KE", "UG", "TZ", "GH", "NG"]);
 
 /** ISO 3166-1 alpha-3 for link/split APIs. */
-export const countryAlpha3Schema = z.enum(["KEN", "UGA", "TZA", "NGA", "GHA"]);
+export const countryAlpha3Schema = z.enum(["KEN", "UGA", "TZA", "NGA", "GHA", "USA"]);
 
 /** Momo msisdn: 12 digits incl. country code, no '+' (docs: KE/UG/TZ). */
 export const msisdnSchema = z

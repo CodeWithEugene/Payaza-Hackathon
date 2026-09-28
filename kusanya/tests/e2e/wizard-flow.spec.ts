@@ -56,7 +56,8 @@ test("demo: WhatsApp paste → Jev extraction → reviewed invoice created & sen
     await expect(page.getByText(/Dubai Fresh FZE/i).first()).toBeVisible();
   }
   await expect(page.getByText("Total (USD)")).toBeVisible();
-  await expect(page.getByText(/Demo rules/i).first()).toBeVisible();
+  // Honest engine label: demo-rules without TYPESAFE_API_KEY, live Jev with it.
+  await expect(page.getByText(/^(Demo rules|Jev AI)$/i).first()).toBeVisible();
   // Send-immediately is on by default; risk screen runs inside the action.
   await expect(page.locator("#send-now")).toBeVisible();
 

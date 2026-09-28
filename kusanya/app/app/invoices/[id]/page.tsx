@@ -93,7 +93,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
     .from(payoutRails)
     .where(eq(payoutRails.businessId, business.id))
     .orderBy(desc(payoutRails.isDefault));
-  const demoMode = env.DEMO_MODE;
+  const demoMode = env.DEMO_TOOLS;
 
   // Serializable props for the client islands.
   const railOptions = rails.map((r) => ({

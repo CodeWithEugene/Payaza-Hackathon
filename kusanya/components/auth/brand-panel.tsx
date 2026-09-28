@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MessageCircle, ShieldCheck, Wallet } from "lucide-react";
 
 import { KusanyaMark } from "@/components/brand/logo";
@@ -35,16 +36,16 @@ const POINTS = [
  * honest demo-mode footer for judges. Hidden below lg — mobile keeps the
  * compact centered brand row above the form.
  */
-export function BrandPanel() {
+export function BrandPanel({ sandbox = false }: { sandbox?: boolean }) {
   return (
     <div className="bg-muted/50 relative hidden flex-col justify-between gap-10 p-10 lg:flex xl:p-14">
       {/* Brand */}
-      <a href="/" className="flex w-fit items-center gap-2.5">
+      <Link href="/" className="flex w-fit items-center gap-2.5">
         <KusanyaMark className="size-9" />
         <span className="font-heading text-xl font-semibold tracking-tight">
           kusanya
         </span>
-      </a>
+      </Link>
 
       {/* Value prop + proof */}
       <div className="flex flex-col gap-8">
@@ -112,8 +113,10 @@ export function BrandPanel() {
 
       {/* Judges footer */}
       <p className="text-muted-foreground max-w-md text-xs">
-        Built on Payaza · Borderless Kenya Hackathon — Track 03. This demo runs
-        in Demo Mode with synthetic payloads; no real money moves.
+        Built on Payaza · Borderless Kenya Hackathon — Track 03.{" "}
+        {sandbox
+          ? "This demo runs on Payaza's real sandbox rails with test money; no real money moves."
+          : "This demo runs in Demo Mode with synthetic payloads; no real money moves."}
       </p>
     </div>
   );

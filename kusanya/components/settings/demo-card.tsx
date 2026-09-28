@@ -39,7 +39,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 
 /** Demo Mode facts + reset. Renders nothing at all when keys are configured. */
-export function DemoCard({ demoMode }: { demoMode: boolean }) {
+export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; sandbox?: boolean }) {
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
@@ -72,8 +72,9 @@ export function DemoCard({ demoMode }: { demoMode: boolean }) {
       <CardHeader>
         <CardTitle>Demo Mode</CardTitle>
         <CardDescription>
-          No Payaza keys configured → the app runs on synthetic payloads that follow the exact
-          live shapes. Same code paths, honest labels.
+          {sandbox
+            ? "Payaza sandbox keys are live: collections, payment links and splits hit Payaza's real test rails. Demo tools (reset, replay, simulated settlement) stay on for judging."
+            : "No Payaza keys configured → the app runs on synthetic payloads that follow the exact live shapes. Same code paths, honest labels."}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">

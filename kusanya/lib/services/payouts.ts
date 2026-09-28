@@ -297,7 +297,7 @@ export async function executePayout(
     });
     publish({ type: "payout.updated", businessId, entityId: payoutId, at: new Date().toISOString() });
 
-    if (env.DEMO_MODE) scheduleDemoSettlement(txnId);
+    if (env.PAYOUTS_SIMULATED) scheduleDemoSettlement(txnId);
 
     return {
       txnId,
@@ -427,7 +427,7 @@ export async function advanceSettlement(inv: Invoice, actor: string, reason: str
 
 /** Demo-only: simulate the Payaza settlement landing (button on invoice page). */
 export async function simulateSettlement(invoiceId: string, businessId: string) {
-  if (!env.DEMO_MODE) throw new Error("settlement simulation is Demo Mode only");
+  if (!env.DEMO_TOOLS) throw new Error("settlement simulation is Demo Mode only");
   const inv = await mustGetInvoice(invoiceId, businessId);
   if (inv.status !== "paid") throw new Error(`invoice must be paid to simulate settlement (is: ${inv.status})`);
   await advanceSettlement(inv, "system:demo", "demo simulate-settlement button");
@@ -458,7 +458,7 @@ export async function confirmPayoutGate(payoutId: string, businessId: string, co
     action: "payout.gate_confirmed",
     entityType: "payouts",
     entityId: payoutId,
-    after: { method: env.DEMO_MODE ? "demo-code" : "pin" },
+    after: { method: env.DEMO_TOOLS ? "demo-code" : "pin" },
   });
   // The gate is the trigger: money moves ONLY after the code verifies.
   await executePayout(payoutId, businessId, actorId, "otp_confirmed");

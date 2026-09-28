@@ -190,6 +190,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
             buyerName={buyer?.name ?? ""}
             buyerEmail={buyerRow?.email ?? ""}
             demoMode={env.DEMO_MODE}
+            sandbox={env.SANDBOX_RAILS}
             payazaLinkUrl={invoice.payazaLinkUrl}
           />
         )}
