@@ -127,3 +127,70 @@
     @apply font-sans;
     }
 }
+/* ---------------------------------------------------------------------------
+ * Accessibility preferences (components/assist/a11y-menu.tsx, lib/a11y/prefs.ts).
+ * Applied as data attributes on <html>, before first paint.
+ * ------------------------------------------------------------------------- */
+
+/* Text size: every size is rem-based, so scaling the root scales the UI. */
+html[data-a11y-text="large"] {
+  font-size: 112.5%;
+}
+html[data-a11y-text="larger"] {
+  font-size: 125%;
+}
+
+/* High contrast: darker secondary text, solid borders, a strong focus ring. */
+html[data-a11y-contrast="high"] {
+  --foreground: oklch(0 0 0);
+  --card-foreground: oklch(0 0 0);
+  --popover-foreground: oklch(0 0 0);
+  --muted-foreground: oklch(0.3 0 0);
+  --border: oklch(0.45 0 0);
+  --input: oklch(0.45 0 0);
+  --ring: oklch(0.2 0 0);
+  --sidebar-border: oklch(0.45 0 0);
+}
+html.dark[data-a11y-contrast="high"] {
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.12 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.12 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --muted-foreground: oklch(0.86 0 0);
+  --border: oklch(1 0 0 / 55%);
+  --input: oklch(1 0 0 / 60%);
+  --ring: oklch(0.95 0 0);
+  --sidebar-border: oklch(1 0 0 / 55%);
+}
+html[data-a11y-contrast="high"] :focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Reduce motion: honour the choice even when the OS setting is off. */
+html[data-a11y-motion="reduce"] *,
+html[data-a11y-motion="reduce"] *::before,
+html[data-a11y-motion="reduce"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html[data-a11y-links="underline"] a {
+  text-decoration-line: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* Readable spacing (WCAG 1.4.12 text-spacing values). */
+html[data-a11y-spacing="wide"] body {
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  word-spacing: 0.12em;
+}
+html[data-a11y-spacing="wide"] p,
+html[data-a11y-spacing="wide"] li {
+  line-height: 1.75;
+}

@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { AssistDock } from "@/components/assist/assist-dock";
+import { A11Y_INIT_SCRIPT } from "@/lib/a11y/prefs";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -22,10 +24,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Apply saved accessibility prefs before first paint (lib/a11y/prefs.ts). */}
+        <script dangerouslySetInnerHTML={{ __html: A11Y_INIT_SCRIPT }} />
+      </head>
       <body className={cn("font-sans antialiased", inter.variable, plexMono.variable)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Providers>
             {children}
+            <AssistDock />
             <Toaster richColors position="top-right" />
           </Providers>
         </ThemeProvider>
