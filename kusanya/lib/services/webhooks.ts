@@ -1,4 +1,5 @@
 import "server-only";
+import { createHash } from "node:crypto";
 import { and, eq, or } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import {
@@ -63,7 +64,59 @@ export async function receiveWebhook(opts: {
   } catch {
     return { outcome: "unparseable" };
   }
-  return processWebhookPayload(payload, { signatureValid, demoReplay });
+  const result = await processWebhookPayload(payload, { signatureValid, demoReplay });
+  if (result.outcome === "unparseable" && signatureValid) {
+    await keepUnparsedWebhook(payload, result.detail);
+  }
+  return result;
+}
+
+/**
+ * A SIGNED webhook we could not parse means Payaza's real shape differs from
+ * our schema. Keep the raw event for replay once the schema is fixed, and log
+ * its shape (keys, types, status-ish values only; no names/numbers).
+ */
+async function keepUnparsedWebhook(payload: unknown, detail: string | undefined): Promise<void> {
+  const shape = describeShape(payload);
+  console.warn("[webhook] signed but unparseable", JSON.stringify({ shape, detail }).slice(0, 1800));
+  try {
+    const digest = createHash("sha256").update(JSON.stringify(payload)).digest("hex").slice(0, 32);
+    await db
+      .insert(webhookEvents)
+      .values({
+        id: newId("wev"),
+        eventKind: "unparsed",
+        transactionReference: pickString(payload, "transaction_reference") ?? "unknown",
+        signatureValid: true,
+        dedupeKey: `unparsed:${digest}`,
+        payload: (payload && typeof payload === "object" ? payload : { value: payload }) as Record<string, unknown>,
+        processed: false,
+        error: (detail ?? "unparseable").slice(0, 400),
+      })
+      .onConflictDoNothing();
+  } catch (err) {
+    console.error("[webhook] could not store unparsed event", err);
+  }
+}
+
+const SHAPE_VALUE_KEYS = /status|channel|currency|type|event|code|validation|kind/i;
+
+function describeShape(value: unknown, depth = 0): unknown {
+  if (Array.isArray(value)) return depth > 2 ? "array" : [describeShape(value[0], depth + 1)];
+  if (!value || typeof value !== "object") return typeof value;
+  if (depth > 2) return "object";
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).map(([k, v]) => [
+      k,
+      typeof v === "string" && SHAPE_VALUE_KEYS.test(k) ? `string:${v.slice(0, 40)}` : describeShape(v, depth + 1),
+    ]),
+  );
+}
+
+function pickString(payload: unknown, key: string): string | null {
+  if (!payload || typeof payload !== "object") return null;
+  const v = (payload as Record<string, unknown>)[key];
+  return typeof v === "string" ? v.slice(0, 64) : null;
 }
 
 /** Shared processor — also used by scripts/replay-webhook.ts and demo replay route. */
