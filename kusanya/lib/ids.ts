@@ -21,6 +21,7 @@ export type IdPrefix =
   | "rem" // reminders
   | "aud" // audit_log
   | "tgl" // telegram_links
+  | "key" // api_keys
   | "tok"; // public buyer-facing tokens
 
 export function newId(prefix: IdPrefix): string {

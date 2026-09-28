@@ -16,18 +16,21 @@ export function Topbar(props: TopbarProps) {
   return (
     <header className="bg-background/80 sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b px-4 backdrop-blur">
       <SidebarTrigger className="-ml-1" />
-      <div className="ml-2 flex items-center gap-2">
+      <div className="ml-2 flex min-w-0 items-center gap-2">
         {props.demoMode && (
           <Badge variant="secondary">
             <FlaskConical data-icon="inline-start" />
-            DEMO MODE · synthetic Payaza payloads
+            DEMO MODE<span className="hidden md:inline"> · synthetic Payaza payloads</span>
           </Badge>
         )}
         {props.sandbox && (
           <Badge variant="outline">
             <TestTube data-icon="inline-start" />
-            PAYAZA SANDBOX · real test rails
-            {props.payoutsSimulated ? " · payouts simulated" : ""}
+            PAYAZA SANDBOX
+            <span className="hidden md:inline">
+              {" · real test rails"}
+              {props.payoutsSimulated ? " · payouts simulated" : ""}
+            </span>
           </Badge>
         )}
       </div>

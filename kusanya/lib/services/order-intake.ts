@@ -3,9 +3,8 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { buyers, type Invoice } from "@/lib/db/schema";
 import { isCurrency } from "@/lib/money/currencies";
-import { createInvoice, finalizeInvoice } from "@/lib/services/invoices";
-import { screenInvoice } from "@/lib/services/risk";
-import { loadBuyerCandidates, loadBuyerHistory, runExtraction } from "@/lib/services/extraction";
+import { issueInvoice } from "@/lib/services/invoice-pipeline";
+import { extractFromText } from "@/lib/services/extraction";
 import type { InvoiceExtractionResult, RiskDecision } from "@/lib/jev/types";
 
 /**
@@ -30,18 +29,10 @@ export async function draftInvoiceFromText(opts: {
   actorId: string;
   text: string;
 }): Promise<IntakeOutcome> {
-  const candidates = await loadBuyerCandidates(opts.businessId);
-  const prematch = bestCandidate(opts.text, candidates);
-  const history = await loadBuyerHistory(opts.businessId, prematch?.id ?? null);
-
-  const { extractionId, result } = await runExtraction({
+  const { extractionId, result, candidates } = await extractFromText({
     businessId: opts.businessId,
     text: opts.text,
-    ocrText: null,
     sourceType: "paste",
-    photoUrl: null,
-    buyerCandidates: candidates.map((c) => ({ id: c.id, name: c.name, country: c.country ?? undefined })),
-    history,
   });
 
   const currency = typeof result.currency.value === "string" ? result.currency.value : null;
@@ -54,7 +45,9 @@ export async function draftInvoiceFromText(opts: {
   if (missing.length > 0) return { kind: "needs", missing, extraction: result };
 
   const matched = result.buyerCandidateId ? candidates.find((c) => c.id === result.buyerCandidateId) : undefined;
-  const invoice = await createInvoice({
+  // Same create + risk screen + payment link path as the wizard and the API;
+  // sendNow false: the merchant confirms with a tap in Telegram.
+  const { invoice, riskDecision } = await issueInvoice({
     businessId: opts.businessId,
     actorId: opts.actorId,
     buyer: matched ? { existingId: matched.id } : { name: buyerName, kind: "company" },
@@ -66,43 +59,12 @@ export async function draftInvoiceFromText(opts: {
     dueAt: dueAtFrom(result.dueDate.value),
     feeBearer: "business",
     extractionId,
+    sendNow: false,
   });
-
-  const [buyerRow] = await db.select().from(buyers).where(eq(buyers.id, invoice.buyerId)).limit(1);
-  const buyerHistory = await loadBuyerHistory(opts.businessId, invoice.buyerId);
-  const { result: risk } = await screenInvoice({
-    invoice: { id: invoice.id, status: invoice.status },
-    text: opts.text,
-    buyerName: buyerRow?.name ?? buyerName,
-    buyerCountry: buyerRow?.country ?? "KE",
-    isFirstBuyer: buyerHistory.isFirstBuyer,
-    invoiceTotalMinor: totalMinor!,
-    historyAverageMinor: buyerHistory.averageMinor,
-  });
+  const [buyerRow] = await db.select({ name: buyers.name }).from(buyers).where(eq(buyers.id, invoice.buyerId)).limit(1);
   const displayName = buyerRow?.name ?? buyerName;
-  if (risk.decision !== "pass") {
-    return { kind: "flagged", invoice, decision: risk.decision, buyerName: displayName };
-  }
-  const ready = await finalizeInvoice(invoice.id, opts.businessId);
-  return { kind: "ready", invoice: ready, extraction: result, buyerName: displayName };
-}
-
-/** Same deterministic token-overlap prematch the wizard's extract route uses. */
-function bestCandidate<T extends { name: string }>(text: string, candidates: T[]): T | null {
-  const lower = text.toLowerCase();
-  let best: T | null = null;
-  let bestScore = 0;
-  for (const c of candidates) {
-    const score = c.name
-      .toLowerCase()
-      .split(/\s+/)
-      .filter((t) => t.length > 3 && lower.includes(t)).length;
-    if (score > bestScore) {
-      bestScore = score;
-      best = c;
-    }
-  }
-  return best;
+  if (riskDecision !== "pass") return { kind: "flagged", invoice, decision: riskDecision, buyerName: displayName };
+  return { kind: "ready", invoice, extraction: result, buyerName: displayName };
 }
 
 function dueAtFrom(value: unknown): string {

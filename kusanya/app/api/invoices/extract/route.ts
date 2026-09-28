@@ -1,10 +1,6 @@
 import { z } from "zod";
 import { handle, err, routeSession } from "@/lib/api/http";
-import {
-  runExtraction,
-  loadBuyerCandidates,
-  loadBuyerHistory,
-} from "@/lib/services/extraction";
+import { extractFromText } from "@/lib/services/extraction";
 
 /**
  * POST /api/invoices/extract — WhatsApp paste / OCR text → Jev extraction
@@ -32,32 +28,12 @@ export async function POST(req: Request) {
   if (!parsed.success) return err(400, "Paste the buyer message first (at least a few words).");
 
   return handle(async () => {
-    const candidates = await loadBuyerCandidates(session.businessId);
-    // Deterministic pre-match: best token-overlap candidate supplies history
-    // context for the batched call (single Jev call — no extra inference).
-    const lower = parsed.data.text.toLowerCase();
-    let best: (typeof candidates)[number] | null = null;
-    let bestScore = 0;
-    for (const c of candidates) {
-      const score = c.name
-        .toLowerCase()
-        .split(/\s+/)
-        .filter((t) => t.length > 3 && lower.includes(t)).length;
-      if (score > bestScore) {
-        bestScore = score;
-        best = c;
-      }
-    }
-    const history = await loadBuyerHistory(session.businessId, best?.id ?? null);
-
-    const { extractionId, result } = await runExtraction({
+    const { extractionId, result, candidates } = await extractFromText({
       businessId: session.businessId,
       text: parsed.data.text,
       ocrText: parsed.data.ocrText ?? null,
       sourceType: parsed.data.sourceType,
       photoUrl: parsed.data.photoUrl ?? null,
-      buyerCandidates: candidates.map((c) => ({ id: c.id, name: c.name, country: c.country ?? undefined })),
-      history,
     });
 
     return {

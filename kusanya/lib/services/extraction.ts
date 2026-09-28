@@ -112,3 +112,43 @@ export async function loadBuyerHistory(businessId: string, buyerId: string | nul
     isFirstBuyer: count === 0,
   };
 }
+
+/**
+ * Full text → fields pipeline used by the wizard route and the public API:
+ * load the buyer directory, pre-match the best candidate deterministically
+ * (token overlap) to supply history context, then one batched Jev call.
+ */
+export async function extractFromText(input: {
+  businessId: string;
+  text: string;
+  ocrText?: string | null;
+  sourceType: "snap" | "paste" | "manual";
+  photoUrl?: string | null;
+}) {
+  const candidates = await loadBuyerCandidates(input.businessId);
+  const lower = input.text.toLowerCase();
+  let best: (typeof candidates)[number] | null = null;
+  let bestScore = 0;
+  for (const c of candidates) {
+    const score = c.name
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((t) => t.length > 3 && lower.includes(t)).length;
+    if (score > bestScore) {
+      bestScore = score;
+      best = c;
+    }
+  }
+  const history = await loadBuyerHistory(input.businessId, best?.id ?? null);
+
+  const { extractionId, result } = await runExtraction({
+    businessId: input.businessId,
+    text: input.text,
+    ocrText: input.ocrText ?? null,
+    sourceType: input.sourceType,
+    photoUrl: input.photoUrl ?? null,
+    buyerCandidates: candidates.map((c) => ({ id: c.id, name: c.name, country: c.country ?? undefined })),
+    history,
+  });
+  return { extractionId, result, candidates };
+}
