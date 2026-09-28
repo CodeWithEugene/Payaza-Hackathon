@@ -17,7 +17,7 @@ const RAILS = [
     title: "Visa And Mastercard",
     description:
       "A hosted checkout link your international buyer pays in seconds, settled in dollars.",
-    currencies: ["USD", "EUR"],
+    currencies: ["USD"],
     tone: "text-brand-violet bg-brand-violet/12",
   },
   {
@@ -25,7 +25,7 @@ const RAILS = [
     title: "Apple Pay",
     description:
       "One tap on an iPhone. The buyer's wallet handles the rest, so checkout abandonment drops.",
-    currencies: ["USD", "EUR"],
+    currencies: ["USD"],
     tone: "text-brand-violet bg-brand-violet/12",
   },
   {
@@ -33,7 +33,7 @@ const RAILS = [
     title: "Google Pay",
     description:
       "Android buyers pay straight from their wallet without digging out card details.",
-    currencies: ["USD", "EUR"],
+    currencies: ["USD"],
     tone: "text-brand-violet bg-brand-violet/12",
   },
   {
