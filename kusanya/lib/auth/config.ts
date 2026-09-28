@@ -47,7 +47,7 @@ export const auth = betterAuth({
           sendMagicLink: async ({ email, url }) => {
             await sendEmail({
               to: email,
-              subject: "Your Kusanya sign-in link",
+              subject: "Your Kusanya Sign-In Link",
               html: magicLinkEmail(url),
               tag: "magic-link",
             });

@@ -380,7 +380,7 @@ export default async function AnalyticsPage({
         <div className="flex flex-col gap-1">
           <h1 className="font-heading text-xl font-semibold tracking-tight">Analytics</h1>
           <p className="text-sm text-muted-foreground">
-            Honest numbers only — one currency at a time, real zeros, nothing smoothed.
+            Honest numbers only: one currency at a time, real zeros, nothing smoothed.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -440,7 +440,7 @@ export default async function AnalyticsPage({
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              Gross of completed {currency} collections since {windowLabel} — fees and splits
+              Gross of completed {currency} collections since {windowLabel}. Fees and splits
               are not deducted.
             </p>
           </CardContent>
@@ -505,10 +505,10 @@ export default async function AnalyticsPage({
       {/* ------------------------------------------------------- area chart -- */}
       <Card>
         <CardHeader>
-          <CardTitle>Completed collections · {currency} · last {WINDOW_DAYS} days</CardTitle>
+          <CardTitle>Completed Collections · {currency} · Last {WINDOW_DAYS} Days</CardTitle>
           <CardDescription>
             Daily gross totals of completed {currency} collections. Days without a completed
-            collection show a real zero — nothing is interpolated.
+            collection show a real zero, and nothing is interpolated.
           </CardDescription>
           <CardAction className="flex items-center gap-2">
             <Badge variant="secondary">{currency}</Badge>
@@ -532,7 +532,7 @@ export default async function AnalyticsPage({
                 <EmptyMedia variant="icon">
                   <TrendingUp />
                 </EmptyMedia>
-                <EmptyTitle>No completed {currency} collections in this window</EmptyTitle>
+                <EmptyTitle>No Completed {currency} Collections In This Window</EmptyTitle>
                 <EmptyDescription>
                   When a {currency} invoice is paid through Payaza, its daily total appears
                   here. Try another currency above.
@@ -547,9 +547,9 @@ export default async function AnalyticsPage({
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Channel mix · completed collections</CardTitle>
+            <CardTitle>Channel Mix · Completed Collections</CardTitle>
             <CardDescription>
-              How many completed collections rode each channel — all currencies together.
+              How many completed collections rode each channel, all currencies together.
               Counts are currency-neutral; amounts are never summed across currencies.
             </CardDescription>
             {pieData.length > 0 && (
@@ -573,7 +573,7 @@ export default async function AnalyticsPage({
                   <EmptyMedia variant="icon">
                     <Wallet />
                   </EmptyMedia>
-                  <EmptyTitle>No completed collections yet</EmptyTitle>
+                  <EmptyTitle>No Completed Collections Yet</EmptyTitle>
                   <EmptyDescription>
                     Card, M-Pesa, MTN… once collections complete, the mix shows up here.
                   </EmptyDescription>
@@ -585,9 +585,9 @@ export default async function AnalyticsPage({
 
         <Card>
           <CardHeader>
-            <CardTitle>Invoices by status</CardTitle>
+            <CardTitle>Invoices By Status</CardTitle>
             <CardDescription>
-              Every invoice on the books right now — {invoiceTotal.toLocaleString("en-KE")}{" "}
+              Every invoice on the books right now: {invoiceTotal.toLocaleString("en-KE")}{" "}
               total, counted once each.
             </CardDescription>
             {statusData.length > 0 && (
@@ -611,7 +611,7 @@ export default async function AnalyticsPage({
                   <EmptyMedia variant="icon">
                     <ListChecks />
                   </EmptyMedia>
-                  <EmptyTitle>No invoices yet</EmptyTitle>
+                  <EmptyTitle>No Invoices Yet</EmptyTitle>
                   <EmptyDescription>
                     Create your first invoice and its journey through the statuses will be
                     charted here.
@@ -626,9 +626,9 @@ export default async function AnalyticsPage({
       {/* ----------------------------------------------------- top buyers -- */}
       <Card className="gap-0 py-0">
         <CardHeader className="border-b px-4 py-3">
-          <CardTitle>Top buyers · completed collections</CardTitle>
+          <CardTitle>Top Buyers · Completed Collections</CardTitle>
           <CardDescription>
-            Ranked by number of completed collections. Totals are shown per currency — never
+            Ranked by number of completed collections. Totals are shown per currency and never
             summed across currencies.
           </CardDescription>
           {topBuyers.length > 0 && (
@@ -682,7 +682,7 @@ export default async function AnalyticsPage({
                 <EmptyMedia variant="icon">
                   <Users />
                 </EmptyMedia>
-                <EmptyTitle>No completed collections yet</EmptyTitle>
+                <EmptyTitle>No Completed Collections Yet</EmptyTitle>
                 <EmptyDescription>
                   Your most reliable buyers will be ranked here once their invoices are paid.
                 </EmptyDescription>

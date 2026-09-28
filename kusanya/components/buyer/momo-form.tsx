@@ -84,7 +84,7 @@ export function MomoForm({ token, country, amountLabel, onSuccess }: MomoFormPro
         throw new Error(data?.error ?? "We couldn't send the prompt. Please try again.");
       }
       // Parent switches to the pending view with the server's message.
-      onSuccess(data.message ?? "Prompt sent — approve it on your phone.");
+      onSuccess(data.message ?? "Prompt sent. Approve it on your phone.");
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       setError(msg);
@@ -156,7 +156,7 @@ export function MomoForm({ token, country, amountLabel, onSuccess }: MomoFormPro
 
       <Button type="submit" disabled={busy} className="mt-4 w-full sm:w-auto">
         {busy ? <Spinner data-icon="inline-start" /> : <Smartphone data-icon="inline-start" />}
-        Send payment prompt
+        Send Payment Prompt
       </Button>
 
       <p className="mt-3 text-xs text-muted-foreground">

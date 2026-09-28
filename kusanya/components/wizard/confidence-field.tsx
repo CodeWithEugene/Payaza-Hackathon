@@ -125,7 +125,7 @@ export function ConfidenceField({
                     From the message: <span className="italic">“{snippet}”</span>
                   </>
                 ) : (
-                  "Medium confidence — worth a quick check."
+                  "Medium confidence, worth a quick check."
                 )}
               </TooltipContent>
             </Tooltip>
@@ -141,7 +141,7 @@ export function ConfidenceField({
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                Numbers and dates are resolved in code from your text — the AI
+                Numbers and dates are resolved in code from your text; the AI
                 never types them
               </TooltipContent>
             </Tooltip>

@@ -88,7 +88,7 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
   if (inv.status !== "settled") {
     const eta = settlementEta(inv.currency as CurrencyCode);
     throw new Error(
-      `This invoice isn't settled yet — Payaza settles ${inv.currency} in ${eta.label}. Payout unlocks the moment funds land in your wallet.`,
+      `This invoice isn't settled yet. Payaza settles ${inv.currency} in ${eta.label}. Payout unlocks the moment funds land in your wallet.`,
     );
   }
 
@@ -97,10 +97,10 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
     .from(payoutRails)
     .where(and(eq(payoutRails.id, input.railId), eq(payoutRails.businessId, input.businessId)))
     .limit(1);
-  if (!rail) throw new Error("Payout rail not found — add your M-Pesa or bank details in Settings.");
+  if (!rail) throw new Error("Payout rail not found. Add your M-Pesa or bank details in Settings.");
 
   const wf = await invoiceWaterfall(inv);
-  if (wf.netCurrency !== "KES") throw new Error("waterfall did not resolve to KES — contact support");
+  if (wf.netCurrency !== "KES") throw new Error("Waterfall did not resolve to KES. Contact support.");
   const payoutMinor = wf.netMinor;
   if (payoutMinor <= 0) throw new Error("Nothing left to pay out after fees and splits.");
 
@@ -193,7 +193,7 @@ export async function initiateInvoicePayout(input: InitiatePayoutInput) {
     payoutId,
     status: "awaiting_confirmation" as const,
     amountDisplay: formatMinor("KES", payoutMinor),
-    message: `Payout of ${formatMinor("KES", payoutMinor)} to ${isMpesa ? "M-Pesa" : "bank"} ${maskAccount(accountNumber)} created — confirm to send.`,
+    message: `Payout of ${formatMinor("KES", payoutMinor)} to ${isMpesa ? "M-Pesa" : "bank"} ${maskAccount(accountNumber)} created. Confirm to send.`,
   };
 }
 
@@ -224,7 +224,7 @@ export async function executePayout(
   const txnId = row.txn.id;
   const inv = await mustGetInvoice(row.txn.invoiceId, businessId);
   if (inv.status !== "settled") {
-    throw new Error("This invoice isn't settled anymore — refresh and check its status.");
+    throw new Error("This invoice isn't settled anymore. Refresh and check its status.");
   }
   const biz = await mustGetBusiness(businessId);
   const owner = await getOwnerContact(businessId);
@@ -233,7 +233,7 @@ export async function executePayout(
     .from(payoutRails)
     .where(and(eq(payoutRails.id, row.payout.railId), eq(payoutRails.businessId, businessId)))
     .limit(1);
-  if (!rail) throw new Error("Payout rail not found — add your M-Pesa or bank details in Settings.");
+  if (!rail) throw new Error("Payout rail not found. Add your M-Pesa or bank details in Settings.");
 
   const wallet = await getWalletForCurrency(businessId, "KES");
   if (!wallet) throw new Error("No active KES wallet found on your Payaza account.");
@@ -576,7 +576,7 @@ async function notifyPayoutOutcome(inv: Invoice, amountMinor: number, success: b
     if (owner.email) {
       await sendEmail({
         to: owner.email,
-        subject: `Imefika! ${amountDisplay} paid out — ${inv.number}`,
+        subject: `Imefika! ${amountDisplay} Paid Out For ${inv.number}`,
         html: payoutSentEmail({
           merchantName: owner.business.name,
           amountDisplay,
@@ -593,7 +593,7 @@ async function notifyPayoutOutcome(inv: Invoice, amountMinor: number, success: b
   } else if (owner.email) {
     await sendEmail({
       to: owner.email,
-      subject: `Payout failed — ${inv.number} (funds safe)`,
+      subject: `Payout Failed For ${inv.number} (Funds Safe)`,
       html: payoutFailedEmail({
         merchantName: owner.business.name,
         amountDisplay,

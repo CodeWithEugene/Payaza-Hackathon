@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     }
     const country = CURRENCY_TO_COUNTRY[inv.invoice.currency];
     if (!country) {
-      return err(400, "Mobile money isn't available for this currency — use the card button.");
+      return err(400, "Mobile money isn't available for this currency. Use the card button.");
     }
 
     const result = await startMomoCollection({

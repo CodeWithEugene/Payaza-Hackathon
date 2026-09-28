@@ -35,7 +35,7 @@ export function DemoOutboxButton() {
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
           <Mail className="size-4" />
-          <span className="text-xs">Demo outbox</span>
+          <span className="text-xs">Demo Outbox</span>
           {items.length > 0 && (
             <Badge variant="secondary" className="ml-auto rounded-full px-1.5">
               {items.length}
@@ -50,7 +50,7 @@ export function DemoOutboxButton() {
         <ScrollArea className="h-64">
           {items.length === 0 ? (
             <p className="px-3 py-6 text-center text-xs text-muted-foreground">
-              Nothing yet — send an invoice or take a payment.
+              Nothing yet. Send an invoice or take a payment.
             </p>
           ) : (
             <ul className="divide-y">

@@ -10,7 +10,7 @@ import { KusanyaMark } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Sign in",
+  title: "Sign In",
 };
 
 export default function LoginPage() {

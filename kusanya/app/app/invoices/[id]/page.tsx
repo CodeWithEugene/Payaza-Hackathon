@@ -158,7 +158,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
     {
       at: invoice.createdAt,
       icon: "created",
-      title: "Invoice created",
+      title: "Invoice Created",
       detail: buyer ? `For ${buyer.name} · ${buyer.country}` : undefined,
     },
   ];
@@ -166,8 +166,8 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
     events.push({
       at: invoice.issuedAt,
       icon: "send",
-      title: "Sent to buyer",
-      detail: "Payment link delivered — the buyer can pay by card or mobile money.",
+      title: "Sent To Buyer",
+      detail: "Payment link delivered. The buyer can pay by card or mobile money.",
     });
   }
   if (risk) {
@@ -176,10 +176,10 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
       icon: "flag",
       title:
         risk.decision === "pass"
-          ? "Risk screening passed"
+          ? "Risk Screening Passed"
           : risk.decision === "review"
-            ? "Flagged for review by risk screening"
-            : "Put on hold by risk screening",
+            ? "Flagged For Review By Risk Screening"
+            : "Put On Hold By Risk Screening",
       detail: `Composite score ${risk.compositeScore}/100${risk.fallback ? " · rule-based screening" : ""}`,
       tone: risk.decision === "hold" ? "destructive" : "default",
     });
@@ -189,7 +189,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
       events.push({
         at: r.sentAt,
         icon: "reminder",
-        title: `Reminder sent via ${r.channel}`,
+        title: `Reminder Sent Via ${r.channel}`,
       });
     }
   }
@@ -200,15 +200,15 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
         events.push({
           at,
           icon: "paid",
-          title: `Payment received — ${formatMinor(t.currency as CurrencyCode, Number(t.amountMinor))}`,
+          title: `Payment Received: ${formatMinor(t.currency as CurrencyCode, Number(t.amountMinor))}`,
           detail: `Via ${channelLabel(t.channel)} · ref ${t.merchantReference}`,
         });
       } else if (t.status === "failed") {
         events.push({
           at,
           icon: "flag",
-          title: "Payment attempt failed",
-          detail: `Via ${channelLabel(t.channel)} — nothing was collected; the invoice is still open.`,
+          title: "Payment Attempt Failed",
+          detail: `Via ${channelLabel(t.channel)}. Nothing was collected; the invoice is still open.`,
           tone: "destructive",
         });
       }
@@ -218,14 +218,14 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
         events.push({
           at,
           icon: "payout",
-          title: `Imefika! KES landed in ${payout ? mask(payout.beneficiaryAccount) : "your account"}`,
+          title: `Imefika! KES Landed In ${payout ? mask(payout.beneficiaryAccount) : "Your Account"}`,
           detail: `${formatMinor("KES", Number(t.amountMinor))} paid out via ${channelLabel(t.channel)}.`,
         });
       } else if (t.status === "failed") {
         events.push({
           at,
           icon: "payout",
-          title: "Payout failed — your funds are safe",
+          title: "Payout Failed, But Your Funds Are Safe",
           detail: "The destination rejected the transfer. Check your rail details in Settings and try again.",
           tone: "destructive",
         });
@@ -358,7 +358,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
             <CardContent>
               {items.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  No line items — this invoice carries a single total.
+                  No line items. This invoice carries a single total.
                 </p>
               ) : (
                 <Table>
@@ -442,7 +442,7 @@ export default async function InvoiceDetailPage({ params }: DetailProps) {
             <CardContent>
               {txns.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  No transactions yet — once the buyer pays, every step appears here.
+                  No transactions yet. Once the buyer pays, every step appears here.
                 </p>
               ) : (
                 <Table>

@@ -145,7 +145,7 @@ export default async function PaymentsPage({
         <div className="flex flex-col gap-1">
           <h1 className="font-heading text-xl font-semibold tracking-tight">Payments</h1>
           <p className="text-sm text-muted-foreground">
-            Your Payaza wallets and every shilling in and out — amounts, fees and nets exactly
+            Your Payaza wallets and every shilling in and out: amounts, fees and nets exactly
             as reported.
           </p>
         </div>
@@ -156,7 +156,7 @@ export default async function PaymentsPage({
             <CardContent className="flex items-center gap-3 py-1 text-muted-foreground">
               <Wallet className="size-5 shrink-0" />
               <p className="text-sm">
-                Wallets unavailable — Payaza keys not configured (demo fixtures below)
+                Wallets unavailable: Payaza keys not configured (demo fixtures below)
               </p>
             </CardContent>
           </Card>
@@ -204,7 +204,7 @@ export default async function PaymentsPage({
                         <CircleAlert />
                         <AlertTitle>Post-No-Debit</AlertTitle>
                         <AlertDescription>
-                          Post-No-Debit: this wallet is frozen for payouts — contact Payaza
+                          Post-No-Debit: this wallet is frozen for payouts. Contact Payaza
                           support.
                         </AlertDescription>
                       </Alert>
@@ -258,11 +258,11 @@ export default async function PaymentsPage({
                     <Coins />
                   </EmptyMedia>
                   <EmptyTitle>
-                    No {tab === "in" ? "collections" : tab === "out" ? "payouts" : "transactions"}{" "}
-                    yet
+                    No {tab === "in" ? "Collections" : tab === "out" ? "Payouts" : "Transactions"}{" "}
+                    Yet
                   </EmptyTitle>
                   <EmptyDescription>
-                    When money moves on your invoices it lands here — every amount, fee, net and
+                    When money moves on your invoices it lands here: every amount, fee, net and
                     reference exactly as Payaza reports it.
                   </EmptyDescription>
                 </EmptyHeader>

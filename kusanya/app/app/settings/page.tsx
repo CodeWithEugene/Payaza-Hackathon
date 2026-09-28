@@ -87,7 +87,7 @@ export default async function SettingsPage() {
       <div className="flex flex-col gap-1">
         <h1 className="font-heading text-xl font-semibold tracking-tight">Settings</h1>
         <p className="text-sm text-muted-foreground">
-          Your business profile, payout rails, preferences — and the demo facts, when Demo
+          Your business profile, payout rails and preferences, plus the demo facts when Demo
           Mode is on.
         </p>
       </div>
@@ -97,7 +97,7 @@ export default async function SettingsPage() {
         <CardHeader>
           <CardTitle>Business</CardTitle>
           <CardDescription>
-            Your Kusanya business profile — the identity buyers see at checkout.
+            Your Kusanya business profile: the identity buyers see at checkout.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -127,7 +127,7 @@ export default async function SettingsPage() {
                 <ShieldCheck />
               </ItemMedia>
               <ItemContent>
-                <ItemTitle>KYC tier</ItemTitle>
+                <ItemTitle>KYC Tier</ItemTitle>
                 <ItemDescription>
                   Mirrors Payaza&apos;s test/live gates: tier 1 carries small limits, tier 2
                   unlocks full volumes.
@@ -148,7 +148,7 @@ export default async function SettingsPage() {
             </Item>
           </ItemGroup>
           <p className="mt-3 text-xs text-muted-foreground">
-            Read-only — managed by the hackathon team.
+            Read-only, managed by the hackathon team.
           </p>
         </CardContent>
       </Card>

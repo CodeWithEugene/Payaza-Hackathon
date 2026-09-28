@@ -19,7 +19,7 @@ export function SimulateSettleButton({ invoiceId }: { invoiceId: string }) {
     try {
       const res = await simulateSettlementAction(invoiceId);
       if (res.ok) {
-        toast.success("Settlement simulated — the funds are now in your KES wallet.");
+        toast.success("Settlement simulated. The funds are now in your KES wallet.");
         router.refresh();
       } else {
         toast.error(res.error ?? "Could not simulate settlement.");
@@ -34,7 +34,7 @@ export function SimulateSettleButton({ invoiceId }: { invoiceId: string }) {
   return (
     <Button variant="outline" onClick={run} disabled={busy}>
       {busy ? <Spinner data-icon="inline-start" /> : <Zap data-icon="inline-start" />}
-      Simulate settlement
+      Simulate Settlement
     </Button>
   );
 }

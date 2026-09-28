@@ -45,7 +45,7 @@ type Props = { params: Promise<{ token: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { token } = await params;
   const inv = await getBuyerInvoice(token);
-  if (!inv) return { title: "Invoice not found" };
+  if (!inv) return { title: "Invoice Not Found" };
   return {
     title: `Invoice ${inv.invoice.number} · ${inv.business?.name ?? "Kusanya"}`,
   };
@@ -215,7 +215,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
               <span className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <CheckCircle2 className="size-8" />
               </span>
-              <h2 className="text-lg font-semibold">Paid — asante!</h2>
+              <h2 className="text-lg font-semibold">Paid, Asante!</h2>
               <StatusBadge status={invoice.status} />
               {latestCompleted && (
                 <p className="text-sm text-muted-foreground">
@@ -244,7 +244,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
           <Card>
             <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
               <XCircle className="size-10 text-destructive" />
-              <h2 className="text-lg font-semibold">This payment didn&apos;t go through.</h2>
+              <h2 className="text-lg font-semibold">This Payment Didn&apos;t Go Through</h2>
               <p className="text-sm text-muted-foreground">
                 If money left your account, your provider will return it or it will reflect
                 shortly. The merchant can resend the invoice if payment is still due.
@@ -257,7 +257,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
           <Card>
             <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
               <Ban className="size-10 text-muted-foreground" />
-              <h2 className="text-lg font-semibold">This invoice was cancelled</h2>
+              <h2 className="text-lg font-semibold">This Invoice Was Cancelled</h2>
               <p className="text-sm text-muted-foreground">
                 No payment is needed. Contact the merchant if you believe this is a mistake.
               </p>
@@ -269,7 +269,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
           <Card>
             <CardContent className="py-8 text-center">
               <p className="text-sm text-muted-foreground">
-                This invoice is being confirmed by the seller — you&apos;ll be able to pay shortly.
+                This invoice is being confirmed by the seller. You&apos;ll be able to pay shortly.
               </p>
             </CardContent>
           </Card>
@@ -279,7 +279,7 @@ export default async function BuyerInvoicePage({ params }: Props) {
           <Card>
             <CardContent className="py-8 text-center">
               <p className="text-sm text-muted-foreground">
-                This invoice isn&apos;t ready for payment yet — the seller is still preparing it.
+                This invoice isn&apos;t ready for payment yet. The seller is still preparing it.
               </p>
             </CardContent>
           </Card>

@@ -54,7 +54,7 @@ const SCENARIOS: Scenario[] = [
   {
     invoiceKey: "completed",
     icon: CircleCheck,
-    title: "The full story — paid → settled → KES in M-Pesa",
+    title: "The Full Story: Paid → Settled → KES In M-Pesa",
     description:
       "A USD card collection from start to payout, with the transparency waterfall and the confirmation gate.",
     fallback: "/app/invoices",
@@ -62,14 +62,14 @@ const SCENARIOS: Scenario[] = [
   {
     invoiceKey: "sent",
     icon: Smartphone,
-    title: "Live mobile-money payment (webhook replay)",
+    title: "Live Mobile-Money Payment (Webhook Replay)",
     description:
-      "An invoice out with the buyer — replay the M-Pesa webhook and watch it move in real time.",
+      "An invoice out with the buyer. Replay the M-Pesa webhook and watch it move in real time.",
     fallback: "/app/invoices",
   },
   {
     icon: ShieldAlert,
-    title: "Risk queue: first-time buyer + anomaly",
+    title: "Risk Queue: First-Time Buyer + Anomaly",
     description:
       "A borderline invoice waiting on a human, with every scored reason shown.",
     fallback: "/app/review",
@@ -77,7 +77,7 @@ const SCENARIOS: Scenario[] = [
   {
     invoiceKey: "partial",
     icon: TriangleAlert,
-    title: "Underpayment alert (85% received)",
+    title: "Underpayment Alert (85% Received)",
     description:
       "The buyer paid short. See the alert, the shortfall math and the guardrail-checked follow-up.",
     fallback: "/app/invoices",
@@ -85,14 +85,14 @@ const SCENARIOS: Scenario[] = [
   {
     invoiceKey: "hold",
     icon: Lock,
-    title: "Sanctions hold",
+    title: "Sanctions Hold",
     description:
-      "Screening froze this one before send — with the reason and the override trail.",
+      "Screening froze this one before send, with the reason and the override trail.",
     fallback: "/app/invoices",
   },
   {
     icon: Users,
-    title: "Partners & automatic splits",
+    title: "Partners & Automatic Splits",
     description:
       "Agents and partners get their share automatically as invoices settle.",
     fallback: "/app/partners",
@@ -129,7 +129,7 @@ export function DemoLauncher() {
         return;
       }
       setDemo({ login: body.login, invoiceIds: body.invoiceIds ?? {} });
-      toast.success("Demo data loaded — FreshLeaf Exports is ready.");
+      toast.success("Demo data loaded. FreshLeaf Exports is ready.");
     } catch {
       const message = "Couldn't reach the demo server. Is the app running?";
       setResetError(message);
@@ -175,9 +175,9 @@ export function DemoLauncher() {
               Step 1
             </Badge>
           </CardAction>
-          <CardTitle>Load the demo data</CardTitle>
+          <CardTitle>Load The Demo Data</CardTitle>
           <CardDescription>
-            Wipes and reseeds the whole FreshLeaf Exports story — invoices,
+            Wipes and reseeds the whole FreshLeaf Exports story: invoices,
             buyers, transactions and payouts. Takes a few seconds.
           </CardDescription>
         </CardHeader>
@@ -185,7 +185,7 @@ export function DemoLauncher() {
           {resetError ? (
             <Alert variant="destructive">
               <CircleAlert />
-              <AlertTitle>Reset didn&apos;t finish</AlertTitle>
+              <AlertTitle>Reset Didn&apos;t Finish</AlertTitle>
               <AlertDescription>{resetError}</AlertDescription>
             </Alert>
           ) : null}
@@ -200,7 +200,7 @@ export function DemoLauncher() {
             ) : (
               <DatabaseZap data-icon="inline-start" />
             )}
-            {resetting ? "Reseeding the story…" : "Load demo data"}
+            {resetting ? "Reseeding The Story…" : "Load Demo Data"}
           </Button>
         </CardContent>
         {demo ? (
@@ -221,7 +221,7 @@ export function DemoLauncher() {
               ) : (
                 <LogIn data-icon="inline-start" />
               )}
-              {signingIn ? "Signing in…" : "Fill & sign in"}
+              {signingIn ? "Signing In…" : "Fill & Sign In"}
             </Button>
           </CardFooter>
         ) : null}
@@ -236,11 +236,11 @@ export function DemoLauncher() {
             Step 2
           </Badge>
           <h2 className="font-heading text-base font-medium">
-            Jump into a scene
+            Jump Into A Scene
           </h2>
         </div>
         <p className="text-muted-foreground text-sm">
-          Load the demo data first — each card then deep-links to the exact
+          Load the demo data first. Each card then deep-links to the exact
           invoice in that moment of the story.
         </p>
         <div className="grid gap-3 md:grid-cols-2">
@@ -272,13 +272,13 @@ export function DemoLauncher() {
       {/* Payaza test facts */}
       <Alert>
         <CreditCard />
-        <AlertTitle>Payaza test card & payout code</AlertTitle>
+        <AlertTitle>Payaza Test Card & Payout Code</AlertTitle>
         <AlertDescription>
           <span className="flex flex-col gap-1">
             <span>
               Visa{" "}
               <span className="font-mono text-foreground">4508750015741019</span>{" "}
-              — expiry <span className="font-mono text-foreground">01/39</span>{" "}
+              with expiry <span className="font-mono text-foreground">01/39</span>{" "}
               approves, <span className="font-mono text-foreground">05/39</span>{" "}
               declines. Any CVC.
             </span>

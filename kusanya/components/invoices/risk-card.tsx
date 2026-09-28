@@ -43,7 +43,7 @@ function DecisionBadge({ decision }: { decision: string }) {
     return (
       <Badge variant="secondary">
         <AlertTriangle data-icon="inline-start" />
-        Needs review
+        Needs Review
       </Badge>
     );
   }
@@ -51,7 +51,7 @@ function DecisionBadge({ decision }: { decision: string }) {
     return (
       <Badge variant="destructive">
         <Ban data-icon="inline-start" />
-        On hold
+        On Hold
       </Badge>
     );
   }
@@ -79,7 +79,7 @@ export function RiskCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Risk screening</CardTitle>
+        <CardTitle>Risk Screening</CardTitle>
         <CardDescription>
           Checked automatically before this invoice could be sent.
         </CardDescription>
@@ -132,14 +132,14 @@ export function RiskCard({
           <div className="flex flex-col gap-2">
             {risk.decision === "hold" && (
               <p className="text-sm text-muted-foreground">
-                This invoice is on hold — it will not be sent until you override the
+                This invoice is on hold. It will not be sent until you override the
                 decision or cancel it.
               </p>
             )}
             {risk.decision === "review" && (
               <p className="text-sm text-muted-foreground">
                 A human look was requested before sending. Approve it to Ready, or
-                cancel — either way it&apos;s logged with your note.
+                cancel it. Either way it&apos;s logged with your note.
               </p>
             )}
             <RiskOverride invoiceId={invoiceId} current={risk.decision} />

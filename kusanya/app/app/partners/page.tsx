@@ -167,7 +167,7 @@ export default async function PartnersPage() {
           <div className="flex flex-col gap-1">
             <h1 className="font-heading text-xl font-semibold tracking-tight">Partners</h1>
             <p className="text-sm text-muted-foreground">
-              Agents, freight forwarders and brokers — paid automatically from each collection.
+              Agents, freight forwarders and brokers, paid automatically from each collection.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -181,21 +181,21 @@ export default async function PartnersPage() {
 
         <Alert>
           <Info />
-          <AlertTitle>How partner splits work</AlertTitle>
+          <AlertTitle>How Partner Splits Work</AlertTitle>
           <AlertDescription>
             Partners (agents, freight, brokers) get paid automatically from each collection via
-            Payaza split accounts — splits ride along in the buyer&apos;s checkout.
+            Payaza split accounts, and splits ride along in the buyer&apos;s checkout.
           </AlertDescription>
         </Alert>
 
         {/* --------------------------------------------------- partner list -- */}
         <Card className="gap-0 py-0">
           <CardHeader className="border-b px-4 py-3">
-            <CardTitle>Split beneficiaries</CardTitle>
+            <CardTitle>Split Beneficiaries</CardTitle>
             <CardDescription>
               {partners.length > 0
                 ? `${partners.length} active partner${partners.length === 1 ? "" : "s"} · shares are what they receive; Payaza stores the inverse`
-                : "Nobody yet — add your first partner to start splitting collections."}
+                : "Nobody yet. Add your first partner to start splitting collections."}
             </CardDescription>
             {partners.length > 0 && (
               <CardAction>
@@ -217,9 +217,9 @@ export default async function PartnersPage() {
                   <EmptyMedia variant="icon">
                     <Users />
                   </EmptyMedia>
-                  <EmptyTitle>No partners yet</EmptyTitle>
+                  <EmptyTitle>No Partners Yet</EmptyTitle>
                   <EmptyDescription>
-                    Add the agent, broker or haulier who helps your exports move — Kusanya
+                    Add the agent, broker or haulier who helps your exports move. Kusanya
                     registers them as a Payaza split account and pays them automatically from
                     each collection.
                   </EmptyDescription>
@@ -270,7 +270,7 @@ export default async function PartnersPage() {
                             </Badge>
                           </TooltipTrigger>
                           <TooltipContent side="top" align="start" className="max-w-72">
-                            Stored on Payaza as split_value {Number(p.splitValue)} — Payaza&apos;s
+                            Stored on Payaza as split_value {Number(p.splitValue)}. Payaza&apos;s
                             split_value is the platform-keep percentage; Kusanya handles the
                             inversion.
                           </TooltipContent>
@@ -296,7 +296,7 @@ export default async function PartnersPage() {
             <div className="flex flex-col gap-1">
               <h2 className="font-heading text-base font-medium">Statements</h2>
               <p className="text-sm text-muted-foreground">
-                What each partner earned — and what has actually settled — over the last 90
+                What each partner earned (and what has actually settled) over the last 90
                 days. All amounts in KES.
               </p>
             </div>
@@ -313,7 +313,7 @@ export default async function PartnersPage() {
                         <span className="flex min-w-0 items-center gap-2 text-sm">
                           <Receipt className="shrink-0 text-muted-foreground" aria-hidden />
                           <span className="truncate">
-                            Statement — {p.name} · last 90 days
+                            Statement: {p.name} · Last 90 Days
                           </span>
                         </span>
                         <ChevronDown className="shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
@@ -384,7 +384,7 @@ export default async function PartnersPage() {
                         ) : (
                           <Empty>
                             <EmptyHeader>
-                              <EmptyTitle>Nothing in the last 90 days</EmptyTitle>
+                              <EmptyTitle>Nothing In The Last 90 Days</EmptyTitle>
                               <EmptyDescription>
                                 No invoice splits for {p.name} in this window. Attach their
                                 split to an invoice and it will show up here.

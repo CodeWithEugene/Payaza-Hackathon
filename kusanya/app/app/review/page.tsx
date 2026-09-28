@@ -37,7 +37,7 @@ import { ExportMenu } from "@/components/export/export-menu";
 import { dateText, moneyText, statusText } from "@/lib/export/format";
 import type { ExportColumn, ExportRow } from "@/lib/export/types";
 
-export const metadata: Metadata = { title: "Risk queue" };
+export const metadata: Metadata = { title: "Risk Queue" };
 
 const EXPORT_COLUMNS: ExportColumn[] = [
   { key: "invoice", header: "Invoice" },
@@ -143,7 +143,7 @@ export default async function ReviewPage() {
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-col gap-1">
           <h1 className="font-heading text-2xl font-semibold tracking-tight">
-            Risk queue
+            Risk Queue
           </h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
             Composite score = weighted AI judgments + deterministic facts. Hold is
@@ -169,17 +169,17 @@ export default async function ReviewPage() {
             <EmptyMedia variant="icon">
               <ShieldCheck />
             </EmptyMedia>
-            <EmptyTitle>Queue clear — nothing flagged.</EmptyTitle>
+            <EmptyTitle>Queue Clear, Nothing Flagged</EmptyTitle>
             <EmptyDescription>
               Every recent invoice passed its risk screen. Anything flagged for
-              review or held lands here — nothing sends without you.
+              review or held lands here, and nothing sends without you.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button asChild>
               <Link href="/app/invoices/new">
                 <Plus data-icon="inline-start" />
-                New invoice
+                New Invoice
               </Link>
             </Button>
           </EmptyContent>
@@ -219,7 +219,7 @@ export default async function ReviewPage() {
                     )}
                     {risk?.fallback && (
                       <Badge variant="outline">
-                        Fail-safe default — AI was unavailable
+                        Fail-safe default: AI was unavailable
                       </Badge>
                     )}
                     <span className="text-xs text-muted-foreground">

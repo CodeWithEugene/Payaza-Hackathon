@@ -5,7 +5,7 @@ import { DemoLauncher } from "@/components/demo/demo-launcher";
 import { KusanyaMark } from "@/components/brand/logo";
 
 export const metadata: Metadata = {
-  title: "Live demo",
+  title: "Live Demo",
 };
 
 export default function DemoPage() {

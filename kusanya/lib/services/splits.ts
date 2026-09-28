@@ -118,7 +118,7 @@ export async function attachInvoiceSplits(
   allocations: { partnerId: string; sharePct: number }[],
 ) {
   const total = allocations.reduce((s, a) => s + a.sharePct, 0);
-  if (total > 100) throw new Error(`Split shares sum to ${total}% — must be ≤ 100%.`);
+  if (total > 100) throw new Error(`Split shares sum to ${total}%, but they must be ≤ 100%.`);
   const [inv] = await db
     .select()
     .from(invoices)

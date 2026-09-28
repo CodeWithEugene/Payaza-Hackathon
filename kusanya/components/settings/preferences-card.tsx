@@ -145,7 +145,7 @@ export function PreferencesCard({
           <Field>
             <FieldLabel htmlFor="pref-policy">Payout confirmation</FieldLabel>
             <FieldDescription>
-              A second check before money leaves your wallet — Kusanya never stores a payout
+              A second check before money leaves your wallet. Kusanya never stores a payout
               PIN.
             </FieldDescription>
             <Select
@@ -190,7 +190,7 @@ export function PreferencesCard({
               <FieldContent>
                 <FieldLabel htmlFor="pref-notify-sms">SMS</FieldLabel>
                 <FieldDescription>
-                  Short alerts to your Kenyan number — including &quot;Imefika!&quot; when a
+                  Short alerts to your Kenyan number, including &quot;Imefika!&quot; when a
                   payout lands.
                 </FieldDescription>
               </FieldContent>
@@ -201,12 +201,12 @@ export function PreferencesCard({
       <CardFooter className="flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted-foreground">
           {demoMode
-            ? "Demo Mode: preferences persist on the demo business — “Reset demo data” restores the seeded defaults."
+            ? "Demo Mode: preferences persist on the demo business, and “Reset Demo Data” restores the seeded defaults."
             : "Applies to new invoices and payouts immediately."}
         </p>
         <Button onClick={handleSave} disabled={busy}>
           {busy ? <Spinner data-icon="inline-start" /> : null}
-          Save preferences
+          Save Preferences
         </Button>
       </CardFooter>
     </Card>

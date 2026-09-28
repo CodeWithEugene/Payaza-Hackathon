@@ -149,7 +149,7 @@ export default async function InvoicesPage({
           <Button asChild>
             <Link href="/app/invoices/new">
               <Plus data-icon="inline-start" />
-              New invoice
+              New Invoice
             </Link>
           </Button>
         </div>
@@ -191,7 +191,7 @@ export default async function InvoicesPage({
               <FileText />
             </EmptyMedia>
             <EmptyTitle>
-              {filtering ? "No invoices match" : "No invoices yet"}
+              {filtering ? "No Invoices Match" : "No Invoices Yet"}
             </EmptyTitle>
             <EmptyDescription>
               {filtering
@@ -202,13 +202,13 @@ export default async function InvoicesPage({
           <EmptyContent>
             {filtering ? (
               <Button variant="outline" asChild>
-                <Link href="/app/invoices">Clear filters</Link>
+                <Link href="/app/invoices">Clear Filters</Link>
               </Button>
             ) : (
               <Button asChild>
                 <Link href="/app/invoices/new">
                   <Plus data-icon="inline-start" />
-                  New invoice
+                  New Invoice
                 </Link>
               </Button>
             )}

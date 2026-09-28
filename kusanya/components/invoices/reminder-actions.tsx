@@ -75,7 +75,7 @@ export function ReminderActions({
         const reason = guardrailReason(data.guardrail) ?? "unsupported or unsafe claims";
         toast.error(`Blocked by guardrail: ${reason}`);
       } else {
-        toast.success("Draft checked against your ledger — review it, then send.");
+        toast.success("Draft checked against your ledger. Review it, then send.");
       }
     } catch {
       toast.error("Could not draft the reminder. Please try again.");
@@ -102,7 +102,7 @@ export function ReminderActions({
       }
       router.refresh();
       if (data.skipped) {
-        toast(`Reminder skipped — ${data.reason ?? "invoice no longer open"}.`);
+        toast(`Reminder skipped: ${data.reason ?? "invoice no longer open"}.`);
       } else {
         toast.success("Reminder sent to the buyer.");
       }
@@ -126,7 +126,7 @@ export function ReminderActions({
         ) : (
           <ScanSearch data-icon="inline-start" />
         )}
-        Draft &amp; check
+        Draft &amp; Check
       </Button>
       {status === "draft" && (
         <Button size="sm" onClick={approveAndSend} disabled={busy !== null}>
@@ -135,7 +135,7 @@ export function ReminderActions({
           ) : (
             <Check data-icon="inline-start" />
           )}
-          Approve &amp; send
+          Approve &amp; Send
         </Button>
       )}
     </div>

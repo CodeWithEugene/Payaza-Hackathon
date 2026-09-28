@@ -33,8 +33,8 @@ export function SendButton({
       if (res.ok) {
         toast.success(
           action === "resend"
-            ? "Invoice resent — the buyer has a fresh payment link."
-            : "Invoice sent — email and SMS are on their way to the buyer.",
+            ? "Invoice resent. The buyer has a fresh payment link."
+            : "Invoice sent. Email and SMS are on their way to the buyer.",
         );
         router.refresh();
       } else {
@@ -59,7 +59,7 @@ export function SendButton({
   return (
     <Button onClick={run} disabled={busy}>
       {busy ? <Spinner data-icon="inline-start" /> : <Send data-icon="inline-start" />}
-      Send invoice
+      Send Invoice
     </Button>
   );
 }

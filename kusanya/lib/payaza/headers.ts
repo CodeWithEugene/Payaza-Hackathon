@@ -14,7 +14,7 @@ export function authorizationHeader(): string {
   if (!cachedAuth) {
     if (!env.PAYAZA_PUBLIC_KEY) {
       throw new Error(
-        "PAYAZA_PUBLIC_KEY missing — cannot call live APIs (Demo Mode should intercept first)",
+        "PAYAZA_PUBLIC_KEY missing, so live APIs cannot be called (Demo Mode should intercept first)",
       );
     }
     cachedAuth = `Payaza ${Buffer.from(env.PAYAZA_PUBLIC_KEY).toString("base64")}`;

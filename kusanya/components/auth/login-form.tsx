@@ -66,7 +66,7 @@ export function LoginForm() {
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>Sign in</CardTitle>
+          <CardTitle>Sign In</CardTitle>
           <CardDescription>
             Pick up your collections where you left them.
           </CardDescription>
@@ -80,7 +80,7 @@ export function LoginForm() {
               {error ? (
                 <Alert variant="destructive">
                   <CircleAlert />
-                  <AlertTitle>Couldn&apos;t sign you in</AlertTitle>
+                  <AlertTitle>Couldn&apos;t Sign You In</AlertTitle>
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               ) : null}
@@ -122,7 +122,7 @@ export function LoginForm() {
                 ) : (
                   <LogIn data-icon="inline-start" />
                 )}
-                {busy ? "Signing in…" : "Sign in"}
+                {busy ? "Signing In…" : "Sign In"}
               </Button>
             </FieldGroup>
           </form>
@@ -144,9 +144,9 @@ export function LoginForm() {
 
       <Card size="sm">
         <CardHeader>
-          <CardTitle>Judging the demo?</CardTitle>
+          <CardTitle>Judging The Demo?</CardTitle>
           <CardDescription>
-            Skip signup — step into Wanjiru&apos;s account at FreshLeaf Exports.
+            Skip signup and step into Wanjiru&apos;s account at FreshLeaf Exports.
             Her story is already mid-flight.
           </CardDescription>
         </CardHeader>
@@ -162,7 +162,7 @@ export function LoginForm() {
             onClick={fillDemoCredentials}
           >
             <Wand2 data-icon="inline-start" />
-            Fill demo credentials
+            Fill Demo Credentials
           </Button>
         </CardContent>
       </Card>

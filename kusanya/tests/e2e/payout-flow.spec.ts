@@ -19,7 +19,7 @@ async function login(page: Page) {
   await page.goto("/login");
   await page.locator("#login-email").fill(DEMO_EMAIL);
   await page.locator("#login-password").fill(DEMO_PASSWORD);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.getByRole("button", { name: "Sign In" }).click();
   await page.waitForURL(/\/app/, { timeout: 20_000 });
 }
 
@@ -56,7 +56,7 @@ test("demo: settled invoice pays out through the confirmation gate → Imefika!"
   await page.goto(`/app/invoices/${sentId}`);
   const statusBadge = page
     .locator('[data-slot="badge"]')
-    .filter({ hasText: /^(Settled|Paying out|Imefika! Completed)$/ })
+    .filter({ hasText: /^(Settled|Paying Out|Imefika! Completed)$/ })
     .first();
   await expect(statusBadge).toHaveText("Settled", { timeout: 15_000 });
 
@@ -64,10 +64,10 @@ test("demo: settled invoice pays out through the confirmation gate → Imefika!"
   //    waterfall; initiating must NOT move money — the badge stays Settled.
   await page.getByRole("button", { name: /Pay out to M-Pesa/i }).click();
   const dialog = page.getByRole("dialog");
-  await expect(dialog.getByText("Confirm payout")).toBeVisible();
+  await expect(dialog.getByText("Confirm Payout")).toBeVisible();
   await expect(dialog.getByText("You'll receive", { exact: true })).toBeVisible();
   await dialog.getByRole("button", { name: /Initiate payout/i }).click();
-  await expect(dialog.getByText("Confirmation code")).toBeVisible({ timeout: 15_000 });
+  await expect(dialog.getByText("Confirmation Code")).toBeVisible({ timeout: 15_000 });
   await expect(statusBadge).toHaveText("Settled"); // money has NOT moved yet
 
   // 5. Wrong code → rejected, dialog stays open, still Settled. The gate is real.
@@ -76,7 +76,7 @@ test("demo: settled invoice pays out through the confirmation gate → Imefika!"
   await expect(
     page.locator('[data-sonner-toast]').filter({ hasText: /Wrong confirmation code/i }),
   ).toBeVisible({ timeout: 15_000 });
-  await expect(dialog.getByText("Confirmation code")).toBeVisible();
+  await expect(dialog.getByText("Confirmation Code")).toBeVisible();
   await expect(statusBadge).toHaveText("Settled");
 
   // 6. Correct demo code → the transfer executes now (and only now).
@@ -88,7 +88,7 @@ test("demo: settled invoice pays out through the confirmation gate → Imefika!"
 
   // 7. Invoice → Paying out (dialog closed + router.refresh), then the demo
   //    settlement webhook lands ~1.5s later through the same completion path.
-  await expect(statusBadge).toHaveText(/^(Paying out|Imefika! Completed)$/, { timeout: 20_000 });
+  await expect(statusBadge).toHaveText(/^(Paying Out|Imefika! Completed)$/, { timeout: 20_000 });
   await expect
     .poll(
       async () => {

@@ -16,14 +16,14 @@ export function CopyLinkButton({ token }: { token: string }) {
       toast.success("Buyer link copied to your clipboard.");
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error("Your browser blocked clipboard access — copy the link from the address bar instead.");
+      toast.error("Your browser blocked clipboard access. Copy the link from the address bar instead.");
     }
   }
 
   return (
     <Button variant="outline" onClick={copy}>
       {copied ? <Check data-icon="inline-start" /> : <Link2 data-icon="inline-start" />}
-      {copied ? "Copied" : "Copy buyer link"}
+      {copied ? "Copied" : "Copy Buyer Link"}
     </Button>
   );
 }

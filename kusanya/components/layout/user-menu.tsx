@@ -46,7 +46,7 @@ export function UserMenu({ userName }: { userName: string | null }) {
             router.refresh();
           }}
         >
-          <LogOut className="mr-2 size-4" /> Sign out
+          <LogOut className="mr-2 size-4" /> Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

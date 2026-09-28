@@ -15,7 +15,7 @@ async function login(page: Page) {
   await page.goto("/login");
   await page.locator("#login-email").fill(DEMO_EMAIL);
   await page.locator("#login-password").fill(DEMO_PASSWORD);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.getByRole("button", { name: "Sign In" }).click();
   await page.waitForURL(/\/app/, { timeout: 20_000 });
 }
 
@@ -70,7 +70,7 @@ test("demo: WhatsApp paste → Jev extraction → reviewed invoice created & sen
   await expect(page.getByRole("heading", { name: /^KSN-2026-\d{4}$/ })).toBeVisible({ timeout: 15_000 });
   const statusBadge = page
     .locator('[data-slot="badge"]')
-    .filter({ hasText: /^(Sent|Ready to send|Needs review|On hold)$/ })
+    .filter({ hasText: /^(Sent|Ready To Send|Needs Review|On Hold)$/ })
     .first();
   await expect(statusBadge).toHaveText("Sent");
   await expect(page.getByText(/Dubai Fresh FZE/).first()).toBeVisible();

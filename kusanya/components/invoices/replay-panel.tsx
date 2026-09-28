@@ -21,13 +21,13 @@ interface ReplayEvent {
 }
 
 const REPLAYS: ReplayEvent[] = [
-  { event: "collection.success", label: "Card payment succeeds", ref: "collection" },
-  { event: "momo.success", label: "M-Pesa payment succeeds", ref: "collection" },
-  { event: "collection.failed", label: "Payment fails", ref: "collection" },
+  { event: "collection.success", label: "Card Payment Succeeds", ref: "collection" },
+  { event: "momo.success", label: "M-Pesa Payment Succeeds", ref: "collection" },
+  { event: "collection.failed", label: "Payment Fails", ref: "collection" },
   { event: "collection.underpay", label: "Underpayment 85%", ref: "collection" },
-  { event: "payout.success", label: "Payout succeeds", ref: "payout" },
-  { event: "payout.failed", label: "Payout fails", ref: "payout" },
-  { event: "settlement.complete", label: "Settlement completes", ref: "invoice" },
+  { event: "payout.success", label: "Payout Succeeds", ref: "payout" },
+  { event: "payout.failed", label: "Payout Fails", ref: "payout" },
+  { event: "settlement.complete", label: "Settlement Completes", ref: "invoice" },
 ];
 
 /**
@@ -73,7 +73,7 @@ export function ReplayPanel({
         return;
       }
       if (data.ok === false) {
-        toast(`Replayed: ${item.event} — ${data.detail ?? data.outcome ?? "no change (already processed?)"}`);
+        toast(`Replayed: ${item.event}. ${data.detail ?? data.outcome ?? "no change (already processed?)"}`);
       } else {
         toast.success(`Replayed: ${item.event}`);
       }
@@ -81,7 +81,7 @@ export function ReplayPanel({
       await new Promise((resolve) => setTimeout(resolve, 1200));
       router.refresh();
     } catch {
-      toast.error("Replay failed — is the demo API running?");
+      toast.error("Replay failed. Is the demo API running?");
     } finally {
       setBusyEvent(null);
     }
@@ -92,10 +92,10 @@ export function ReplayPanel({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FlaskConical className="size-4 text-muted-foreground" />
-          Demo controls
+          Demo Controls
         </CardTitle>
         <CardDescription>
-          Synthetic Payaza webhooks — same code path as live.
+          Synthetic Payaza webhooks, same code path as live.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">

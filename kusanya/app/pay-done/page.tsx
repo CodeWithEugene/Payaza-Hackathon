@@ -22,7 +22,7 @@ import { PayDoneRefresh } from "@/components/buyer/pay-done-refresh";
  */
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Payment status" };
+export const metadata: Metadata = { title: "Payment Status" };
 
 type Props = { searchParams: Promise<{ ref?: string | string[] }> };
 

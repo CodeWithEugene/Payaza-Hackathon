@@ -125,7 +125,7 @@ export function PayoutDialog({
         toast.error(data?.error ?? "Wrong confirmation code.");
         return;
       }
-      toast.success("Payout sent — watch it land in seconds.");
+      toast.success("Payout sent. Watch it land in seconds.");
       setOpen(false);
       setStep("rail");
       setCode("");
@@ -142,16 +142,16 @@ export function PayoutDialog({
       <DialogTrigger asChild>
         <Button>
           <Banknote data-icon="inline-start" />
-          Pay out to M-Pesa
+          Pay Out To M-Pesa
         </Button>
       </DialogTrigger>
       <DialogContent>
         {step === "rail" ? (
           <>
             <DialogHeader>
-              <DialogTitle>Confirm payout</DialogTitle>
+              <DialogTitle>Confirm Payout</DialogTitle>
               <DialogDescription>
-                You&apos;ll receive the net of this invoice — fees and FX are already
+                You&apos;ll receive the net of this invoice. Fees and FX are already
                 accounted for in the waterfall.
               </DialogDescription>
             </DialogHeader>
@@ -168,7 +168,7 @@ export function PayoutDialog({
             {frozen && (
               <Alert variant="destructive">
                 <TriangleAlert />
-                <AlertTitle>Payouts frozen on this wallet</AlertTitle>
+                <AlertTitle>Payouts Frozen On This Wallet</AlertTitle>
                 <AlertDescription>{walletWarning}</AlertDescription>
               </Alert>
             )}
@@ -177,7 +177,7 @@ export function PayoutDialog({
               <FieldLabel>Destination</FieldLabel>
               {rails.length === 0 ? (
                 <FieldDescription>
-                  No payout rail yet — add your M-Pesa number or bank account in
+                  No payout rail yet. Add your M-Pesa number or bank account in
                   Settings, then come back.
                 </FieldDescription>
               ) : (
@@ -217,14 +217,14 @@ export function PayoutDialog({
             <DialogFooter>
               <Button onClick={initiate} disabled={initiating || !railId || frozen}>
                 {initiating && <Spinner data-icon="inline-start" />}
-                Initiate payout
+                Initiate Payout
               </Button>
             </DialogFooter>
           </>
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle>Confirmation code</DialogTitle>
+              <DialogTitle>Confirmation Code</DialogTitle>
               <DialogDescription>
                 Last step before{" "}
                 <span className="font-medium text-foreground">
@@ -263,7 +263,7 @@ export function PayoutDialog({
             <DialogFooter>
               <Button onClick={confirm} disabled={confirming || code.trim().length < 4}>
                 {confirming && <Spinner data-icon="inline-start" />}
-                Confirm &amp; send money
+                Confirm &amp; Send Money
               </Button>
             </DialogFooter>
           </>

@@ -52,7 +52,7 @@ export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; san
       if (res.ok) {
         setConfirmOpen(false);
         toast.success(
-          "Demo data reset — the FreshLeaf story is reseeded. Sign in with the demo login if you're asked.",
+          "Demo data reset. The FreshLeaf story is reseeded. Sign in with the demo login if you're asked.",
         );
         router.refresh();
       } else {
@@ -84,7 +84,7 @@ export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; san
               <LogIn />
             </ItemMedia>
             <ItemContent>
-              <ItemTitle>Demo login</ItemTitle>
+              <ItemTitle>Demo Login</ItemTitle>
               <ItemDescription className="font-mono">
                 wanjiru@kusanya.demo · kusanya-demo-2026
               </ItemDescription>
@@ -95,7 +95,7 @@ export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; san
               <ShieldCheck />
             </ItemMedia>
             <ItemContent>
-              <ItemTitle>Payout confirmation code</ItemTitle>
+              <ItemTitle>Payout Confirmation Code</ItemTitle>
               <ItemDescription>
                 Every payout confirmation gate in the demo accepts this code.
               </ItemDescription>
@@ -111,7 +111,7 @@ export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; san
               <CreditCard />
             </ItemMedia>
             <ItemContent>
-              <ItemTitle>Payaza test card</ItemTitle>
+              <ItemTitle>Payaza Test Card</ItemTitle>
               <ItemDescription>
                 <span className="font-mono text-foreground">Visa 4508750015741019</span> ·
                 expiry <span className="font-mono text-foreground">01/39</span> approves ·{" "}
@@ -126,7 +126,7 @@ export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; san
             Emails/SMS the app sends appear in the sidebar &quot;Demo outbox&quot;.
           </p>
           <p>
-            Webhooks replay from invoice detail pages (&quot;Demo controls&quot; card) —
+            Webhooks replay from invoice detail pages (&quot;Demo controls&quot; card):
             collection success, underpay, overpay, failure and settlement.
           </p>
         </div>
@@ -140,7 +140,7 @@ export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; san
           <AlertDialogTrigger asChild>
             <Button variant="destructive">
               <RotateCcw data-icon="inline-start" />
-              Reset demo data
+              Reset Demo Data
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -148,7 +148,7 @@ export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; san
               <AlertDialogMedia>
                 <RotateCcw />
               </AlertDialogMedia>
-              <AlertDialogTitle>Reset the demo story?</AlertDialogTitle>
+              <AlertDialogTitle>Reset The Demo Story?</AlertDialogTitle>
               <AlertDialogDescription>
                 This wipes every invoice, transaction and partner in the demo database and
                 reseeds the FreshLeaf Exports story from scratch. You may be asked to sign in
@@ -166,7 +166,7 @@ export function DemoCard({ demoMode, sandbox = false }: { demoMode: boolean; san
                 }}
               >
                 {busy ? <Spinner data-icon="inline-start" /> : <RotateCcw data-icon="inline-start" />}
-                Reset demo data
+                Reset Demo Data
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

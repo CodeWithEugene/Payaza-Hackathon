@@ -66,10 +66,10 @@ export function settlementEta(
 ): SettlementEta {
   if (collectionCurrency === "USD") {
     return {
-      label: "T+3–5 business days",
+      label: "T+3 to 5 business days",
       earliest: addBusinessDays(confirmedAt, 3),
       latest: addBusinessDays(confirmedAt, 5),
-      basis: "Payaza settles USD card collections in T+3–5 business days",
+      basis: "Payaza settles USD card collections in T+3 to 5 business days",
     };
   }
   return {

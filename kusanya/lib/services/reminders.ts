@@ -67,8 +67,8 @@ function templateBody(
   if (offset < 0)
     return `Hi! A quick heads-up: invoice ${invoiceNumber} for ${amountDisplay} is due on ${due}. Pay in ~2 minutes: ${payUrl}`;
   if (offset === 0)
-    return `Hi! Invoice ${invoiceNumber} for ${amountDisplay} is due today (${due}). Pay here: ${payUrl} — if you've already paid, thank you!`;
-  return `Hi! Invoice ${invoiceNumber} for ${amountDisplay} was due on ${due} and is still open. You can settle it here: ${payUrl}. If something's not right, just reply — we'll sort it out.`;
+    return `Hi! Invoice ${invoiceNumber} for ${amountDisplay} is due today (${due}). Pay here: ${payUrl}. If you've already paid, thank you!`;
+  return `Hi! Invoice ${invoiceNumber} for ${amountDisplay} was due on ${due} and is still open. You can settle it here: ${payUrl}. If something's not right, just reply and we'll sort it out.`;
 }
 
 /** Scoped reminder fetch (business check via invoice ownership). */
@@ -129,7 +129,7 @@ export async function sendReminder(reminderId: string, businessId: string, actor
   if (rem.channel === "email" && buyer.email) {
     await sendEmail({
       to: buyer.email,
-      subject: `Reminder: invoice ${inv.number}`,
+      subject: `Reminder: Invoice ${inv.number}`,
       html: reminderEmail({
         buyerName: buyer.name.split(" ")[0]!,
         invoiceNumber: inv.number,
@@ -225,8 +225,8 @@ export async function processBuyerReply(opts: {
   if (owner?.email && (result.intent === "dispute" || !result.reliable)) {
     await sendEmail({
       to: owner.email,
-      subject: result.reliable ? `Buyer dispute on ${inv.number}` : `Buyer reply needs your eyes — ${inv.number}`,
-      html: `<p>Buyer replied on invoice <strong>${inv.number}</strong>.</p><p>Detected intent: <strong>${result.intent}</strong> (confidence ${(result.confidence * 100).toFixed(0)}%${result.reliable ? "" : " — LOW, showing raw message"})</p><blockquote style="border-left:3px solid #ccc;padding-left:12px;color:#444">${escapeHtml(opts.message.slice(0, 2000))}</blockquote>`,
+      subject: result.reliable ? `Buyer Dispute On ${inv.number}` : `Buyer Reply Needs Your Eyes: ${inv.number}`,
+      html: `<p>Buyer replied on invoice <strong>${inv.number}</strong>.</p><p>Detected intent: <strong>${result.intent}</strong> (confidence ${(result.confidence * 100).toFixed(0)}%${result.reliable ? "" : "; LOW, showing raw message"})</p><blockquote style="border-left:3px solid #ccc;padding-left:12px;color:#444">${escapeHtml(opts.message.slice(0, 2000))}</blockquote>`,
       tag: "buyer-reply",
     });
   }
