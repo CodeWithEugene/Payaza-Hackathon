@@ -3,9 +3,9 @@ import Image from "next/image"
 import { TRUST_LOGOS } from "./data"
 
 /**
- * Partner and rail logos: the official artwork, unmodified. Each sits on a
- * light tile (in both themes) because several marks are dark ink that would
- * vanish on the dark background, and brand rules forbid recoloring them.
+ * Partner and rail logos: the official artwork, unmodified, with no frame.
+ * In dark mode each sits on a light tile because several marks are dark ink
+ * that would vanish on the dark background, and brand rules forbid recoloring.
  */
 export function TrustStrip() {
   return (
@@ -25,7 +25,7 @@ export function TrustStrip() {
           {TRUST_LOGOS.map((logo) => (
             <li
               key={logo.name}
-              className="flex h-16 items-center justify-center rounded-2xl bg-white px-5 ring-1 ring-foreground/10 transition-shadow hover:shadow-md sm:h-[4.5rem] sm:px-6"
+              className="flex h-16 items-center justify-center rounded-2xl px-5 sm:h-[4.5rem] sm:px-6 dark:bg-white"
             >
               <Image
                 src={logo.src}
