@@ -56,6 +56,14 @@ const envSchema = z.object({
   EMAIL_FROM_NAME: z.string().optional().default("Kusanya"),
   AFRICASTALKING_USER: z.string().optional().default(""),
   AFRICASTALKING_KEY: z.string().optional().default(""),
+  /** Africa's Talking (USSD + SMS). Username "sandbox" targets the sandbox API. */
+  AT_API_KEY: z.string().optional().default(""),
+  AT_USERNAME: z.string().optional().default("sandbox"),
+  /** Optional alphanumeric sender id / shortcode (must exist on the AT account). */
+  AT_SENDER_ID: z.string().optional().default(""),
+  AT_USSD_CODE: z.string().optional().default("*384*11400#"),
+  /** Optional override; otherwise derived from AT_API_KEY (lib/africastalking/client.ts). */
+  AT_CALLBACK_TOKEN: z.string().optional().default(""),
 
   NEXT_PUBLIC_DEMO_MODE: z
     .enum(["true", "false"])

@@ -8,6 +8,7 @@ import { HowItWorks } from "@/components/landing/how-it-works"
 import { Rails } from "@/components/landing/rails"
 import { StatsBand } from "@/components/landing/stats-band"
 import { TrustStrip } from "@/components/landing/trust-strip"
+import { UssdSection } from "@/components/landing/ussd-section"
 
 export const metadata: Metadata = {
   title: { absolute: "Kusanya: Invoice-First International Collections" },
@@ -29,6 +30,7 @@ export default function LandingPage() {
         <TrustStrip />
         <HowItWorks />
         <Bento />
+        <UssdSection />
         <Rails />
         <div className="py-20 md:py-28">
           <StatsBand />

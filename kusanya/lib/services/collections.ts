@@ -575,6 +575,9 @@ async function notifyPaymentReceived(
       tag: "merchant-paid",
     });
   }
+  if (buyerRow?.phone) {
+    await sendSms(buyerRow.phone, `Kusanya: we received ${amountDisplay} for invoice ${inv.number}. Asante!`);
+  }
   if (owner?.phone && !needsMerchantAlert) {
     await sendSms(owner.phone, `KUSANYA: Cha kwanza! Invoice ${inv.number} paid, ${amountDisplay}.`);
   }

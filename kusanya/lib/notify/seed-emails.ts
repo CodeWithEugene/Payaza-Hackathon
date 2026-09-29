@@ -13,3 +13,13 @@ export const SEED_EMAILS: ReadonlySet<string> = new Set([
   "post@nordicseafood.example",
   "accounts@mwalimulogistics.co.ke",
 ]);
+
+/** Every phone number the demo seed uses, in E.164 (see lib/notify/sms.ts). */
+export const SEED_PHONES: ReadonlySet<string> = new Set([
+  "+254700111222",
+  "+254722111333",
+  "+254733987654",
+  "+255754123456",
+  "+256772123456",
+  "+971501234567",
+]);

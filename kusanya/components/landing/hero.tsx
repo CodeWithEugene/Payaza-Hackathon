@@ -115,6 +115,13 @@ export function Hero() {
           <p className="text-sm">
             1.5% platform fee. Payaza fees passed through at cost.
           </p>
+          <a
+            href="#ussd"
+            className="inline-flex w-fit items-center gap-2 rounded-full bg-background/80 px-4 py-2 text-sm ring-1 ring-foreground/10 backdrop-blur transition-colors hover:bg-background"
+          >
+            <span className="text-muted-foreground">No smartphone? Dial</span>
+            <span className="font-mono font-semibold tracking-tight text-primary">*384*11400#</span>
+          </a>
         </div>
 
         <ProductMock />

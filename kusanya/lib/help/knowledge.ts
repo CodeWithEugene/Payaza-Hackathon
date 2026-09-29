@@ -57,6 +57,15 @@ export const HELP_ARTICLES: readonly HelpArticle[] = [
     link: { href: "/app/settings", label: "Connect Telegram" },
   },
   {
+    id: "ussd_sms",
+    audiences: ALL,
+    title: "Can I Use Kusanya By USSD Or SMS?",
+    answer:
+      "Yes, no smartphone needed. Dial *384*11400# (on the Africa's Talking sandbox during the demo). Merchants whose phone is on their Kusanya account can see collections, list invoices and create an invoice. Buyers choose Pay an invoice, enter the invoice number and approve the M-Pesa prompt. By SMS, text a buyer's order to create an invoice, then reply SEND with the invoice number to send it.",
+    covers: "USSD code, feature phones, paying or invoicing without internet, SMS commands",
+    keywords: ["ussd", "*384", "dial", "feature phone", "sms", "text message", "no internet", "no smartphone", "kabambe"],
+  },
+  {
     id: "fees",
     audiences: SELLERS,
     title: "What Does It Cost?",
