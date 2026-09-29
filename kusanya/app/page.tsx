@@ -13,7 +13,7 @@ import { UssdSection } from "@/components/landing/ussd-section"
 export const metadata: Metadata = {
   title: { absolute: "Kusanya: Invoice-First International Collections" },
   description:
-    "Kusanya turns Telegram orders into paid invoices for Kenyan exporters. Buyers pay by USD card or regional mobile money, and you receive KES in M-Pesa with every fee shown. Built on Payaza.",
+    "Turn buyer orders from Telegram, USSD or SMS into paid invoices. Buyers abroad pay by card, Apple Pay, Google Pay or mobile money, and you receive KES in M-Pesa with every fee shown. Built on Payaza.",
 }
 
 /**

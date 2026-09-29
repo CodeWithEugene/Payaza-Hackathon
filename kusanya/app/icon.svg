@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-  <!-- Kusanya favicon — fixed ink (#0a0a0a) since browser chrome gives no currentColor context. -->
+  <!-- Kusanya favicon: fixed ink (#0a0a0a) on a white tile so it reads on light and dark tab bars. -->
+  <rect width="24" height="24" rx="5.5" fill="#ffffff"/>
   <g stroke="#0a0a0a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M6.5 4V19"/>
     <path d="M6.5 13L13.5 6"/>
