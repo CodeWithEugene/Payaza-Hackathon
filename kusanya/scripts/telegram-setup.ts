@@ -23,6 +23,7 @@ async function main() {
     commands: [
       { command: "start", description: "Connect or check your Kusanya account" },
       { command: "invoices", description: "Your latest invoices" },
+      { command: "link", description: "Connect your account by phone number" },
       { command: "help", description: "How to send an order" },
       { command: "unlink", description: "Disconnect this chat" },
     ],

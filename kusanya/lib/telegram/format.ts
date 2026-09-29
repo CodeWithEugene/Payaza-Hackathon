@@ -13,6 +13,7 @@ export type BotCommand =
   | { kind: "help" }
   | { kind: "invoices" }
   | { kind: "unlink" }
+  | { kind: "link" }
   | { kind: "unknown_command"; name: string }
   | { kind: "order"; text: string };
 
@@ -32,6 +33,8 @@ export function parseMessage(text: string): BotCommand {
       return { kind: "invoices" };
     case "unlink":
       return { kind: "unlink" };
+    case "link":
+      return { kind: "link" };
     default:
       return { kind: "unknown_command", name };
   }
@@ -57,6 +60,7 @@ export const HELP_TEXT = [
   "<i>Hi, this is Susan from Dubai Fresh FZE. Please send 500kg French beans at $2.30/kg, total USD 1,150. Payment in 5 days.</i>",
   "",
   "/invoices  your latest invoices",
+  "/link  connect a different account by phone number",
   "/unlink  disconnect this chat",
   "/help  this message",
 ].join("\n");
@@ -64,7 +68,9 @@ export const HELP_TEXT = [
 export const NOT_LINKED_TEXT = [
   "<b>Welcome to Kusanya</b>",
   "",
-  "Connect this chat to your Kusanya account first: open Kusanya, go to <b>Settings</b>, then <b>Telegram</b>, and tap <b>Connect Telegram</b>.",
+  "Connect this chat to your Kusanya account first. Tap <b>Share My Phone Number</b> below and I will link the account that uses this number.",
+  "",
+  "Or open Kusanya, go to <b>Settings</b>, then <b>Telegram</b>, and tap <b>Connect Telegram</b>.",
   "",
   "After that, send me any buyer order and I will draft the invoice.",
 ].join("\n");
@@ -93,4 +99,12 @@ export function orderSummaryHtml(s: OrderSummary): string {
     "",
     `Read by ${escapeHtml(s.engine)} with ${Math.round(s.quality * 100)}% overall confidence. Risk screen passed and the Payaza payment link is ready.`,
   ].join("\n");
+}
+
+/** "0746 152 008", "254746152008", "+254 746 152008", "746152008" → "254746152008". */
+export function phoneKey(raw: string | null | undefined): string | null {
+  const digits = (raw ?? "").replace(/[^\d]/g, "");
+  if (digits.length === 10 && digits.startsWith("0")) return `254${digits.slice(1)}`;
+  if (digits.length === 9 && /^[17]/.test(digits)) return `254${digits}`;
+  return digits.length >= 9 ? digits : null;
 }

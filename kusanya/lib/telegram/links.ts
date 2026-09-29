@@ -1,10 +1,11 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
-import { and, desc, eq, gt, isNull } from "drizzle-orm";
+import { and, desc, eq, gt, isNotNull, isNull } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { businesses, telegramLinkCodes, telegramLinks, users } from "@/lib/db/schema";
 import { newId } from "@/lib/ids";
 import { writeAudit } from "@/lib/db/audit";
+import { phoneKey } from "./format";
 
 /**
  * Telegram chat ↔ Kusanya user linking. A signed-in merchant creates a
@@ -39,12 +40,45 @@ export async function consumeLinkCode(
   const ctx = await contextForEmail(row.userEmail);
   if (!ctx) return { ok: false, reason: "no_business" };
 
+  await bindChat(chat, ctx, "code");
+  return { ok: true, businessName: ctx.businessName };
+}
+
+/**
+ * Link by phone: the chat shared its OWN number (Telegram-verified contact),
+ * so it belongs to whichever Kusanya account has that phone on file. The
+ * most recently created account wins if several share a number.
+ */
+export async function linkChatByPhone(
+  phone: string,
+  chat: { chatId: string; username?: string | null; firstName?: string | null },
+): Promise<{ ok: true; businessName: string } | { ok: false }> {
+  const key = phoneKey(phone);
+  if (!key) return { ok: false };
+  const rows = await db
+    .select({ email: users.email, phone: users.phone })
+    .from(users)
+    .innerJoin(businesses, eq(businesses.userId, users.id))
+    .where(isNotNull(users.phone))
+    .orderBy(desc(users.createdAt));
+  const match = rows.find((r) => phoneKey(r.phone) === key);
+  const ctx = match ? await contextForEmail(match.email) : null;
+  if (!ctx) return { ok: false };
+  await bindChat(chat, ctx, "phone");
+  return { ok: true, businessName: ctx.businessName };
+}
+
+async function bindChat(
+  chat: { chatId: string; username?: string | null; firstName?: string | null },
+  ctx: ChatContext,
+  via: "code" | "phone",
+): Promise<void> {
   // One chat maps to one account: relinking moves it.
   await db.delete(telegramLinks).where(eq(telegramLinks.chatId, chat.chatId));
   await db.insert(telegramLinks).values({
     id: newId("tgl"),
     chatId: chat.chatId,
-    userEmail: row.userEmail,
+    userEmail: ctx.email.toLowerCase(),
     username: chat.username?.slice(0, 64) ?? null,
     firstName: chat.firstName?.slice(0, 128) ?? null,
   });
@@ -53,9 +87,8 @@ export async function consumeLinkCode(
     action: "telegram.linked",
     entityType: "businesses",
     entityId: ctx.businessId,
-    after: { username: chat.username ?? null },
+    after: { username: chat.username ?? null, via },
   });
-  return { ok: true, businessName: ctx.businessName };
 }
 
 export interface ChatContext {

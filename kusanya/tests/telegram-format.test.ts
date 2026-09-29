@@ -7,6 +7,7 @@ import {
   orderSummaryHtml,
   parseCallback,
   parseMessage,
+  phoneKey,
 } from "@/lib/telegram/format";
 import { buildSystemPrompt, tidyAnswer } from "@/lib/help/llm";
 
@@ -89,5 +90,27 @@ describe("help LLM grounding", () => {
     expect(tidyAnswer("**Yes** — it settles T+1 – usually.")).toBe("Yes, it settles T+1, usually.");
     expect(tidyAnswer("## Title\nBody")).toBe("Title\nBody");
     expect(tidyAnswer("a. ".repeat(600)).length).toBeLessThanOrEqual(900);
+  });
+});
+
+describe("phoneKey", () => {
+  it("matches the same Kenyan number however it is written", () => {
+    const key = "254746152008";
+    expect(phoneKey("0746152008")).toBe(key);
+    expect(phoneKey("+254 746 152 008")).toBe(key);
+    expect(phoneKey("254746152008")).toBe(key);
+    expect(phoneKey("746152008")).toBe(key);
+  });
+
+  it("rejects empty or too-short input", () => {
+    expect(phoneKey(null)).toBeNull();
+    expect(phoneKey("")).toBeNull();
+    expect(phoneKey("1234")).toBeNull();
+  });
+});
+
+describe("parseMessage /link", () => {
+  it("recognises the link command", () => {
+    expect(parseMessage("/link")).toEqual({ kind: "link" });
   });
 });

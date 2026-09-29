@@ -4,7 +4,15 @@ import { formatMoney } from "@/lib/money/format";
 import { isCurrency } from "@/lib/money/currencies";
 import { cancelInvoice, listInvoices, mustGetInvoice, sendInvoice } from "@/lib/services/invoices";
 import { draftInvoiceFromText } from "@/lib/services/order-intake";
-import { answerCallback, editMessage, sendMessage, sendTyping, type InlineKeyboard } from "./client";
+import {
+  answerCallback,
+  editMessage,
+  requestPhone,
+  sendMessage,
+  sendMessageClearingKeyboard,
+  sendTyping,
+  type InlineKeyboard,
+} from "./client";
 import {
   encodeCallback,
   escapeHtml,
@@ -14,7 +22,7 @@ import {
   parseCallback,
   parseMessage,
 } from "./format";
-import { consumeLinkCode, contextForChat, unlinkChat, type ChatContext } from "./links";
+import { consumeLinkCode, contextForChat, linkChatByPhone, unlinkChat, type ChatContext } from "./links";
 
 /**
  * Telegram update handler. The merchant forwards/pastes a buyer's order; we
@@ -39,6 +47,7 @@ interface TgMessage {
   photo?: unknown[];
   document?: unknown;
   voice?: unknown;
+  contact?: { phone_number: string; user_id?: number; first_name?: string };
 }
 export interface TgUpdate {
   update_id: number;
@@ -56,6 +65,8 @@ export async function handleUpdate(update: TgUpdate): Promise<void> {
   const chatId = String(message.chat.id);
   const text = message.text ?? message.caption ?? "";
 
+  if (message.contact) return handleContact(chatId, message);
+
   if (!text) {
     const media = message.photo || message.document || message.voice;
     await sendMessage(chatId, media
@@ -68,7 +79,8 @@ export async function handleUpdate(update: TgUpdate): Promise<void> {
   if (command.kind === "start") {
     if (!command.code) {
       const ctx = await contextForChat(chatId);
-      await sendMessage(chatId, ctx ? `You're connected to <b>${escapeHtml(ctx.businessName)}</b>.\n\n${HELP_TEXT}` : NOT_LINKED_TEXT);
+      if (ctx) await sendMessage(chatId, `You're connected to <b>${escapeHtml(ctx.businessName)}</b>.\n\n${HELP_TEXT}`);
+      else await requestPhone(chatId, NOT_LINKED_TEXT);
       return;
     }
     const linked = await consumeLinkCode(command.code, {
@@ -88,10 +100,14 @@ export async function handleUpdate(update: TgUpdate): Promise<void> {
     await sendMessage(chatId, HELP_TEXT);
     return;
   }
+  if (command.kind === "link") {
+    await requestPhone(chatId, "Tap <b>Share My Phone Number</b> and I will connect the Kusanya account that uses this number. Payment alerts for that account then come here.");
+    return;
+  }
 
   const ctx = await contextForChat(chatId);
   if (!ctx) {
-    await sendMessage(chatId, NOT_LINKED_TEXT);
+    await requestPhone(chatId, NOT_LINKED_TEXT);
     return;
   }
   if (command.kind === "unlink") {
@@ -101,6 +117,26 @@ export async function handleUpdate(update: TgUpdate): Promise<void> {
   }
   if (command.kind === "invoices") return replyLatestInvoices(chatId, ctx);
   return handleOrder(chatId, ctx, command.text);
+}
+
+/** Shared contact → link the account with that phone. Only the sender's OWN number counts. */
+async function handleContact(chatId: string, message: TgMessage): Promise<void> {
+  const contact = message.contact!;
+  if (!message.from || contact.user_id !== message.from.id) {
+    await requestPhone(chatId, "Please share <b>your own</b> number with the button below, not someone else's contact.");
+    return;
+  }
+  const linked = await linkChatByPhone(contact.phone_number, {
+    chatId,
+    username: message.from.username ?? null,
+    firstName: message.from.first_name ?? null,
+  });
+  await sendMessageClearingKeyboard(
+    chatId,
+    linked.ok
+      ? `✅ Connected to <b>${escapeHtml(linked.businessName)}</b>. Payment alerts for this account now come to this chat.\n\n${HELP_TEXT}`
+      : `No Kusanya account uses this number. It has to match the phone you signed up with. You can also open Kusanya, go to <b>Settings</b>, then <b>Telegram</b>, and tap <b>Connect Telegram</b>.\n\n${escapeHtml(appUrl())}/app/settings`,
+  );
 }
 
 async function handleOrder(chatId: string, ctx: ChatContext, text: string): Promise<void> {

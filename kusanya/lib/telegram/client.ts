@@ -69,6 +69,31 @@ export function sendMessage(chatId: string | number, html: string, keyboard?: In
   });
 }
 
+/** Ask for the user's own phone number (Telegram's native "share contact" button). */
+export function requestPhone(chatId: string | number, html: string) {
+  return callTelegram<{ message_id: number }>("sendMessage", {
+    chat_id: chatId,
+    text: html,
+    parse_mode: "HTML",
+    reply_markup: {
+      keyboard: [[{ text: "📱 Share My Phone Number", request_contact: true }]],
+      resize_keyboard: true,
+      one_time_keyboard: true,
+    },
+  });
+}
+
+/** Plain message that also clears a reply keyboard left by requestPhone. */
+export function sendMessageClearingKeyboard(chatId: string | number, html: string) {
+  return callTelegram<{ message_id: number }>("sendMessage", {
+    chat_id: chatId,
+    text: html,
+    parse_mode: "HTML",
+    link_preview_options: { is_disabled: true },
+    reply_markup: { remove_keyboard: true },
+  });
+}
+
 export function editMessage(chatId: string | number, messageId: number, html: string, keyboard?: InlineKeyboard) {
   return callTelegram("editMessageText", {
     chat_id: chatId,
