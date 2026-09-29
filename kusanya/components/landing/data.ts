@@ -59,14 +59,22 @@ export const A11Y_OPTIONS = [
   "Readable spacing",
 ] as const
 
-export const TRUST_WORDMARKS = [
-  { name: "Payaza", className: "font-semibold tracking-tight" },
-  { name: "TypeSafe Jev", className: "font-mono font-medium tracking-tight" },
-  { name: "M-PESA", className: "font-black tracking-wider" },
-  { name: "VISA", className: "font-black italic tracking-widest" },
-  { name: "mastercard", className: "font-semibold lowercase tracking-tight" },
-  { name: "Apple Pay", className: "font-medium tracking-tight" },
-  { name: "Google Pay", className: "font-medium" },
+/**
+ * Official partner and rail logos (public/logos/partners/). Sources:
+ * payaza.africa (site logo), docs.typesafe.ai (light logo), Wikimedia Commons
+ * for M-PESA, Visa, Mastercard, Apple Pay and Google Pay. Shown unmodified;
+ * each sits on a light tile so the official colors stay legible in dark mode.
+ * width/height are the intrinsic ratio; heightClass sets the rendered size
+ * so marks with different shapes carry similar visual weight.
+ */
+export const TRUST_LOGOS = [
+  { name: "Payaza", src: "/logos/partners/payaza.svg", width: 170, height: 40, heightClass: "h-7 sm:h-8" },
+  { name: "TypeSafe AI", src: "/logos/partners/typesafe.png", width: 370, height: 82, heightClass: "h-6 sm:h-7" },
+  { name: "M-PESA", src: "/logos/partners/mpesa.svg", width: 512, height: 273, heightClass: "h-12 sm:h-14" },
+  { name: "Visa", src: "/logos/partners/visa.svg", width: 1000, height: 324, heightClass: "h-5 sm:h-6" },
+  { name: "Mastercard", src: "/logos/partners/mastercard.svg", width: 999, height: 776, heightClass: "h-8 sm:h-10" },
+  { name: "Apple Pay", src: "/logos/partners/applepay.svg", width: 512, height: 210, heightClass: "h-7 sm:h-8" },
+  { name: "Google Pay", src: "/logos/partners/googlepay.svg", width: 64, height: 24, heightClass: "h-7 sm:h-8" },
 ] as const
 
 export const STATS = [

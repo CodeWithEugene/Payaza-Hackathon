@@ -1,8 +1,11 @@
-import { TRUST_WORDMARKS } from "./data"
+import Image from "next/image"
+
+import { TRUST_LOGOS } from "./data"
 
 /**
- * Partner and rail wordmarks, set as styled text (no logo artwork). Muted
- * and uniform like a logo strip, but real text so it scales and reads.
+ * Partner and rail logos: the official artwork, unmodified. Each sits on a
+ * light tile (in both themes) because several marks are dark ink that would
+ * vanish on the dark background, and brand rules forbid recoloring them.
  */
 export function TrustStrip() {
   return (
@@ -18,13 +21,20 @@ export function TrustStrip() {
           Built On Payaza, Powered By TypeSafe Jev, Paid The Way Your Buyers
           Already Pay
         </h2>
-        <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 sm:gap-x-14">
-          {TRUST_WORDMARKS.map((mark) => (
+        <ul className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          {TRUST_LOGOS.map((logo) => (
             <li
-              key={mark.name}
-              className={`text-xl text-foreground/70 sm:text-2xl ${mark.className}`}
+              key={logo.name}
+              className="flex h-16 items-center justify-center rounded-2xl bg-white px-5 ring-1 ring-foreground/10 transition-shadow hover:shadow-md sm:h-[4.5rem] sm:px-6"
             >
-              {mark.name}
+              <Image
+                src={logo.src}
+                alt={logo.name}
+                width={logo.width}
+                height={logo.height}
+                unoptimized
+                className={`w-auto ${logo.heightClass}`}
+              />
             </li>
           ))}
         </ul>
